@@ -6,6 +6,7 @@
   rebase = false
 [push]
   default = simple
+  autoSetupRemote = true
 [fetch]
   prune = true
   # pruneTags = true
@@ -83,7 +84,7 @@
   useHttpPath = true
 
 [url "git@github.com:"]
-	insteadOf = https://github.com/
+  insteadOf = https://github.com/
 
 [include]
   path = .gitconfigExtra
