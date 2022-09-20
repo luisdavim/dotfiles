@@ -5,8 +5,8 @@
   set t_Co=256
 
   " Overrides {{{
-  hi! link TreesitterContext CursorLine
-  hi! link TreesitterContextLineNumber CursorLineNr
+  " hi! link TreesitterContext CursorLine
+  " hi! link TreesitterContextLineNumber CursorLineNr
   if has('autocmd')
     " if ! has('gui_macvim')
     "   au ColorScheme * hi! Normal ctermbg=none guibg=NONE
