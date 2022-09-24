@@ -10,7 +10,7 @@ INSTALLDIR=$(pwd)
 
 installPackages() {
   apt update && apt upgrade
-  cat files/pkgs/pkg.lst | grep -Ev '\s*#' | tr '\n' ' ' | xargs apt install -y
+  grep -Ev '\s*#' files/pkgs/pkg.lst | tr '\n' ' ' | xargs apt install -y
 
   ./install.sh gopkgs
   pip install -U pip
