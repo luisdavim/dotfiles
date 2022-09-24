@@ -24,15 +24,19 @@
     " au ColorScheme * hi! Folded ctermbg=none guibg=NONE
     " au ColorScheme * hi! CursorLine ctermfg=none guifg=NONE gui=NONE term=NONE cterm=NONE
     " au ColorScheme * hi! CursorLineNr cterm=NONE
+    au ColorScheme * hi! link illuminatedWord Visual
 
     " au ColorScheme * hi! link CocHighlightText CursorLine
     " au ColorScheme * hi! link illuminatedWord CursorLine
     " au ColorScheme * hi! link CocHighlightText Visual
-    au ColorScheme * hi! link illuminatedWord Visual
 
     " au ColorScheme * hi! CocUnderline gui=undercurl term=undercurl
     " au ColorScheme * hi! CocErrorHighlight ctermfg=red guisp=red guifg=#c4384b gui=undercurl term=undercurl
     " au ColorScheme * hi! CocWarningHighlight ctermfg=yellow guisp=yellow guifg=#c4ab39 gui=undercurl term=undercurl
+
+    au ColorScheme * hi! link CocMenuSel PmenuSel
+    au ColorScheme * hi! link CocPumMenu Pmenu
+    au ColorScheme * hi! link CocPumVirtualText Comment
 
     au ColorScheme * hi! link ClapPreview Pmenu
     " au ColorScheme * hi! link ClapDisplay PmenuSel
