@@ -15,7 +15,9 @@
     "   set transparency=5
     " endif
     if g:os != 'Android'
-      set fillchars+=vert:│
+      set fillchars+=vert:│   " add a bar for vertical splits
+      " set fillchars=stl:-     " fill active window's statusline with -
+      " set fillchars+=stlnc:-  " also fill inactive windows
     endif
     " au ColorScheme * hi VertSplit cterm=none ctermfg=Black ctermbg=none guibg=NONE
 
