@@ -192,6 +192,8 @@ alias hsa='helm show all'
 alias hdel='helm delete'
 alias hrm='helm delete'
 alias hhist='helm history'
+alias htpl='helm template'
+alias htp='helm template'
 
 alias helm-plugin-update='helm plugin list | awk '\''!/NAME/ {print $1}'\'' | xargs -L 1 -r helm plugin update'
 
