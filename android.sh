@@ -53,6 +53,19 @@ installDotFiles() {
   cd "${INSTALLDIR}" || exit
 }
 
+installThemes() {
+  if [ ! -d "${PREFIX}/share/termux-style" ]; then
+    git clone git@github.com:adi1090x/termux-style.git "${PREFIX}/share/termux-style"
+  else
+    cd "${PREFIX}/share/termux-style" || exit
+    git pull
+    cd "${INSTALLDIR}" || exit
+  fi
+  if [ ! -s "${PREFIX}/bin/termux-style" ]; then
+    ln -s "${PREFIX}/share/termux-style/tstyle" "${PREFIX}/bin/termux-style"
+  fi
+}
+
 osConfigs() {
   termux-setup-storage
 }
@@ -60,6 +73,7 @@ osConfigs() {
 installAll() {
   installPackages
   installDotFiles
+  installThemes
   osConfigs
 }
 
