@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source "${dotfiles_dir}/lib.sh"
+
 if [[ $OSTYPE != "darwin"* ]]; then
   echo 'Doesnt look like you are on OS X'
   echo '  please try the install.sh script'
@@ -142,34 +144,20 @@ installPackages() {
   sudo spctl --master-disable
   installHomebrew
 
-  while IFS='' read -r TAP; do
-    [[ -z ${TAP} ]] && continue
-    [[ ${TAP} =~ ^#.*$ ]] && continue
-    [[ ${TAP} =~ ^\\s*$ ]] && continue
-    brew_tap "${TAP}"
-  done <files/pkgs/tap.lst
+  # Add brew taps
+  installPkgList "brew_tap" files/pkgs/tap.lst
 
   brew update
   brew_install_or_upgrade cask
 
   # Install brew pkgs
-  while IFS='' read -r PKG; do
-    [[ -z ${PKG} ]] && continue
-    [[ ${PKG} =~ ^#.*$ ]] && continue
-    [[ ${PKG} =~ ^\\s*$ ]] && continue
-    brew_install_or_upgrade "${PKG}"
-  done <files/pkgs/brew.lst
+  installPkgList "brew_install_or_upgrade" files/pkgs/brew.lst
 
   # Install cask pkgs
-  while IFS='' read -r PKG; do
-    [[ -z ${PKG} ]] && continue
-    [[ ${PKG} =~ ^#.*$ ]] && continue
-    [[ ${PKG} =~ ^\\s*$ ]] && continue
-    cask_install "${PKG}"
-  done <files/pkgs/cask.lst
+  installPkgList "cask_install" files/pkgs/cask.lst
 
-  echo $(brew --prefix)/bin/zsh | sudo tee -a /etc/shells >/dev/null
-  echo $(brew --prefix)/bin/bash | sudo tee -a /etc/shells >/dev/null
+  echo "$(brew --prefix)/bin/zsh" | sudo tee -a /etc/shells >/dev/null
+  echo "$(brew --prefix)/bin/bash" | sudo tee -a /etc/shells >/dev/null
   # Set bash as the login shell
   # chsh -s $(brew --prefix)/bin/bash
 
@@ -204,13 +192,7 @@ installFonts() {
   mv *.otf "${HOME}"/Library/Fonts
   curl -sfLO https://github.com/powerline/powerline/raw/develop/font/PowerlineSymbols.otf
   sudo mv PowerlineSymbols.otf "${HOME}"/Library/Fonts/
-  if ! [ -d "${HOME}"/Library/Fonts/ubuntu-mono-powerline-ttf ]; then
-    git clone https://github.com/pdf/ubuntu-mono-powerline-ttf.git "${HOME}"/Library/Fonts/ubuntu-mono-powerline-ttf
-  else
-    cd "${HOME}"/Library/Fonts/ubuntu-mono-powerline-ttf || exit
-    git pull
-    cd "${INSTALLDIR}" || exit
-  fi
+  git_clone_or_update https://github.com/pdf/ubuntu-mono-powerline-ttf.git "${HOME}/Library/Fonts/ubuntu-mono-powerline-ttf"
   cd "${INSTALLDIR}" || exit
 }
 
@@ -237,23 +219,11 @@ installDotFiles() {
   cp files/yabai/yabairc "${HOME}"/.yabairc
   cp files/yabai/skhdrc "${HOME}"/.skhdrc
 
-  if [ ! -d "${HOME}"/.hammerspoon/hs/tiling ]; then
-    git clone https://github.com/dsanson/hs.tiling "$HOME"/.hammerspoon/hs/tiling
-  else
-    cd "${HOME}"/.hammerspoon/hs/tiling || exit
-    git pull
-    cd "${INSTALLDIR}" || exit
-  fi
+  git_clone_or_update https://github.com/dsanson/hs.tiling "$HOME/.hammerspoon/hs/tiling"
 
   cp -r files/hammerspoon/* "${HOME}"/.hammerspoon/
 
-  if [ ! -d "${HOME}"/.reslate ]; then
-    git clone https://github.com/lunixbochs/reslate.git "${HOME}"/.reslate
-  else
-    cd "${HOME}"/.reslate/ || exit
-    git pull
-    cd "${INSTALLDIR}" || exit
-  fi
+  git_clone_or_update https://github.com/lunixbochs/reslate.git "${HOME}/.reslate"
 
   for f in ~/.config/*; do
     if [ ! -s "${f}" ]; then

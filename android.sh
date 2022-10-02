@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source "${dotfiles_dir}/lib.sh"
+
 if [[ $OSTYPE != *"android"* ]]; then
   echo 'Doesnt look like you are on Android'
   echo '  please try the install.sh script'
@@ -54,13 +56,7 @@ installDotFiles() {
 }
 
 installThemes() {
-  if [ ! -d "${PREFIX}/share/termux-style" ]; then
-    git clone git@github.com:adi1090x/termux-style.git "${PREFIX}/share/termux-style"
-  else
-    cd "${PREFIX}/share/termux-style" || exit
-    git pull
-    cd "${INSTALLDIR}" || exit
-  fi
+  git_clone_or_update https://github.com/adi1090x/termux-style.git "${PREFIX}/share/termux-style"
   if [ ! -s "${PREFIX}/bin/termux-style" ]; then
     ln -s "${PREFIX}/share/termux-style/tstyle" "${PREFIX}/bin/termux-style"
   fi

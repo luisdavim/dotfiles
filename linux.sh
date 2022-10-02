@@ -19,7 +19,7 @@ fancy_echo() {
   # echo "${red}red text ${green}green text${reset}"
 
   COLOR=1
-  if [ ! -z "$2" ]; then
+  if [ -n "$2" ]; then
     COLOR=$2
   fi
   tput setaf "$COLOR"
