@@ -19,16 +19,16 @@ fancy_echo() {
   shift
 
   # shellcheck disable=SC2059
-  printf "\n$fmt\n" ${@}
+  printf "\n$fmt\n" "${@}"
 }
 
 brew_install_or_upgrade() {
   if brew_is_installed "$1"; then
     if brew_is_upgradable "$1"; then
-      brew upgrade ${@}
+      brew upgrade "${@}"
     fi
   else
-    brew install ${@}
+    brew install "${@}"
   fi
 }
 
@@ -37,7 +37,7 @@ cask_install() {
     fancy_echo "$1 is already installed!"
   else
     fancy_echo "Installing $1 ..."
-    brew install --cask ${@} --appdir=/Applications
+    brew install --cask "${@}" --appdir=/Applications
   fi
 }
 
@@ -151,14 +151,15 @@ installPackages() {
   # Add brew taps
   installPkgList "brew_tap" files/pkgs/tap.lst
 
+  fancy_echo "Updating brew formulae ..."
   brew update
-  brew_install_or_upgrade cask
 
   # Install brew pkgs
   # installPkgList "brew_install_or_upgrade" files/pkgs/brew.lst
   grep -Ev '\s*#' files/pkgs/brew.lst | tr '\n' '\0' | xargs -0 -n1 brew install
 
   # Install cask pkgs
+  brew_install_or_upgrade cask
   installPkgList "cask_install" files/pkgs/cask.lst
 
   echo "$(brew --prefix)/bin/zsh" | sudo tee -a /etc/shells >/dev/null
@@ -194,7 +195,7 @@ installFonts() {
   mkdir -p "${HOME}"/Library/Fonts
   curl -fLo DroidSansMonoForPowerlinePlusNerdFileTypes.otf https://raw.githubusercontent.com/ryanoasis/nerd-fonts/1.0.0/patched-fonts/DroidSansMono/complete/Droid%20Sans%20Mono%20for%20Powerline%20Nerd%20Font%20Complete.otf
   chmod 664 DroidSansMonoForPowerlinePlusNerdFileTypes.otf
-  mv *.otf "${HOME}"/Library/Fonts
+  mv ./*.otf "${HOME}"/Library/Fonts
   curl -sfLO https://github.com/powerline/powerline/raw/develop/font/PowerlineSymbols.otf
   sudo mv PowerlineSymbols.otf "${HOME}"/Library/Fonts/
   git_clone_or_update https://github.com/pdf/ubuntu-mono-powerline-ttf.git "${HOME}/Library/Fonts/ubuntu-mono-powerline-ttf"
@@ -236,6 +237,7 @@ installDotFiles() {
     fi
   done
 
+  mkdir -p /usr/local/etc/bash_completion.d
   cp files/shell/bash/bash_aliases_completion /usr/local/etc/bash_completion.d/
   curl -sfLo knife_autocomplete https://raw.githubusercontent.com/wk8/knife-bash-autocomplete/master/knife_autocomplete.sh
   mv knife_autocomplete /usr/local/etc/bash_completion.d/
@@ -264,7 +266,7 @@ case "$1" in
   installFonts
   ;;
 "itermcolors" | "termColors" | "termProfiles")
-  installItermColors ${@:2}
+  installItermColors "${@:2}"
   ;;
 *)
   installAll

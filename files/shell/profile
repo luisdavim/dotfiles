@@ -131,6 +131,9 @@ if [ -x "$(command -v brew)" ]; then
 
   export CFLAGS="-Wno-error=implicit-function-declaration"
 
+  export CGO_CFLAGS="-I${HOMEBREW_PREFIX}/include"
+  export CGO_LDFLAGS="-L${HOMEBREW_PREFIX}/lib"
+
   # Use brew python
   if [ -d "${BREW_PREFIX}/opt/python/libexec/bin" ]; then
     PATH="${BREW_PREFIX}/opt/python/libexec/bin:$PATH"

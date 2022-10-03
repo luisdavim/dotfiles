@@ -14,11 +14,13 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     done < <(networksetup -listallnetworkservices | grep -v '*')
   }
 
-  reload-yabai() {
+  yabai-reload() {
     # stop, upgrade, start yabai
+    brew services stop skhd
     brew services stop yabai
     brew upgrade yabai
     brew services start yabai
+    brew services start skhd
 
     # reinstall the scripting addition
     sudo yabai --uninstall-sa

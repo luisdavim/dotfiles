@@ -20,6 +20,7 @@ ack
 ansible
 ansible-lint
 archivemount
+asciidoctor
 asciinema
 asdf
 autopep8
@@ -191,6 +192,7 @@ mas
 mercurial
 microk8s
 minikube
+mix-completion
 mockery
 moreutils
 mtr
@@ -227,6 +229,7 @@ pv
 pyenv
 pyenv-virtualenv
 python
+rake-completion
 rancher-cli
 ranger
 rbac-lookup
@@ -238,6 +241,7 @@ rename
 ripgrep
 rke
 rollup
+ruby-completion
 s3cmd
 samba
 sampler
@@ -255,6 +259,7 @@ source-highlight
 speedtest-cli
 starship
 stern
+svn
 svu
 tanka
 tcptraceroute
@@ -300,7 +305,9 @@ xhyve
 yabai
 yamllint
 yarn
+yarn-completion
 ydiff
 yq
 ytt
 zsh
+zsh-completions

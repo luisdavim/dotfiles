@@ -176,7 +176,9 @@ if [ -x "$(command -v brew)" ]; then
   # export RBENV_ROOT="$(brew --prefix rbenv)"
   # export GEM_HOME="$(brew --prefix)/opt/gems"
   # export GEM_PATH="$(brew --prefix)/opt/gems"
-  export HOMEBREW_PREFIX="$(brew --prefix)"
+  if [ -z "${HOMEBREW_PREFIX}" ]; then
+    export HOMEBREW_PREFIX="$(brew --prefix)"
+  fi
 fi
 
 # Alias definitions.
@@ -213,8 +215,8 @@ fi
 [ -x "$(command -v thefuck)" ] && eval "$(thefuck --alias)"
 
 if [ -n "${HOMEBREW_PREFIX}" ]; then
-  [ ! -f ${HOMEBREW_PREFIX}/opt/asdf/asdf.sh ] || source "${HOMEBREW_PREFIX}/opt/asdf/asdf.sh"
-  [ ! -f ${HOMEBREW_PREFIX}/opt/asdf/etc/bash_completion.d/asdf.bash ] || source "${HOMEBREW_PREFIX}/opt/asdf/etc/bash_completion.d/asdf.bash"
+  [ ! -f "${HOMEBREW_PREFIX}/opt/asdf/asdf.sh" ] || source "${HOMEBREW_PREFIX}/opt/asdf/asdf.sh"
+  [ ! -f "${HOMEBREW_PREFIX}/opt/asdf/etc/bash_completion.d/asdf.bash" ] || source "${HOMEBREW_PREFIX}/opt/asdf/etc/bash_completion.d/asdf.bash"
 fi
 
 [ "$OSTYPE" == "linux-gnu" ] && source /etc/profile.d/vte-2.91.sh

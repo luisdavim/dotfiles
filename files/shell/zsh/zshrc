@@ -164,7 +164,9 @@ zstyle ':completion:*:complete:(cd|pushd):*' tag-order \
 # you may need to run this:
 # chmod -R go-w "$(brew --prefix)/share"
 if [ -x "$(command -v brew)" ]; then
-  export HOMEBREW_PREFIX="$(brew --prefix)"
+  if [ -z "${HOMEBREW_PREFIX}" ]; then
+    export HOMEBREW_PREFIX="$(brew --prefix)"
+  fi
   FPATH=${HOMEBREW_PREFIX}/share/zsh/site-functions:$FPATH
 fi
 

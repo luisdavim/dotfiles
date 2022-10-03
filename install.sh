@@ -7,7 +7,7 @@ dotfiles_dir="$(dirname "$0")"
 
 CMD="${1:-all}"
 shift
-ARGS="${@}"
+ARGS=("${@}")
 
 source "${dotfiles_dir}/files/scripts/hubinstall"
 source "${dotfiles_dir}/files/scripts/hashinstall"
@@ -571,10 +571,10 @@ installAll() {
 }
 
 if isFunction "${CMD}"; then
-  $CMD "${ARGS}"
+  $CMD "${ARGS[@]}"
   exit $?
 elif isFunction "install${CMD}"; then
-  "install${CMD}" "${ARGS}"
+  "install${CMD}" "${ARGS[@]}"
   exit $?
 fi
 
@@ -620,7 +620,7 @@ case "$CMD" in
   installHelmPlugins
   ;;
 *)
-  installOSSpecific "${CMD}" "${ARGS}"
+  installOSSpecific "${CMD}" "${ARGS{@}}"
   if [ -z "${CMD}" ] || [[ ${CMD} == "all" ]]; then
     installAll
   fi
