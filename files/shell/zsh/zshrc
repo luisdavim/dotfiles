@@ -4,6 +4,12 @@ if [[ "$CONFIGURED" == "true" ]]; then
   return
 fi
 
+if [[ -f ~/.profile ]]; then
+  set -a
+  source ~/.profile
+  set +a
+fi
+
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
@@ -215,12 +221,6 @@ alias -s {yml,yaml,json}=$EDITOR
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-if [[ -f ~/.profile ]]; then
-  set -a
-  source ~/.profile
-  set +a
-fi
 
 [[ ! -f ~/.aliases ]] || source ~/.aliases
 [[ ! -f /etc/grc.zsh ]] || source /etc/grc.zsh

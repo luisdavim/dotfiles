@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
+dotfiles_dir="$(dirname "$0")"
 source "${dotfiles_dir}/lib.sh"
+
+export HOMEBREW_NO_AUTO_UPDATE=1
+export HOMEBREW_NO_INSTALL_CLEANUP=1
 
 if [[ $OSTYPE != "darwin"* ]]; then
   echo 'Doesnt look like you are on OS X'
@@ -60,16 +64,15 @@ brew_is_upgradable() {
 
 brew_tap() {
   fancy_echo "Adding Tap: $1 ..."
-  brew tap "$1"
-  brew tap "$1" --repair 2>/dev/null
+  brew tap "$1" || brew tap "$1" --repair 2>/dev/null
 }
 
 brew_expand_alias() {
-  brew info "$1" 2>/dev/null | head -1 | awk '{gsub(/.*\//, ""); gsub(/:/, ""); print $1}'
+  brew info "$1" 2>/dev/null | head -1 | awk '{gsub(/.*\//, ""); gsub(/==>/, ""); gsub(/:/, ""); print $1}'
 }
 
 cask_expand_alias() {
-  brew info --cask "$1" 2>/dev/null | head -1 | awk '{gsub(/.*\//, ""); gsub(/:/, ""); print $1}'
+  brew info --cask "$1" 2>/dev/null | head -1 | awk '{gsub(/.*\//, ""); gsub(/==>/, ""); gsub(/:/, ""); print $1}'
 }
 
 brew_launchctl_restart() {
@@ -132,6 +135,7 @@ installHomebrew() {
   if [ ! -x "$(command -v brew)" ]; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/stephennancekivell/brew-update-notifier/master/install.sh)"
+    eval "$(/opt/homebrew/bin/brew shellenv)"
   fi
 }
 
@@ -151,7 +155,8 @@ installPackages() {
   brew_install_or_upgrade cask
 
   # Install brew pkgs
-  installPkgList "brew_install_or_upgrade" files/pkgs/brew.lst
+  # installPkgList "brew_install_or_upgrade" files/pkgs/brew.lst
+  grep -Ev '\s*#' files/pkgs/brew.lst | tr '\n' '\0' | xargs -0 -n1 brew install
 
   # Install cask pkgs
   installPkgList "cask_install" files/pkgs/cask.lst

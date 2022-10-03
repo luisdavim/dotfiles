@@ -1,13 +1,19 @@
+# awless
+# bosh-cli
+# bosh-init
 # chunkwm
 # chunkwm-blur
 # docker-completion
 # docker-compose-completion
+# gotty
+# grv
 # helm
 # kubernetes-cli
 # macvim
 # rust
 # tldr
 # uutils-coreutils
+# godep
 1password
 1password-cli
 ack
@@ -18,7 +24,6 @@ asciinema
 asdf
 autopep8
 avfs
-awless
 aws-iam-authenticator
 aws-shell
 awscli
@@ -33,8 +38,6 @@ bbl
 bfg
 binutils
 blackbox
-bosh-cli
-bosh-init
 brew-cask-completion
 brew-pip
 broot
@@ -111,13 +114,11 @@ gnu-sed
 gnu-tar
 gnu-time
 go-jira
-godep
 golang
 golangci-lint
 golangci-lint
 goreleaser
 gotags
-gotty
 gpatch
 graphicsmagick
 graphviz
@@ -125,7 +126,6 @@ grc
 grex
 gron
 groovy
-grv
 gum
 hab
 hadolint
@@ -211,6 +211,7 @@ packer
 pdsh
 peco
 pet
+pip-completion
 pipenv
 pipx
 pluto

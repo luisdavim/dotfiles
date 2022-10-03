@@ -1,3 +1,4 @@
+# reactiveops/tap
 FairwindsOps/tap
 browsh-org/homebrew-browsh
 buo/cask-upgrade
@@ -37,7 +38,6 @@ microsoft/git
 mike-engel/jwt-cli
 neovim/neovim
 norwoodj/tap
-reactiveops/tap
 reconquest/tubekit https://github.com/reconquest/tubekit.git
 tidwall/jj
 ubuntu/microk8s

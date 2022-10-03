@@ -18,6 +18,8 @@ fi
 # CDPATH
 CDPATH=".:${HOME}:${HOME}/workingCopies:${HOME}/workingCopies/src:$(ls -1d ${HOME}/workingCopies/src/*/ | tr '\n' ':')"
 
+[ -x "/opt/homebrew/bin/brew" ] && eval "$(/opt/homebrew/bin/brew shellenv)"
+
 # Brew paths
 if [ -x "$(command -v brew)" ]; then
   BREW_PREFIX=$(brew --prefix)

@@ -57,7 +57,8 @@ installPkgList() {
     [[ ${PKG} =~ ^#.*$ ]] && continue
     [[ ${PKG} =~ ^\\s*$ ]] && continue
     echo ">>> ${PKG}"
-    eval "${1} ${PKG}"
+    cmd=$(printf '%s %s' "${1}" "${PKG}")
+    eval "${cmd}"
   done <"${2}"
   cd "${INSTALLDIR}" || exit
 }

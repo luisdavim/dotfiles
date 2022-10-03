@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+dotfiles_dir="$(dirname "$0")"
 source "${dotfiles_dir}/lib.sh"
 
 if [[ $OSTYPE != *"android"* ]]; then
