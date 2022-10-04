@@ -197,7 +197,7 @@ installFonts() {
   chmod 664 DroidSansMonoForPowerlinePlusNerdFileTypes.otf
   mv ./*.otf "${HOME}"/Library/Fonts
   curl -sfLO https://github.com/powerline/powerline/raw/develop/font/PowerlineSymbols.otf
-  sudo mv PowerlineSymbols.otf "${HOME}"/Library/Fonts/
+  mv PowerlineSymbols.otf "${HOME}"/Library/Fonts/
   git_clone_or_update https://github.com/pdf/ubuntu-mono-powerline-ttf.git "${HOME}/Library/Fonts/ubuntu-mono-powerline-ttf"
   cd "${INSTALLDIR}" || exit
 }
@@ -240,9 +240,9 @@ installDotFiles() {
   mkdir -p $(brew --prefix)/etc/bash_completion.d
   cp files/shell/bash/bash_aliases_completion $(brew --prefix)/etc/bash_completion.d/
   curl -sfLo knife_autocomplete https://raw.githubusercontent.com/wk8/knife-bash-autocomplete/master/knife_autocomplete.sh
-  sudo mv knife_autocomplete $(brew --prefix)/etc/bash_completion.d/
+  mv knife_autocomplete $(brew --prefix)/etc/bash_completion.d/
   curl -sfLo kitchen-completion https://raw.githubusercontent.com/MarkBorcherding/test-kitchen-bash-completion/master/kitchen-completion.bash
-  sudo mv kitchen-completion $(brew --prefix)/etc/bash_completion.d/
+  mv kitchen-completion $(brew --prefix)/etc/bash_completion.d/
 
   cd "${INSTALLDIR}" || exit
 }
