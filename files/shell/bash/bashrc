@@ -193,12 +193,19 @@ fi
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
 if ! shopt -oq posix; then
-  export BASH_COMPLETION_COMPAT_DIR="/usr/local/etc/bash_completion.d"
+  BASH_COMPLETION_COMPAT_DIR="/usr/local/etc/bash_completion.d"
+  if [ ! -d "$BASH_COMPLETION_COMPAT_DIR" ]; then
+    BASH_COMPLETION_COMPAT_DIR="${HOMEBREW_PREFIX}/etc/bash_completion.d"
+  fi
+  export BASH_COMPLETION_COMPAT_DIR
   [ -f /etc/bash_completion ] && . /etc/bash_completion
   [ -f /usr/share/bash-completion/bash_completion ] && . /usr/share/bash-completion/bash_completion
   [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
   [ -f /usr/local/share/bash-completion/bash_completion ] && . /usr/local/share/bash-completion/bash_completion
   [ -f /usr/local/etc/profile.d/bash_completion.sh ] && . /usr/local/etc/profile.d/bash_completion.sh
+  [ -f ${HOMEBREW_PREFIX}/etc/bash_completion ] && . ${HOMEBREW_PREFIX}/etc/bash_completion
+  [ -f ${HOMEBREW_PREFIX}/share/bash-completion/bash_completion ] && . ${HOMEBREW_PREFIX}/share/bash-completion/bash_completion
+  [ -f ${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh ] && . ${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh
 fi
 
 # [ -x "$(command -v aws_completer)" ] && complete -C 'aws_completer' aws
@@ -214,15 +221,16 @@ fi
 
 [ -x "$(command -v thefuck)" ] && eval "$(thefuck --alias)"
 
+[ -f /etc/grc.bashrc ] && source /etc/grc.bashrc
+[ -f /usr/local/etc/grc.bashrc ] && source /usr/local/etc/grc.bashrc
+
 if [ -n "${HOMEBREW_PREFIX}" ]; then
   [ ! -f "${HOMEBREW_PREFIX}/opt/asdf/asdf.sh" ] || source "${HOMEBREW_PREFIX}/opt/asdf/asdf.sh"
   [ ! -f "${HOMEBREW_PREFIX}/opt/asdf/etc/bash_completion.d/asdf.bash" ] || source "${HOMEBREW_PREFIX}/opt/asdf/etc/bash_completion.d/asdf.bash"
+  [ ! -f "${HOMEBREW_PREFIX}/etc/grc.sh" ] || source "${HOMEBREW_PREFIX}/etc/grc.sh"
 fi
 
 [ "$OSTYPE" == "linux-gnu" ] && source /etc/profile.d/vte-2.91.sh
-
-[ -f /etc/grc.bashrc ] && source /etc/grc.bashrc
-[ -f /usr/local/etc/grc.bashrc ] && source /usr/local/etc/grc.bashrc
 
 # gitprompt configuration
 

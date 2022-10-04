@@ -82,7 +82,7 @@ brew_launchctl_restart() {
   local plist="$domain.plist"
 
   mkdir -p "${HOME}/Library/LaunchAgents"
-  ln -sfv "/usr/local/opt/$name/$plist" "${HOME}/Library/LaunchAgents"
+  ln -sfv "$(brew --prefix)/opt/$name/$plist" "${HOME}/Library/LaunchAgents"
 
   if launchctl list | grep -Fq "$domain"; then
     launchctl unload "${HOME}/Library/LaunchAgents/$plist" >/dev/null
@@ -237,12 +237,12 @@ installDotFiles() {
     fi
   done
 
-  mkdir -p /usr/local/etc/bash_completion.d
-  cp files/shell/bash/bash_aliases_completion /usr/local/etc/bash_completion.d/
+  mkdir -p $(brew --prefix)/etc/bash_completion.d
+  cp files/shell/bash/bash_aliases_completion $(brew --prefix)/etc/bash_completion.d/
   curl -sfLo knife_autocomplete https://raw.githubusercontent.com/wk8/knife-bash-autocomplete/master/knife_autocomplete.sh
-  sudo mv knife_autocomplete /usr/local/etc/bash_completion.d/
+  sudo mv knife_autocomplete $(brew --prefix)/etc/bash_completion.d/
   curl -sfLo kitchen-completion https://raw.githubusercontent.com/MarkBorcherding/test-kitchen-bash-completion/master/kitchen-completion.bash
-  sudo mv kitchen-completion /usr/local/etc/bash_completion.d/
+  sudo mv kitchen-completion $(brew --prefix)/etc/bash_completion.d/
 
   cd "${INSTALLDIR}" || exit
 }

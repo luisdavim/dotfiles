@@ -1,4 +1,4 @@
-access-matrix
+  access-matrix
 bulk-action
 ca-cert
 ctx
@@ -33,3 +33,4 @@ tree
 view-secret
 view-utilization
 who-can
+whoami

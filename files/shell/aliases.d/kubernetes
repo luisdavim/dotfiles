@@ -221,6 +221,8 @@ function helmsman-adopt() {
   kubectl label secret -n ${2} -l name=${1} --overwrite HELMSMAN_CONTEXT=${3:-default} MANAGED-BY=HELMSMAN NAMESPACE=${2}
 }
 
+alias kubectl='kctl'
+
 # Minikube
 function mk() {
   export KUBECONFIG=~/.kube/config.d/minikube

@@ -230,7 +230,9 @@ alias -s {yml,yaml,json}=$EDITOR
 [[ ! -f /usr/local/opt/fzf/shell/key-bindings.zsh ]] || source /usr/local/opt/fzf/shell/key-bindings.zsh
 
 if [ -n "${HOMEBREW_PREFIX}" ]; then
-  [[ ! -f ${HOMEBREW_PREFIX}/opt/asdf/asdf.sh ]] || source ${HOMEBREW_PREFIX}/opt/asdf/asdf.sh
+  [ ! -f "${HOMEBREW_PREFIX}/etc/grc.zshrc" ] || source "${HOMEBREW_PREFIX}/etc/grc.zshrc"
+  [[ ! -f "${HOMEBREW_PREFIX}/opt/fzf/shell/key-bindings.zsh" ]] || source "${HOMEBREW_PREFIX}/opt/fzf/shell/key-bindings.zsh"
+  [[ ! -f "${HOMEBREW_PREFIX}/opt/asdf/asdf.sh" ]] || source "${HOMEBREW_PREFIX}/opt/asdf/asdf.sh"
 fi
 
 export CONFIGURED="true"

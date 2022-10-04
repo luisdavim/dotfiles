@@ -114,6 +114,7 @@ git-credential-manager
 git-delta
 git-extras
 git-quick-stats
+git-secret
 git-secrets
 glab
 glow
