@@ -238,7 +238,7 @@ export AWS_PAGER="bat -p ${AWS_PAGER_OPTS}"
 export GRC_ALIASES=true
 
 # GO config
-GOPROXY=https://proxy.golang.org
+GOPROXY="https://proxy.golang.org,direct"
 GO111MODULE=on
 GOVIM_GOPLS_FLAGS=-remote=auto
 
