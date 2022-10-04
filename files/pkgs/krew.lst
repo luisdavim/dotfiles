@@ -8,6 +8,7 @@ doctor
 edit-status
 exec-all
 get-all
+konfig
 krew
 modify-secret
 mtail
@@ -15,6 +16,7 @@ neat
 node-restart
 node-shell
 ns
+oidc-login
 pod-dive
 pod-inspect
 pod-logs
