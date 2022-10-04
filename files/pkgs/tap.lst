@@ -1,5 +1,7 @@
 # reactiveops/tap
 FairwindsOps/tap
+aws/tap
+bazelbuild/tap
 browsh-org/homebrew-browsh
 buo/cask-upgrade
 caarlos0/tap
@@ -11,15 +13,20 @@ crisidev/homebrew-chunkwm
 datawire/blackbird
 derailed/k9s
 derailed/popeye
+dkanejs/aws-session-manager-plugin
 egison/egison
 eth-p/software
 gardener/tap
 git-chglog/git-chglog
+golangci/tap
 habitat-sh/habitat
 hashicorp/tap
 helix-editor/helix
+homebrew/cask
 homebrew/cask-drivers
 homebrew/cask-fonts
+homebrew/cask-fonts
+homebrew/cask-versions
 homebrew/cask-versions
 homebrew/command-not-found
 homebrew/services
@@ -31,6 +38,7 @@ jzelinskie/faq
 knes1/tap
 knqyf263/pet
 koekeishiya/formulae
+komiserio/komiser
 kontena/chpharos
 kube-score/tap
 little-angry-clouds/homebrew-my-brews
@@ -39,6 +47,7 @@ mike-engel/jwt-cli
 neovim/neovim
 norwoodj/tap
 reconquest/tubekit https://github.com/reconquest/tubekit.git
+robscott/tap
 tidwall/jj
 ubuntu/microk8s
 universal-ctags/universal-ctags

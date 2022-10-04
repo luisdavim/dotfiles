@@ -408,7 +408,7 @@ installBashConf() {
   git_clone_or_update https://github.com/jonmosco/kube-ps1.git "${HOME}/.bash/kube-ps1"
   git_clone_or_update https://github.com/milkbikis/powerline-shell "${HOME}/.bash/powerline-shell"
 
-  source "${HOME}"/.bash_profile
+  source "${HOME}/.bash_profile"
 }
 
 installFishConf() {

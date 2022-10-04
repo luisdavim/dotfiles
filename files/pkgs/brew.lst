@@ -1,4 +1,5 @@
 # awless
+# bats
 # bosh-cli
 # bosh-init
 # chunkwm
@@ -26,15 +27,17 @@ asdf
 autopep8
 avfs
 aws-iam-authenticator
+aws-session-manager-plugin
 aws-shell
 awscli
+awsume
 azure-cli
 bandwhich
 bash
 bash-completion@2
 bat
 bat-extras
-bats
+bats-core
 bbl
 bfg
 binutils
@@ -51,7 +54,9 @@ certbot
 cf-cli
 cfssl
 chafa
+checkov
 chpharos
+chrome-cli
 cmake
 coffeescript
 colima
@@ -97,6 +102,7 @@ findutils
 fluxctl
 fq
 fx
+fzf
 gardenctl
 gawk
 gcal
@@ -117,7 +123,6 @@ gnu-tar
 gnu-time
 go-jira
 golang
-golangci-lint
 golangci-lint
 goreleaser
 gotags
@@ -183,6 +188,7 @@ legit
 lesspipe
 lf
 libmagic
+libressl
 libsecret
 lima
 llvm
@@ -206,7 +212,6 @@ node
 nushell
 openshift-cli
 openssl
-openssl
 operator-sdk
 oras
 p7zip
@@ -222,6 +227,7 @@ popeye
 pre-commit
 prettyping
 procs
+protobuf
 pssh
 pstree
 pt
@@ -292,6 +298,7 @@ ttyd
 ttyplot
 tubekit
 ufraw
+unzip
 vagrant-completion
 vault
 vegeta

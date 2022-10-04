@@ -3,6 +3,7 @@ bulk-action
 ca-cert
 ctx
 debug-shell
+df-pv
 doctor
 edit-status
 exec-all
