@@ -26,7 +26,7 @@ function kctl() {
   if [ -x "$(command -v grc)" ]  && [[ "$CMD" != "modify-secret" ]]&& [[ "$CMD" != "edit" ]] && [[ "$CMD" != "exec" ]] && [[ "$CMD" != "ssh" ]] && [[ "$CMD" != "access-matrix" ]] && [[ "$CMD" != *"shell"* ]]; then
     COLOR="grc -es --colour=auto"
   fi
-  local args=(${COLOR} kubectl ${CMD})
+  local args=(${COLOR} \kubectl ${CMD})
   for arg in ${@}; do
     args+=( "$(printf '%q' "$arg")" )
   done
@@ -41,13 +41,14 @@ alias kvs='kctl view-secret'
 alias keds='command kubectl modify-secret'
 alias ked='command kubectl edit'
 alias krr='kctl rollout restart'
+alias kubectl='kctl'
 
 function kgy() {
-  kubectl get ${@} -o yaml | bat --paging never --theme ${BAT_THEME:-TwoDark} -p -l yaml
+  \kubectl get ${@} -o yaml | bat --paging never --theme ${BAT_THEME:-TwoDark} -p -l yaml
 }
 
 function kgj() {
-  kubectl get ${@} -o json | bat --paging never --theme ${BAT_THEME:-TwoDark} -p -l json
+  \kubectl get ${@} -o json | bat --paging never --theme ${BAT_THEME:-TwoDark} -p -l json
 }
 
 function kubectl-printenv() {
@@ -57,18 +58,18 @@ alias kprintenv='kubectl-printenv'
 alias kpe='kubectl-printenv'
 
 function kubectl-diff() {
-  kubectl diff ${@} | delta -s
+  \kubectl diff ${@} | delta -s
 }
 alias kdiff='kubectl-diff'
 
 function kubectl-getNotReady(){
   filter='.items[]| select(.status != null)|select(.status.conditions[] != null)|select([.status.conditions[]|select(.type == "Ready" and .status == "False")]|length == 1)| .metadata.name'
-  kubectl get ${@} -o json | jq -r "${filter}"
+  \kubectl get ${@} -o json | jq -r "${filter}"
 }
 alias kgnr='kctl getNotReady'
 
 function kubectl-leader() {
-  kubectl -n kube-system get ep kube-scheduler -o json | jq -r '.metadata.annotations."control-plane.alpha.kubernetes.io/leader"' | jq -r '.holderIdentity' | cut -d_ -f1
+  \kubectl -n kube-system get ep kube-scheduler -o json | jq -r '.metadata.annotations."control-plane.alpha.kubernetes.io/leader"' | jq -r '.holderIdentity' | cut -d_ -f1
 }
 
 function kubectl-events() {
@@ -108,8 +109,8 @@ function kubectl-cfg() {
   case "$1" in
     split)
       mkdir -p "${CFG_DIR}"
-      for ctx in $(kubectl --kubeconfig="${CFG}" config get-contexts -o name); do
-        kubectl --kubeconfig="${CFG}" config view --minify --context=${ctx} > "${CFG_DIR}/${ctx}"
+      for ctx in $(\kubectl --kubeconfig="${CFG}" config get-contexts -o name); do
+        \kubectl --kubeconfig="${CFG}" config view --minify --context=${ctx} > "${CFG_DIR}/${ctx}"
       done
       if [[ "$2" == "-p" ]] || [[ "$2" == "--purge" ]]; then
         rm "${CFG}"
@@ -124,10 +125,10 @@ function kubectl-cfg() {
       fi
       if [[ "$2" == "all" ]]; then
         for CTX in $(ls -1 ${CFG_DIR}); do
-          KUBECONFIG="${DST}:${CFG_DIR}/${CTX}" kubectl config view --flatten >> ${DST}
+          KUBECONFIG="${DST}:${CFG_DIR}/${CTX}" \kubectl config view --flatten >> ${DST}
         done
       else
-        KUBECONFIG="${DST}:${2}" kubectl config view --flatten >> ${DST}
+        KUBECONFIG="${DST}:${2}" \kubectl config view --flatten >> ${DST}
       fi
       ;;
     *)
@@ -140,18 +141,18 @@ function kubectl-cfg() {
 alias kcfg='kubectl-cfg'
 
 function kubectl-enter() {
-  kubectl exec -ti ${@} -- sh
+  \kubectl exec -ti ${@} -- sh
 }
 alias kctl-enter='kubectl-enter'
 
-function kexec(){ pod=$1; shift; command kubectl exec -it $pod -- $@; }
+function kexec(){ pod=$1; shift; \kubectl exec -it $pod -- $@; }
 alias kctl-exec='kexec'
 
-function krun() { name=$1; shift; image=$1; shift; command kubectl run -it --generator=run-pod/v1 --image $image $name -- $@; }
+function krun() { name=$1; shift; image=$1; shift; \kubectl run -it --generator=run-pod/v1 --image $image $name -- $@; }
 alias kctl-run='krun'
 
 function kubectl-remote_shell() {
-  command kubectl ${@} run --restart=Never --rm -i --tty debug --image=quay.io/giantswarm/debug -- sh
+  \kubectl ${@} run --restart=Never --rm -i --tty debug --image=quay.io/giantswarm/debug -- sh
 }
 alias kctl-shell='kubectl-remote_shell'
 alias kube-shell='kubectl-remote_shell'
@@ -165,9 +166,9 @@ function kubectl-purge_crd() {
     echo 'please provide a CRD name'
     return
   fi
-  kubectl get ${1} --all-namespaces --no-headers | awk '{print $2 " -n " $1}' | xargs -L1 -r kubectl patch -p '{"metadata":{"finalizers": []}}' --type=merge ${1};
-  kubectl get ${1} --all-namespaces --no-headers | awk '{print $2 " -n " $1}' | xargs -L1 -r kubectl delete ${1};
-  kubectl api-resources -o name | grep "${1}" | awk '{print $1}' | xargs -r kubectl delete crd
+  \kubectl get ${1} --all-namespaces --no-headers | awk '{print $2 " -n " $1}' | xargs -L1 -r \kubectl patch -p '{"metadata":{"finalizers": []}}' --type=merge ${1};
+  \kubectl get ${1} --all-namespaces --no-headers | awk '{print $2 " -n " $1}' | xargs -L1 -r \kubectl delete ${1};
+  \kubectl api-resources -o name | grep "${1}" | awk '{print $1}' | xargs -r \kubectl delete crd
 }
 alias kctl-clean_crd='kubectl-purge_crd'
 
@@ -200,7 +201,7 @@ alias helm-plugin-update='helm plugin list | awk '\''!/NAME/ {print $1}'\'' | xa
 function helm-clean() {
   NS=${1:-kube-system}
   if [[ "${NS}" == "all" ]]; then
-    NS=$(kubectl get ns --no-headers -o custom-columns='NAME:.metadata.name')
+    NS=$(\kubectl get ns --no-headers -o custom-columns='NAME:.metadata.name')
   fi
   for N in ${NS}; do
     echo "Looking for ConfigMaps in ${N}:"
@@ -212,16 +213,14 @@ function helm-clean() {
 
 function helm-getSecrets() {
   HELM_HOME="${HELM_HOME:-~/.helm}"
-  kubectl get secret -n kube-system tiller-secret -o go-template='{{index .data "ca.crt"| base64decode}}' > $HELM_HOME/ca.pem
-  kubectl get secret -n kube-system tiller-secret -o go-template='{{index .data "tls.crt"| base64decode}}' > $HELM_HOME/cert.pem
-  kubectl get secret -n kube-system tiller-secret -o go-template='{{index .data "tls.key"| base64decode}}' > $HELM_HOME/key.pem
+  \kubectl get secret -n kube-system tiller-secret -o go-template='{{index .data "ca.crt"| base64decode}}' > $HELM_HOME/ca.pem
+  \kubectl get secret -n kube-system tiller-secret -o go-template='{{index .data "tls.crt"| base64decode}}' > $HELM_HOME/cert.pem
+  \kubectl get secret -n kube-system tiller-secret -o go-template='{{index .data "tls.key"| base64decode}}' > $HELM_HOME/key.pem
 }
 
 function helmsman-adopt() {
   kubectl label secret -n ${2} -l name=${1} --overwrite HELMSMAN_CONTEXT=${3:-default} MANAGED-BY=HELMSMAN NAMESPACE=${2}
 }
-
-alias kubectl='kctl'
 
 # Minikube
 function mk() {
@@ -258,7 +257,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 
 # Velero aliases
-alias velero='kubectl exec -it -n velero ${VELRO:-$(kubectl get pods -n velero | grep velero | awk '\''{ print $1}'\'')} -- /velero'
+alias velero='\kubectl exec -it -n velero ${VELRO:-$(\kubectl get pods -n velero | grep velero | awk '\''{ print $1}'\'')} -- /velero'
 
 # Gardener aliases
 alias gctl='gardenctl'
