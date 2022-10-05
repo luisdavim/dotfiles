@@ -110,8 +110,9 @@ function kubectl-cfg() {
     split)
       mkdir -p "${CFG_DIR}"
       for ctx in $(\kubectl --kubeconfig="${CFG}" config get-contexts -o name); do
-        \kubectl --kubeconfig="${CFG}" config view --minify --context=${ctx} > "${CFG_DIR}/${ctx}"
+        \kubectl --kubeconfig="${CFG}" config view --minify --flatten --raw --context=${ctx} > "${CFG_DIR}/${ctx}"
       done
+      chmod 600 "${CFG_DIR}/*"
       if [[ "$2" == "-p" ]] || [[ "$2" == "--purge" ]]; then
         rm "${CFG}"
       fi
@@ -120,15 +121,16 @@ function kubectl-cfg() {
       DST=${3:-~/.kube/config}
       if [ -z "$2" ]; then
         echo 'Usage:'
-        echo 'kcfg merge <source_cfg> [<dest_cfg>]'
+        echo -e '\tkcfg merge <source_cfg> [<dest_cfg>]'
+        echo -e '\tuse "all" as source_cfg to merge all configuration files'
         return 1
       fi
       if [[ "$2" == "all" ]]; then
         for CTX in $(ls -1 ${CFG_DIR}); do
-          KUBECONFIG="${DST}:${CFG_DIR}/${CTX}" \kubectl config view --flatten >> ${DST}
+          KUBECONFIG="${DST}:${CFG_DIR}/${CTX}" \kubectl config view --flatten --raw >> ${DST}
         done
       else
-        KUBECONFIG="${DST}:${2}" \kubectl config view --flatten >> ${DST}
+        KUBECONFIG="${DST}:${2}" \kubectl config view --flatten --raw >> ${DST}
       fi
       ;;
     *)
