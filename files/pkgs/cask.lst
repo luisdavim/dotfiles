@@ -10,6 +10,8 @@
 # oni
 # pingplotter
 # skype-for-business
+# webex-nbr-player
+# webex-wrf-player
 alacritty
 android-file-transfer
 android-platform-tools
@@ -72,8 +74,6 @@ viber
 virtualbox
 virtualbox-extension-pack
 visual-studio-code
-webex-nbr-player
-webex-wrf-player
 whatsapp
 wireshark
 zoom

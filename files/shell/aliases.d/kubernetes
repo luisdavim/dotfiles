@@ -187,6 +187,7 @@ alias kindenv='export KUBECONFIG=~/.kube/kind-config'
 # Helm aliases
 alias hup='helm upgrade --install --atomic --cleanup-on-fail'
 alias hls='helm list -a'
+alias hla='helm list -aA'
 alias hga='helm get all'
 alias hgav='helm get values --all'
 alias hgv='helm get values'

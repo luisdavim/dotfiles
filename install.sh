@@ -620,7 +620,7 @@ case "$CMD" in
   installHelmPlugins
   ;;
 *)
-  installOSSpecific "${CMD}" "${ARGS{@}}"
+  installOSSpecific "${CMD}" "${ARGS[@]}"
   if [ -z "${CMD}" ] || [[ ${CMD} == "all" ]]; then
     installAll
   fi

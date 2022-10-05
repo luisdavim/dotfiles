@@ -191,7 +191,6 @@ let g:coc_global_extensions = [
       \ 'coc-phpls',
       \ 'coc-powershell',
       \ 'coc-prettier',
-      \ 'coc-pyls',
       \ 'coc-pyright',
       \ 'coc-rls',
       \ 'coc-rust-analyzer',

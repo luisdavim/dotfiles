@@ -45,6 +45,7 @@ pyflakes
 pygments-style-tomorrownightbright
 pyhcl
 pyinstaller
+pylance
 pylint
 pyls
 pyobjc

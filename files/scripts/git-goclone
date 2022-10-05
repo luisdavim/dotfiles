@@ -86,20 +86,20 @@ else
   exit 1
 fi
 
-path=${workspace}/src/$(echo "${hostname}/${user}/${repo}" | sed -e 's/\.git$//g')
-
 # Check if the workspace passed by the user is a number
 # and get the corresponding workspace from GOPATH
 re='^[+-]?[0-9]+([.][0-9]+)?$'
 if [[ $w =~ $re ]]; then
   saveIFS=$IFS
   IFS=":"
-  workspace=($GOPATH)
+  gowsp=($GOPATH)
   IFS=$saveIFS
-  workspace=${workspace[${w}]}
+  workspace=${gowsp[${w}]}
 else
   workspace=$w
 fi
+
+path=${workspace}/src/$(echo "${hostname}/${user}/${repo}" | sed -e 's/\.git$//g')
 
 if [[ ${DEBUG} == "true" ]]; then
   echo "Cloning ${url} into: ${path}"
