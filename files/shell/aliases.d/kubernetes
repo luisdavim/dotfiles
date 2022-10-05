@@ -88,16 +88,18 @@ function kubectl-ctx() {
   fi
   CFG_DIR=~/.kube/config.d
   if [ -d "${CFG_DIR}" ] && [[ "$KUBECONFIG" != "~/.kube/config" ]]; then
-    if [ -n "$1" ]; then
-      if [ -f "${CFG_DIR}/${1}" ]; then
-        export KUBECONFIG="${CFG_DIR}/${1}"
-        return
-      fi
-    else
-      CTX=$(ls -1 ${CFG_DIR}/ | fzf)
-      export KUBECONFIG="${CFG_DIR}/${CTX}"
+    if [ -n "$1" ] && [ -f "${CFG_DIR}/${1}" ]; then
+      export KUBECONFIG="${CFG_DIR}/${1}"
       return
     fi
+    files=$(find "${CFG_DIR}/" -type f -name "*${1}*" -printf "%f\n")
+    if [ $(wc -l <<< "${files}") -eq 1 ]; then
+      export KUBECONFIG="${CFG_DIR}/${files}"
+      return
+    fi
+    CTX=$(echo "${files}"| fzf)
+    export KUBECONFIG="${CFG_DIR}/${CTX}"
+    return
   fi
   kubectx "${@}"
 }
