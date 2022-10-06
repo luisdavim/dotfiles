@@ -72,6 +72,11 @@ function kubectl-leader() {
   \kubectl -n kube-system get ep kube-scheduler -o json | jq -r '.metadata.annotations."control-plane.alpha.kubernetes.io/leader"' | jq -r '.holderIdentity' | cut -d_ -f1
 }
 
+function kubectl-default-ingressclass() {
+  \kubectl get ingressclass -o yaml | yq '.items[]|select(.metadata.annotations."ingressclass.kubernetes.io/is-default-class" == "true")'
+}
+alias kgdic='kubectl-default-ingressclass'
+
 function kubectl-events() {
   FILTER=""
   if [ -n "$1" ]; then
@@ -93,8 +98,8 @@ function kubectl-ctx() {
       return
     fi
     # files=$(find "${CFG_DIR}/" -type f -name "*${1}*" -printf "%f\n")
-    files=$(ls -1 ${CFG_DIR}/ | fzf --filter="${1}")
-    l=$(echo -n "${files}" | wc -l)
+    files=$(ls -1 "${CFG_DIR}/" | fzf --filter="${1}")
+    l=$(echo -n "${files}" | grep -c '^')
     if [ $l -eq 0 ]; then
       echo "no matching context found"
       return
@@ -103,8 +108,8 @@ function kubectl-ctx() {
       export KUBECONFIG="${CFG_DIR}/${files}"
       return
     fi
-    CTX=$(echo "${files}"| fzf)
-    if [ ! -f "${CTX}" ]; then
+    CTX=$(echo -n "${files}"| fzf)
+    if [ ! -f "${CFG_DIR}/${CTX}" ]; then
       echo "no matching context found"
       return
     fi
