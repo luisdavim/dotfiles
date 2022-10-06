@@ -92,12 +92,22 @@ function kubectl-ctx() {
       export KUBECONFIG="${CFG_DIR}/${1}"
       return
     fi
-    files=$(find "${CFG_DIR}/" -type f -name "*${1}*" -printf "%f\n")
-    if [ $(wc -l <<< "${files}") -eq 1 ]; then
+    # files=$(find "${CFG_DIR}/" -type f -name "*${1}*" -printf "%f\n")
+    files=$(ls -1 ${CFG_DIR}/ | fzf --filter="${1}")
+    l=$(echo -n "${files}" | wc -l)
+    if [ $l -eq 0 ]; then
+      echo "no matching context found"
+      return
+    fi
+    if [ $l -eq 1 ]; then
       export KUBECONFIG="${CFG_DIR}/${files}"
       return
     fi
     CTX=$(echo "${files}"| fzf)
+    if [ ! -f "${CTX}" ]; then
+      echo "no matching context found"
+      return
+    fi
     export KUBECONFIG="${CFG_DIR}/${CTX}"
     return
   fi
