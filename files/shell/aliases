@@ -95,7 +95,7 @@ function fawk() {
 function hgrep() {
   if [ ! -z "$1" ]; then
     echo -e '#ID\t#USER\t#SEQ\t#DATE TIME\t#DURATION\t#COMMAND'
-    grep "${1}" $_eternal_history_histfile
+    grep --text "${1}" $_eternal_history_histfile
   else
     history
   fi

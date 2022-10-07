@@ -122,6 +122,7 @@ gnu-getopt
 gnu-sed
 gnu-tar
 gnu-time
+go-boring
 go-jira
 golang
 golangci-lint

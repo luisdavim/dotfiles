@@ -414,4 +414,9 @@
   let g:floaterm_height = 0.5
   " }}}
 
+
+  " neoterm {{{
+  let g:neoterm_default_mod = 'horizontal'
+  " }}}
+
 " }}}
