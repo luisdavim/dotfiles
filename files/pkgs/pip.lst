@@ -2,10 +2,13 @@
 # yq
 BlastRadius
 Pygments
+aiohttp
 alacritty-colorscheme
 ansible-test
 aws-ssm-copy
 aws-sso-util
+black
+"black[d]"
 boto
 boto3
 bpython
@@ -49,6 +52,7 @@ pyinstaller
 pylance
 pylint
 pyls
+pyls-black
 pyobjc
 python-language-server
 pyvmomi

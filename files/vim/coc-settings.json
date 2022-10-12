@@ -53,6 +53,7 @@
   "jedi.workspace.symbols.maxSymbols": 20,
   "jedi.workspace.symbols.ignoreFolders": [".nox", ".tox", ".venv", "__pycache__", "venv"],
   "pyright.enable": true,
+  "python.formatting.provider": "black",
   "explorer.quitOnOpen": true,
   "explorer.toggle": true,
   "explorer.focus": true,

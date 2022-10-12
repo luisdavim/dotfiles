@@ -80,6 +80,7 @@ alias grbm='git rebase $(git-main_branch)'
 alias grbr='git rebase --root'
 alias gaf='git amend . && git force'
 alias gtn='git tag $(svu next)'
+alias gpnt='git tag $(svu next) && git push --tags'
 
 alias masterDiff='git diff $(git merge-base --fork-point master)'
 alias latestTag='git describe --tags `git rev-list --tags --max-count=1`'
