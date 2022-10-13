@@ -191,6 +191,7 @@ openssh-sftp-server
 openssl
 openssl-1.1
 openssl-tool
+parallel
 patch
 pcre
 pcre2
