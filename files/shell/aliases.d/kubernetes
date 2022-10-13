@@ -86,10 +86,32 @@ function kubectl-events() {
 }
 alias kctl-events='kubectl-events'
 
+function kubectl-parallel() {
+  CFG_DIR=~/.kube/config.d
+  files=$(ls -1 "${CFG_DIR}/" | fzf --filter="${1}")
+  shift
+
+  echo "${files}" | xargs -P 10 -I {} -r -- sh -c 'C="${1}"; shift; kubectl --kubeconfig=${C}/{} ${@} &> /tmp/{}.kout' -- ${CFG_DIR} ${@}
+
+  for f in ${files}; do
+    echo ">> $f"
+    cat "/tmp/${f}.kout"
+    echo "---"
+  done
+
+  rm /tmp/*.kout
+}
+alias kparallel='kubectl-parallel'
+
 function kubectl-ctx() {
   if [[ "${1}" == "kind" ]]; then
     export KUBECONFIG=~/.kube/kind-config
     return
+  fi
+  LIST_ONLY="false"
+  if [[ "${1}" == '-l' ]]; then
+    LIST_ONLY="true"
+    shift
   fi
   CFG_DIR=~/.kube/config.d
   if [ -d "${CFG_DIR}" ] && [[ "$KUBECONFIG" != "~/.kube/config" ]]; then
@@ -102,6 +124,10 @@ function kubectl-ctx() {
     l=$(echo -n "${files}" | grep -c '^')
     if [ $l -eq 0 ]; then
       echo "no matching context found"
+      return
+    fi
+    if [[ "${LIST_ONLY}" == "true" ]]; then
+      echo "${files}"
       return
     fi
     if [ $l -eq 1 ]; then
@@ -217,6 +243,23 @@ alias htpl='helm template'
 alias htp='helm template'
 
 alias helm-plugin-update='helm plugin list | awk '\''!/NAME/ {print $1}'\'' | xargs -L 1 -r helm plugin update'
+
+function helm-parallel() {
+  CFG_DIR=~/.kube/config.d
+  files=$(ls -1 "${CFG_DIR}/" | fzf --filter="${1}")
+  shift
+
+  echo "${files}" | xargs -P 10 -I {} -r -- sh -c 'C="${1}"; shift; helm --kubeconfig=${C}/{} ${@} &> /tmp/{}.kout' -- ${CFG_DIR} ${@}
+
+  for f in ${files}; do
+    echo ">> $f"
+    cat "/tmp/${f}.kout"
+    echo "---"
+  done
+
+  rm /tmp/*.kout
+}
+alias hparallel='helm-parallel'
 
 function helm-clean() {
   NS=${1:-kube-system}
