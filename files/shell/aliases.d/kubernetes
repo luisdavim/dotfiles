@@ -91,6 +91,13 @@ function kubectl-parallel() {
   files=$(ls -1 "${CFG_DIR}/" | fzf --filter="${1}")
   shift
 
+  echo -e "Running:\n\tkubectl ${*}\non:\n${files}\n---"
+  echo -n "Are you sure? [y/N] "
+  read REPLY
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    return
+  fi
+
   echo "${files}" | xargs -P 10 -I {} -r -- sh -c 'C="${1}"; shift; kubectl --kubeconfig=${C}/{} ${@} &> /tmp/{}.kout' -- ${CFG_DIR} ${@}
 
   for f in ${files}; do
@@ -99,7 +106,7 @@ function kubectl-parallel() {
     echo "---"
   done
 
-  rm /tmp/*.kout
+  rm -f /tmp/*.kout
 }
 alias kparallel='kubectl-parallel'
 
@@ -248,6 +255,13 @@ function helm-parallel() {
   CFG_DIR=~/.kube/config.d
   files=$(ls -1 "${CFG_DIR}/" | fzf --filter="${1}")
   shift
+
+  echo -e "Running:\n\tkubectl ${*}\non:\n${files}\n---"
+  echo -n "Are you sure? [y/N] "
+  read REPLY
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    return
+  fi
 
   echo "${files}" | xargs -P 10 -I {} -r -- sh -c 'C="${1}"; shift; helm --kubeconfig=${C}/{} ${@} &> /tmp/{}.kout' -- ${CFG_DIR} ${@}
 
