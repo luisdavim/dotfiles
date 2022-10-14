@@ -10,6 +10,7 @@ bash-completion
 bat
 binutils
 binutils-gold
+binutils-libs
 boost
 busybox
 bzip2
@@ -35,12 +36,16 @@ exa
 fd
 file
 findutils
+fontconfig
+freetype
 fzf
 gawk
 gdbm
+gdk-pixbuf
 gettext
 gh
 ghc-libs
+giflib
 git
 git-delta
 glib
@@ -98,13 +103,16 @@ icu-devtools
 inetutils
 jq
 jsoncpp
+k9s
 kakoune
 krb5
 kubectl
+kubelogin
 ldns
 less
 libandroid-glob
 libandroid-posix-semaphore
+libandroid-spawn
 libandroid-support
 libarchive
 libassuan
@@ -124,6 +132,7 @@ libexpat
 libffi
 libgc
 libgcrypt
+libgd
 libgit2
 libgmp
 libgnutls
@@ -135,6 +144,7 @@ libicu-static
 libidn
 libidn2
 libjansson
+libjpeg-turbo
 libksba
 libllvm
 liblua53
@@ -148,12 +158,15 @@ libnettle
 libnghttp2
 libnpth
 libpcap
+libpng
 libprotobuf
 libresolv-wrapper
+libsixel
 libsqlite
 libssh2
 libtalloc
 libtermkey
+libtiff
 libtirpc
 libtreesitter
 libunibilium
@@ -161,6 +174,7 @@ libunistring
 libuuid
 libuv
 libvterm
+libwebp
 libxml2
 libyaml
 lld
@@ -232,6 +246,7 @@ tmux
 tracepath
 tree
 tsu
+ttf-dejavu
 unbound
 unzip
 util-linux
@@ -246,3 +261,4 @@ yq
 zlib
 zsh
 zsh-completions
+zstd
