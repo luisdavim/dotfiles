@@ -88,19 +88,21 @@ alias kctl-events='kubectl-events'
 
 function kubectl-parallel() {
   CFG_DIR=~/.kube/config.d
-  files=$(ls -1 "${CFG_DIR}/" | fzf --filter="${1}")
+  ctxs=$(kubectl-get-ctx "${1}")
   shift
 
-  echo -e "Running:\n\tkubectl ${*}\non:\n${files}\n---"
+  echo -e "Running:\n\tkubectl ${*}\non:\n${ctxs}\n---"
   echo -n "Are you sure? [y/N] "
   read REPLY
   if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     return
   fi
+  echo ""
 
-  echo "${files}" | xargs -P 10 -I {} -r -- sh -c 'C="${1}"; shift; kubectl --kubeconfig=${C}/{} ${@} &> /tmp/{}.kout' -- ${CFG_DIR} ${@}
+  # echo "${ctxs}" | xargs -P 10 -I {} -r -- sh -c 'C="${1}"; shift; kubectl --kubeconfig=${C}/{} ${@} &> /tmp/{}.kout' -- ${CFG_DIR} ${@}
+  echo "${ctxs}" | xargs -P 10 -I {} -r -- sh -c 'C="${1}"; shift; eval "kubectl --kubeconfig=${C}/{} ${*} &> /tmp/{}.kout"' -- ${CFG_DIR} ${@}
 
-  for f in ${files}; do
+  for f in ${ctxs}; do
     echo ">> $f"
     cat "/tmp/${f}.kout"
     echo "---"
@@ -109,6 +111,24 @@ function kubectl-parallel() {
   rm -f /tmp/*.kout
 }
 alias kparallel='kubectl-parallel'
+
+function kubectl-get-ctx() {
+  CFG_DIR=~/.kube/config.d
+  if [ -d "${CFG_DIR}" ] && [[ "$KUBECONFIG" != "~/.kube/config" ]]; then
+    if [[ "${1}" == "-z" ]]; then
+      ls -1 "${CFG_DIR}/" | fzf --filter="${1}"
+    else
+      find "${CFG_DIR}/" -type f -name "*${1}*" -printf "%f\n"
+    fi
+    return
+  fi
+
+  if [[ "${1}" == "-z" ]]; then
+    \kubectl config get-contexts -o name | fzf --filter="${1}"
+  else
+    \kubectl config get-contexts -o name | grep "${1}"
+  fi
+}
 
 function kubectl-ctx() {
   if [[ "${1}" == "kind" ]]; then
@@ -253,19 +273,20 @@ alias helm-plugin-update='helm plugin list | awk '\''!/NAME/ {print $1}'\'' | xa
 
 function helm-parallel() {
   CFG_DIR=~/.kube/config.d
-  files=$(ls -1 "${CFG_DIR}/" | fzf --filter="${1}")
+  ctxs=$(kubectl-get-ctx "${1}")
   shift
 
-  echo -e "Running:\n\tkubectl ${*}\non:\n${files}\n---"
+  echo -e "Running:\n\tkubectl ${*}\non:\n${ctxs}\n---"
   echo -n "Are you sure? [y/N] "
   read REPLY
   if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     return
   fi
+  echo ""
 
-  echo "${files}" | xargs -P 10 -I {} -r -- sh -c 'C="${1}"; shift; helm --kubeconfig=${C}/{} ${@} &> /tmp/{}.kout' -- ${CFG_DIR} ${@}
+  echo "${ctxs}" | xargs -P 10 -I {} -r -- sh -c 'C="${1}"; shift; eval "helm --kubeconfig=${C}/{} ${*} &> /tmp/{}.kout"' -- ${CFG_DIR} ${@}
 
-  for f in ${files}; do
+  for f in ${ctxs}; do
     echo ">> $f"
     cat "/tmp/${f}.kout"
     echo "---"
