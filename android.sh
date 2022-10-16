@@ -19,18 +19,31 @@ installPackages() {
   pip install -U pip
   pip install -U pipx
   pip install -U neovim
-  # pip install -U awscliv2
-  # export CARGO_BUILD_TARGET=aarch64-linux-android
-  # pipx install git+https://github.com/aws/aws-cli.git@v2
   installAwsCli
 }
 
 installAwsCli() {
-  curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
-  unzip awscliv2.zip
-  ./aws/install -i ~/.local/aws-cli -b ~/.local/bin --update
-  rm -rf aws
-  rm awscliv2.zip
+  # curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
+  # unzip awscliv2.zip
+  # ./aws/install -i ~/.local/aws-cli -b ~/.local/bin --update
+  # rm -rf aws
+  # rm awscliv2.zip
+
+  export CARGO_BUILD_TARGET=aarch64-linux-android
+
+  # if [ ! -d "${PREFIX}/share/awscli" ]; then
+  #   git clone -b v2 https://github.com/aws/aws-cli.git "${PREFIX}/share/awscli"
+  # fi
+  # cd "${PREFIX}/share/awscli" || return
+  # git checkout .
+  # git pull
+  # pip install -e .
+
+  pipx install git+https://github.com/aws/aws-cli.git@v2
+
+  # pip install -U awscliv2
+
+  cd "${INSTALLDIR}" || exit
 }
 
 installDotFiles() {
@@ -77,6 +90,9 @@ installAll() {
 case "$1" in
 "packages" | "pkgs")
   installPackages
+  ;;
+"awscli")
+  installAwsCli
   ;;
 "dotfiles")
   installDotFiles

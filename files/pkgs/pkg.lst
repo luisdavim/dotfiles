@@ -5,13 +5,18 @@ ambs
 apt
 asciinema
 attr
+autoconf
+automake
 bash
 bash-completion
 bat
+bc
 binutils
 binutils-gold
 binutils-libs
+bison
 boost
+build-essential
 busybox
 bzip2
 c-ares
@@ -36,6 +41,7 @@ exa
 fd
 file
 findutils
+flex
 fontconfig
 freetype
 fzf
@@ -52,6 +58,7 @@ glib
 glow
 gnupg
 golang
+gperf
 gpgv
 grep
 groff
@@ -147,6 +154,7 @@ libjansson
 libjpeg-turbo
 libksba
 libllvm
+libltdl
 liblua53
 libluajit
 liblz4
@@ -168,6 +176,7 @@ libtalloc
 libtermkey
 libtiff
 libtirpc
+libtool
 libtreesitter
 libunibilium
 libunistring
@@ -181,6 +190,7 @@ lld
 llvm
 lsof
 luv
+m4
 make
 man
 mlocate
@@ -217,6 +227,7 @@ proot
 psmisc
 pv
 python
+python-cryptography
 python2
 ranger
 readline
