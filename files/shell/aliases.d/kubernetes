@@ -128,7 +128,8 @@ function kubectl-get-ctx() {
     shift
     \kubectl config get-contexts -o name | fzf --filter="${1}"
   else
-    \kubectl config get-contexts -o name | grep "${1}"
+    re=$(sed 's/[.$]/[&]/g; s/?/./g; s/\*/.*/g; s/\^/\\^/g' <<<"$1")
+    \kubectl config get-contexts -o name | grep "${re}"
   fi
 }
 
