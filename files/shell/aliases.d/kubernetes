@@ -137,10 +137,10 @@ function kubectl-ctx() {
     export KUBECONFIG=~/.kube/kind-config
     return
   fi
-  LIST_ONLY="false"
   if [[ "${1}" == '-l' ]]; then
-    LIST_ONLY="true"
     shift
+    kubectl-get-ctx -z "${1}"
+    return
   fi
   CFG_DIR=~/.kube/config.d
   if [ -d "${CFG_DIR}" ] && [[ "$KUBECONFIG" != "~/.kube/config" ]]; then
@@ -153,10 +153,6 @@ function kubectl-ctx() {
     l=$(echo -n "${files}" | grep -c '^')
     if [ $l -eq 0 ]; then
       echo "no matching context found"
-      return
-    fi
-    if [[ "${LIST_ONLY}" == "true" ]]; then
-      echo "${files}"
       return
     fi
     if [ $l -eq 1 ]; then
