@@ -116,6 +116,7 @@ function kubectl-get-ctx() {
   CFG_DIR=~/.kube/config.d
   if [ -d "${CFG_DIR}" ] && [[ "$KUBECONFIG" != "~/.kube/config" ]]; then
     if [[ "${1}" == "-z" ]]; then
+      shift
       ls -1 "${CFG_DIR}/" | fzf --filter="${1}"
     else
       find "${CFG_DIR}/" -type f -name "*${1}*" -printf "%f\n"
@@ -124,6 +125,7 @@ function kubectl-get-ctx() {
   fi
 
   if [[ "${1}" == "-z" ]]; then
+    shift
     \kubectl config get-contexts -o name | fzf --filter="${1}"
   else
     \kubectl config get-contexts -o name | grep "${1}"
