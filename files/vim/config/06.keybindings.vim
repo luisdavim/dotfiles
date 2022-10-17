@@ -166,7 +166,7 @@
   nnoremap <C-o> :Clap filer<CR>
   nnoremap <C-e> :Clap command<CR>
   nnoremap <C-j> :Clap tags<CR>
-  nnoremap <C-f> :Clap grep2<CR>
+  nnoremap <C-f> :Clap grep<CR>
   nnoremap <C-w>w :Clap windows<CR>
   nnoremap <C-w>b :Clap buffers<CR>
 
@@ -184,7 +184,7 @@
   nnoremap <silent> [clap]q :Clap quickfix<CR>
   nnoremap <silent> [clap]l :Clap loclist<CR>
   nnoremap <silent> [clap]gs :Clap git_diff_files<CR>
-  nnoremap <silent> [clap]gr :Clap grep2<CR>
+  nnoremap <silent> [clap]gr :Clap grep<CR>
   nnoremap <silent> [clap]* :Clap grep ++query=<cword><CR>
   xnoremap <silent> [clap]* :Clap grep ++query=@visual<CR>
   " }}}

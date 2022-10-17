@@ -4,9 +4,9 @@
 function _isFunction() {
   check='declare -F --'
   if [[ "$(ps -p "$$" -o comm=)" == *"zsh" ]]; then
-    check='print -l ${(ok)functions} | grep -w'
+    check='print -l ${(ok)functions[(I)[^_+]*]} | grep -w'
   fi
-  eval "$check $1" >/dev/null
+  [[ "$(eval "$check $1")" == "${1}" ]]
 }
 
 # Extra aliases
