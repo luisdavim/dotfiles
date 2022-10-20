@@ -63,8 +63,8 @@ function kubectl-diff() {
 alias kdiff='kubectl-diff'
 
 function kubectl-getNotReady(){
-  filter='.items[]| select(.status != null)|select(.status.conditions[] != null)|select([.status.conditions[]|select(.type == "Ready" and .status == "False")]|length == 1)| .metadata.name'
-  \kubectl get ${@} -o json | jq -r "${filter}"
+  filter='.items[]| select(.status != null)|select(.status.conditions[] != null)|select([.status.conditions[]|select(.type == "Ready" and .status == "False")]|length == 1)| .metadata.namespace + "\t" + .metadata.name'
+  echo -e "NAMESPACE\tNAME\n$(\kubectl get ${@} -o json | jq -r "${filter}")" | column -t
 }
 alias kgnr='kctl getNotReady'
 
