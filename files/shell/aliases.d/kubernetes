@@ -11,7 +11,7 @@
 # to use GNU watch command instead of kubectl [...] --watch
 # [ -f ~/.kubectl_aliases/.kubectl_aliases ] && source <(cat ~/.kubectl_aliases/.kubectl_aliases | sed -r 's/(kubectl.*) --watch/watch \1/g')
 # to print the full command before running it
-# function kubectl() { echo "+ kubectl $@">&2; command kubectl $@; }
+# function kubectl() { echo "+ kubectl $@">&2; \kubectl $@; }
 
 function kctl() {
   CMD="${1}"
@@ -33,15 +33,15 @@ function kctl() {
   eval "${args[*]}"
 }
 # alias k='kubectl "--context=${KUBECTL_CONTEXT:-$(kubectl config current-context)}" ${KUBECTL_NAMESPACE/[[:alnum:]-]*/--namespace=${KUBECTL_NAMESPACE}}'
-# alias kubectl="kubectl --context \${KUBE_CONTEXT:-\$(command kubectl config current-context)}"
+# alias kubectl="kubectl --context \${KUBE_CONTEXT:-\$(\kubectl config current-context)}"
 alias k='kctl'
 alias kga='kctl get -A'
 alias kd='kctl describe'
 alias kvs='kctl view-secret'
-alias keds='command kubectl modify-secret'
-alias ked='command kubectl edit'
+alias keds='\kubectl modify-secret'
+alias ked='\kubectl edit'
 alias krr='kctl rollout restart'
-alias kubectl='kctl'
+# alias kubectl='kctl'
 
 function kgy() {
   \kubectl get ${@} -o yaml | bat --paging never --theme ${BAT_THEME:-TwoDark} -p -l yaml
@@ -52,7 +52,7 @@ function kgj() {
 }
 
 function kubectl-printenv() {
-  kubectl exec ${@} -- strings /proc/1/environ
+  \kubectl exec ${@} -- strings /proc/1/environ
 }
 alias kprintenv='kubectl-printenv'
 alias kpe='kubectl-printenv'
@@ -63,8 +63,9 @@ function kubectl-diff() {
 alias kdiff='kubectl-diff'
 
 function kubectl-getNotReady(){
-  filter='.items[]| select(.status != null)|select(.status.conditions[] != null)|select([.status.conditions[]|select(.type == "Ready" and .status == "False")]|length == 1)| .metadata.namespace + "\t" + .metadata.name'
-  echo -e "NAMESPACE\tNAME\n$(\kubectl get ${@} -o json | jq -r "${filter}")" | column -t
+  filter='.items[]| select(.status != null)|select(.status.conditions[] != null)|select([.status.conditions[]|select(.type == "Ready" and .status == "False")]|length == 1)'
+  table="([\"NAMESPACE\",\"NAME\"] | (., map(length*\"-\"))),(${filter} | [.metadata.namespace, .metadata.name]) | @tsv"
+  \kubectl get ${@} -o json | jq -r "${table}"
 }
 alias kgnr='kctl getNotReady'
 
