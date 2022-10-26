@@ -1,5 +1,5 @@
-" Set internal encoding of vim, not needed on neovim, since coc.nvim using some
-" unicode characters in the file autoload/float.vim
+" May need for vim (not neovim) since coc.nvim calculate byte offset by count
+" utf-8 byte sequence.
 set encoding=utf-8
 
 " TextEdit might fail if hidden is not set.
