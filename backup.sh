@@ -44,7 +44,8 @@ function backupDotFiles() {
 
 function backupTermux() {
   pkg list-installed | cut -d '/' -f1 | grep -v '\.\.\.' | sort -u >files/pkgs/pkg.lst
-  cp -r "${HOME}/.termux/"* files/termux/
+  cp -r "${HOME}/.termux/"*.* files/termux/
+  cp -r "${HOME}/.termux/".* files/termux/
 }
 
 function backupIterm() {
