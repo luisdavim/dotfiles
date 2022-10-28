@@ -14,10 +14,6 @@ source "${dotfiles_dir}/files/scripts/hashinstall"
 source "${dotfiles_dir}/files/scripts/gobinaries"
 source "${dotfiles_dir}/lib.sh"
 
-getNerdFont() {
-  getFromRawGithub 'ryanoasis/nerd-fonts/' "patched-fonts/${1}" 'latest'
-}
-
 installEls() {
   installFromRawGithub 'AnthonyDiGirolamo/els'
 }

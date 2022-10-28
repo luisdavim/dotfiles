@@ -63,3 +63,6 @@ installPkgList() {
   cd "${INSTALLDIR}" || exit
 }
 
+getNerdFont() {
+  getFromRawGithub 'ryanoasis/nerd-fonts/' "patched-fonts/${1}" 'latest'
+}
