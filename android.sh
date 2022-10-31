@@ -63,7 +63,7 @@ installDotFiles() {
   curl -sfLo kitchen-completion https://raw.githubusercontent.com/MarkBorcherding/test-kitchen-bash-completion/master/kitchen-completion.bash
   mv kitchen-completion "${PREFIX}/etc/bash_completion.d/"
 
-  termux-fix-shebang /data/data/com.termux/files/usr/etc/bash_completion.d/*
+  # termux-fix-shebang /data/data/com.termux/files/usr/etc/bash_completion.d/*
   # grep -lir --exclude-dir=.git '#!' ${HOME}/.bash/ | xargs -n 1 termux-fix-shebang
 
   cd "${INSTALLDIR}" || exit

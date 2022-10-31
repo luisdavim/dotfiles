@@ -229,9 +229,9 @@ installScripts() {
   # installFromRawGithub 'mykeels/slack-theme-cli' 'slack-theme'
   # installFromRawGithub 'smitt04/slack-dark-theme' 'darkSlack.sh'
   installFromGithub 'dotenv-linter/dotenv-linter'
-  if [[ $OSTYPE == *"android"* ]]; then
-    termux-fix-shebang "${HOME}/.local/bin/"*
-  fi
+  # if [[ $OSTYPE == *"android"* ]]; then
+  #   termux-fix-shebang "${HOME}/.local/bin/"*
+  # fi
   installTestssl
   git_clone_or_update https://github.com/wookayin/kitty-tmux.git "${HOME}/.kitty-tmux"
 
