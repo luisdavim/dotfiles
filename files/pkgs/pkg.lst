@@ -3,7 +3,9 @@ amber
 ambr
 ambs
 apt
+arj
 asciinema
+atool
 attr
 autoconf
 automake
@@ -26,6 +28,7 @@ cmake
 colordiff
 command-not-found
 coreutils
+cpio
 ctags
 curl
 dash
@@ -117,6 +120,7 @@ kubectl
 kubelogin
 ldns
 less
+lhasa
 libandroid-glob
 libandroid-posix-semaphore
 libandroid-spawn
@@ -159,6 +163,7 @@ liblua53
 libluajit
 liblz4
 liblzma
+liblzo
 libmd
 libmpfr
 libmsgpack
@@ -190,6 +195,8 @@ lld
 llvm
 lsof
 luv
+lzip
+lzop
 m4
 make
 man
@@ -208,13 +215,14 @@ net-tools
 netcat-openbsd
 nmap
 nmap-ncat
-nodejs
+nodejs-lts
 oniguruma
 openssh
 openssh-sftp-server
 openssl
 openssl-1.1
 openssl-tool
+p7zip
 parallel
 patch
 pcre
@@ -259,6 +267,7 @@ tree
 tsu
 ttf-dejavu
 unbound
+unrar
 unzip
 util-linux
 vim-python
@@ -269,6 +278,7 @@ xxhash
 xz-utils
 yarn
 yq
+zip
 zlib
 zsh
 zsh-completions
