@@ -134,6 +134,20 @@ function kubectl-get-ctx() {
   fi
 }
 
+if [ -d "${CFG_DIR}" ]; then
+  for CTX in $(find ~/.kube/config.d/ -type f); do
+    local cmd="alias k8s-${CTX}='kubectl --kubeconfig ${CTX}'"
+    eval "${cmd}"
+  done
+fi
+
+if [ -f ~/.kube/config ]; then
+  for CTX in $(\kubectl config get-contexts -o name); do
+    local cmd="alias k8s-${CTX}='kubectl --context ${CTX}'"
+    eval "${cmd}"
+  done
+fi
+
 function kubectl-ctx() {
   if [[ "${1}" == "kind" ]]; then
     export KUBECONFIG=~/.kube/kind-config

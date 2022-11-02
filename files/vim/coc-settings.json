@@ -13,7 +13,6 @@
   "go.checkForUpdates": "install",
   "go.goplsUseDaemon": true,
   "go.goplsOptions": {
-    "local": "gecgithub01.walmart.com",
     "staticcheck": true,
     "usePlaceholders": true,
     "completeUnimported": true,
