@@ -135,15 +135,19 @@ function kubectl-get-ctx() {
 }
 
 if [ -d ~/.kube/config.d ]; then
-  for CTX in $(find ~/.kube/config.d/ -type f); do
-    local cmd="alias k8s-${CTX}='kubectl --kubeconfig ${CTX}'"
+  for CTX in $(find ~/.kube/config.d/ -type f -printf "%f\n"); do
+    local cmd="alias k8s-${CTX/#${USER}-}='kubectl --kubeconfig ${HOME}/.kube/config.d/${CTX}'"
+    eval "${cmd}"
+    local cmd="alias helm-${CTX/#${USER}-}='helm --kubeconfig ${HOME}/.kube/config.d/${CTX}'"
     eval "${cmd}"
   done
 fi
 
 if [ -f ~/.kube/config ]; then
   for CTX in $(\kubectl config get-contexts -o name); do
-    local cmd="alias k8s-${CTX}='kubectl --context ${CTX}'"
+    local cmd="alias k8s-${CTX/#${USER}-}='kubectl --context ${CTX}'"
+    eval "${cmd}"
+    local cmd="alias helm-${CTX/#${USER}-}='helm --context ${CTX}'"
     eval "${cmd}"
   done
 fi
