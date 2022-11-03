@@ -134,7 +134,7 @@ function kubectl-get-ctx() {
   fi
 }
 
-if [ -d "${CFG_DIR}" ]; then
+if [ -d ~/.kube/config.d ]; then
   for CTX in $(find ~/.kube/config.d/ -type f); do
     local cmd="alias k8s-${CTX}='kubectl --kubeconfig ${CTX}'"
     eval "${cmd}"
