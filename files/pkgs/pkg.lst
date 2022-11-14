@@ -14,6 +14,7 @@ bash-completion
 bat
 bc
 binutils
+binutils-bin
 binutils-gold
 binutils-libs
 bison
@@ -201,6 +202,7 @@ m4
 make
 man
 mlocate
+monolith
 mosh
 multitail
 nano
@@ -215,7 +217,7 @@ net-tools
 netcat-openbsd
 nmap
 nmap-ncat
-nodejs-lts
+nodejs
 oniguruma
 openssh
 openssh-sftp-server
@@ -242,8 +244,10 @@ readline
 resolv-conf
 rhash
 ripgrep
+ripsecrets
 ruby
 runit
+rush
 rust
 screenfetch
 sed
@@ -262,6 +266,7 @@ termux-licenses
 termux-services
 termux-tools
 tmux
+topgrade
 tracepath
 tree
 tsu
@@ -272,14 +277,18 @@ unzip
 util-linux
 vim-python
 vim-runtime
+viu
 w3m
 wget
+xh
 xxhash
 xz-utils
 yarn
 yq
+zellij
 zip
 zlib
+zoxide
 zsh
 zsh-completions
 zstd
