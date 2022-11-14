@@ -1,3 +1,4 @@
+"black[d]"
 # ansible
 # yq
 BlastRadius
@@ -8,12 +9,12 @@ ansible-test
 aws-ssm-copy
 aws-sso-util
 black
-"black[d]"
 boto
 boto3
 bpython
 click
 container-transform
+dagger-io
 docformatter
 docker
 dreampie

@@ -14,17 +14,6 @@ alias docker-gc='docker rmi $(docker images -f "dangling=true" -q)'
 alias docker-exec="docker exec -i -t"
 alias docker-vm="screen $HOME/Library/Containers/com.docker.docker/Data/vms/0/tty"
 
-alias docker-start='colima start --mount $HOME/workingCopies:w'
-alias docker-stop='colima stop'
-alias docker-delete='colima delete'
-
-alias containerd-start='colima start --runtime containerd --mount $HOME/workingCopies:w'
-alias nerdctl='colima nerdctl'
-
-function docker-enter() {
-  docker exec -i -t $1 /bin/sh
-}
-
 function docker-retag() {
   for image in $(docker images | grep "${1}" | awk '{print $1}'); do
     image2=$(echo ${image} | sed -e "s/${1}/${2}/")
@@ -34,3 +23,13 @@ function docker-retag() {
   done
 }
 
+function docker-enter() {
+  docker exec -i -t $1 /bin/sh
+}
+
+alias dockerd-bootstrap='colima start --mount $HOME/workingCopies:w'
+alias dockerd-stop='colima stop'
+alias dockerd-teardown='colima delete'
+
+alias containerd-start='colima start --runtime containerd --mount $HOME/workingCopies:w'
+alias nerdctl='colima nerdctl'

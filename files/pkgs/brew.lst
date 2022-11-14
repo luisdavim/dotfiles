@@ -42,6 +42,7 @@ bbl
 bfg
 binutils
 blackbox
+bottom
 brew-cask-completion
 brew-pip
 broot
@@ -71,6 +72,7 @@ cruft
 csvkit
 ctags
 curl
+dagger
 dark-mode
 dateutils
 datree
@@ -174,6 +176,7 @@ kakoune
 kapp
 kbenv
 kbld
+kdash
 kind
 kompose
 kops
@@ -203,6 +206,7 @@ microk8s
 minikube
 mix-completion
 mockery
+monolith
 moreutils
 mtr
 ncdu
@@ -248,7 +252,9 @@ reattach-to-user-namespace
 remarshal
 rename
 ripgrep
+ripsecrets
 rke
+rm-improved
 rollup
 ruby-completion
 s3cmd
@@ -295,6 +301,7 @@ tmux-xpanes
 toast
 toilet
 tokei
+topgrade
 tree
 ttyd
 ttyplot
@@ -306,11 +313,13 @@ vault
 vegeta
 vendir
 vim
+viu
 w3m
 watch
 wdiff
 wget
 whois
+xh
 xhyve
 yabai
 yamllint
@@ -319,5 +328,6 @@ yarn-completion
 ydiff
 yq
 ytt
+zoxide
 zsh
 zsh-completions

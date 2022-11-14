@@ -135,6 +135,7 @@
   // "coc.preferences.snippetStatusText": "\u2710",
   "coc.preferences.messageLevel": "error",
   "coc.preferences.formatOnType": false,
+  "coc.preferences.formatOnSave": true,
   "coc.preferences.formatOnSaveFiletypes": [
     "go",
     "graphql",
@@ -148,6 +149,7 @@
     "yaml"
   ],
   "coc.preferences.rootPatterns": [".git", ".hg", ".projections.json", "requirements.txt", "setup.cfg", "package.json", "go.mod", "Makefile"],
+  "git.conflict.enabled": true,
   "git.enableGlobalStatus": true,
   "git.addGBlameToVirtualText": false,
   "git.enableGutters": true,
