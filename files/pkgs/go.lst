@@ -30,6 +30,7 @@ github.com/posener/goreadme/cmd/goreadme
 github.com/princjef/gomarkdoc/cmd/gomarkdoc
 github.com/rancher/k3d
 github.com/sahil-lakhwani/creyaml
+github.com/shenwei356/rush
 github.com/spf13/cobra/cobra
 github.com/spf13/viper
 github.com/sqs/goreturns
