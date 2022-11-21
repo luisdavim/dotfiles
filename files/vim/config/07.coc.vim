@@ -86,7 +86,7 @@ endfunction
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
 " Organize imports on save
-autocmd BufWritePre *.ts,*.js,*.py,*.rb,*.go call CocAction('runCommand', 'editor.action.organizeImport')
+autocmd BufWritePre *.ts,*.js,*.py,*.rb,*.go silent! call CocAction('runCommand', 'editor.action.organizeImport')
 " Manage go struct tags
 autocmd FileType go nmap gtj :CocCommand go.tags.add json<cr>
 autocmd FileType go nmap gty :CocCommand go.tags.add yaml<cr>

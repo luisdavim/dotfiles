@@ -81,8 +81,9 @@ alias grbr='git rebase --root'
 alias gaf='git amend . && git force'
 alias gtn='git tag $(svu next)'
 alias gpnt='git tag $(svu next) && git push --tags'
-alias gcpt="git cherry-pick --strategy-option=theirs"
-alias gcpo="git cherry-pick --strategy-option=ours"
+alias gcpt='git cherry-pick --strategy-option=theirs'
+alias gcpo='git cherry-pick --strategy-option=ours'
+alias grp='git recursive pull'
 
 alias masterDiff='git diff $(git merge-base --fork-point master)'
 alias latestTag='git describe --tags `git rev-list --tags --max-count=1`'

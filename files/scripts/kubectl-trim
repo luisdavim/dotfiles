@@ -89,7 +89,7 @@ yaml)
 esac
 
 TRIM='walk(if type == "object" then del('$(join_by '?, ' "${FIELDS[@]}")') else . end)'
-CMD="kubectl get -o json ${@} | jq '${TRIM}' ${CONVERT}"
+CMD="kubectl get -o json ${*} | jq '${TRIM}' ${CONVERT}"
 
 if [[ ${DEBUG} == "true" ]]; then
   echo "${CMD}"

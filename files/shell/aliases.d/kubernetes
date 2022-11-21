@@ -251,6 +251,12 @@ alias kshell='kubectl-remote_shell'
 alias kssh='kubectl-ssh'
 alias kpssh='kubectl-pssh'
 
+function kubectl-ingress-nslookup() {
+  for name in $(kubectl get ingress ${@} | awk -F '[[:space:]]+' '{$0=$4;sub(/,/,"\n");print}'); do
+    dig +noall +answer "$name"
+  done
+}
+
 function kubectl-purge_crd() {
   if [ -z "${1}" ]; then
     echo 'please provide a CRD name'
@@ -283,6 +289,7 @@ alias hgh='helm get hooks'
 alias hsa='helm show all'
 alias hdel='helm delete'
 alias hrm='helm delete'
+alias hrb='helm-rollback'
 alias hhist='helm history'
 alias htpl='helm template'
 alias htp='helm template'
