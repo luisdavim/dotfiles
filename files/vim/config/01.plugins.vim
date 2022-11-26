@@ -41,6 +41,9 @@
 
   Plug 'bronson/vim-visual-star-search'
 
+  Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+  " Plug 'yuki-yano/fzf-preview.vim', { 'branch': 'release/rpc' }
+
   Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary' }
   Plug 'liuchengxu/vista.vim'
   Plug 'vn-ki/coc-clap'
@@ -116,7 +119,7 @@
   " Plug 'posva/vim-vue'
   " Plug 'sheerun/vim-polyglot' " see: https://github.com/sheerun/vim-polyglot/issues/779
 
-  Plug 'iamcco/markdown-preview.nvim', {'for': ['markdown', 'vim-plug'], 'do': 'cd app & yarn install' }
+  " Plug 'iamcco/markdown-preview.nvim', {'for': ['markdown', 'vim-plug'], 'do': 'cd app & yarn install' }
 
   " function! BuildComposer(info)
   "   if a:info.status != 'unchanged' || a:info.force
@@ -139,13 +142,11 @@
 
   Plug 'puremourning/vimspector', {'for': ['c', 'cpp', 'go', 'python', 'java', 'javascript', 'sh', 'vim-plug'], 'do': function('BuildVimspector')}
 
-  Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-  " Plug 'yuki-yano/fzf-preview.vim', { 'branch': 'release/rpc' }
   " Plug 'neoclide/coc.nvim', {'branch': 'release'}
   Plug 'neoclide/coc.nvim', {'branch': 'master', 'do': 'yarn install --frozen-lockfile'}
 
   " Plug 'tom-doerr/vim_codex'
-  Plug 'github/copilot.vim'
+  " Plug 'github/copilot.vim'
 
   call plug#end()
 
