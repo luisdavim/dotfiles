@@ -195,6 +195,10 @@ if [ "$0" = "$BASH_SOURCE" ]; then
     usage "You need to provide a project.\nTerminating...\n" >&2
   fi
 
+  if [[ "${project}" != */* ]]; then
+    project="${project}/${project}"
+  fi
+
   if [[ ${RAW} == "true" ]]; then
     name="${2:-$(basename "${project}")}"
     installFromRawGithub "${project}" "${name}" "${tag}"
