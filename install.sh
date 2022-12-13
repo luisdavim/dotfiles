@@ -90,6 +90,7 @@ installKubeScripts() {
   installFromGithub 'flavio/kuberlr' "${1}" "${2}"
   installFromGithub 'doitintl/kube-no-trouble' "${1}" "${2}" "kubent"
   # installFromGithub 'Praqma/helmsman' "${1}" "${2}"
+  installFromGithub 'kubeshark/kubeshark' "${1}" "${2}"
   installFromGithub 'shyiko/kubesec' "${1}" "${2}"
   installFromGithub 'kubermatic/kubeone' "${1}" "${2}"
   installFromGithub 'kubernetes-sigs/kustomize' "${1}" "${2}"
@@ -97,6 +98,7 @@ installKubeScripts() {
   # installFromGithub 'operator-framework/operator-sdk' "${1}" "${2}"
   installFromGithub 'nutellinoit/kubenvz' "${1}" "${2}"
   installFromGithub 'jaredallard/localizer' "${1}" "${2}"
+
   installFromGithub 'loft-sh/loft' "${1}" "${2}"
   installFromGithub 'loft-sh/vcluster' "${1}" "${2}"
   installFromGithub 'loft-sh/devspace' "${1}" "${2}"
