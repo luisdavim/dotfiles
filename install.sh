@@ -619,7 +619,7 @@ case "$CMD" in
   ;;
 *)
   installOSSpecific "${CMD}" "${ARGS[@]}"
-  if [ -z "${CMD}" ] || [[ ${CMD} == "all" ]]; then
+  if [[ -z "${CMD}" || ${CMD} == "all" ]]; then
     installAll
   fi
   ;;
