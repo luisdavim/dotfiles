@@ -100,7 +100,6 @@ function kubectl-parallel() {
   fi
   echo ""
 
-  # echo "${ctxs}" | xargs -P 10 -I {} -r -- sh -c 'C="${1}"; shift; kubectl --kubeconfig=${C}/{} ${@} &> /tmp/{}.kout' -- ${CFG_DIR} ${@}
   echo "${ctxs}" | xargs -P 10 -I {} -r -- sh -c 'C="${1}"; shift; eval "kubectl --kubeconfig=${C}/{} ${*} &> /tmp/{}.kout"' -- ${CFG_DIR} ${@}
 
   for f in ${ctxs}; do
