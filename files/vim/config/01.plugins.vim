@@ -80,8 +80,7 @@
   " Plug 'chriskempson/base16-vim'
   " Plug 'ghifarit53/tokyonight-vim'
   " Plug 'mangeshrex/uwu.vim'
-  Plug 'cormacrelf/vim-colors-github'
-  Plug 'wojciechkepka/vim-github-dark'
+  " Plug 'cormacrelf/vim-colors-github'
 
   if has('nvim')
     Plug 'folke/lsp-colors.nvim'
@@ -90,10 +89,12 @@
     Plug 'lukas-reineke/indent-blankline.nvim'
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     Plug 'nvim-treesitter/nvim-treesitter-context'
+    Plug 'nvim-treesitter/nvim-treesitter-textobjects'
     Plug 'nvim-lua/plenary.nvim'
     Plug 'sindrets/diffview.nvim'
   else
     Plug 'Yggdroot/indentLine', {'on': 'IndentLinesEnable'}
+    Plug 'wojciechkepka/vim-github-dark'
   endif
 
   Plug 'frazrepo/vim-rainbow'
