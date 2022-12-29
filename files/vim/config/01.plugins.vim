@@ -187,7 +187,6 @@ let g:coc_global_extensions = [
       \ 'coc-json',
       \ 'coc-jsref',
       \ 'coc-lists',
-      \ 'coc-lightbulb',
       \ 'coc-lua',
       \ 'coc-markdown-preview-enhanced',
       \ 'coc-markdownlint',
