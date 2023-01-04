@@ -91,6 +91,7 @@ docker-slim
 dust
 ec2-ami-tools
 ec2-api-tools
+ec2-instance-selector
 ec2-metadata-mock
 egison
 eksctl
