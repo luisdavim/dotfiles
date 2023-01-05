@@ -102,8 +102,8 @@ while true; do
 done
 
 # Allow the file to be sourced without excuting this part
-if [ "$0" = "$BASH_SOURCE" ]; then
-  CMD="${@}"
+if [ "$0" = "${BASH_SOURCE[0]}" ]; then
+  CMD="${*}"
   if [ -z "${CMD}" ]; then
     usage "You need to provide a command.\nTerminating...\n" >&2
     exit 1

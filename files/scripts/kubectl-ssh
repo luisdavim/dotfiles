@@ -13,6 +13,7 @@ DEBUG=false
 USER=${USER:-app}
 IP=InternalIP
 IDENTITY=""
+EC2=false
 
 function usage {
   if [ -n "${1}" ]; then
@@ -25,6 +26,7 @@ function usage {
   echo '  -h, --help                            display help'
   echo '  -d, --debug                           enable debug output'
   echo '  -e, --external-ip                     use the external IP'
+  echo '  --ec2                                 use AWS mssh to connect'
   echo "  -u, --user <user>                     ssh user default: ${USER}"
   echo "  -i, --indentity <file>                Path to the identity file"
   echo ''
@@ -35,7 +37,11 @@ function nodeIP() {
   kubectl get no "${1}" -o json | jq -r '.status.addresses[] | select(.type=="'${IP}'") | .address'
 }
 
-OPTS=$(getopt -o hdeu:i: --long help,debug,external-ip,user:,identity: -n "$(basename "$0")" -- "$@")
+function providerID() {
+  basename "$(kubectl get no "${1}" -o json | jq -r '.spec.providerID')"
+}
+
+OPTS=$(getopt -o hdeu:i: --long help,debug,ec2,external-ip,user:,identity: -n "$(basename "$0")" -- "$@")
 
 if [ $? != 0 ]; then usage "Terminating...\n" >&2; fi
 
@@ -46,6 +52,10 @@ while true; do
   -h | --help) usage ;;
   -d | --debug)
     DEBUG=true
+    shift
+    ;;
+  --ec2)
+    EC2=true
     shift
     ;;
   -e | --external-ip)
@@ -69,7 +79,7 @@ while true; do
 done
 
 # Allow the file to be sourced without excuting this part
-if [ "$0" = "$BASH_SOURCE" ]; then
+if [ "$0" = "${BASH_SOURCE[0]}" ]; then
 
   if ! [ -x "$(command -v jq)" ]; then
     echo -e "You need jq.\nTerminating...\n" >&2
@@ -82,7 +92,7 @@ if [ "$0" = "$BASH_SOURCE" ]; then
     echo $?
   )" -eq 0 ]]; then
     echo 'Please select a node:'
-    NODE=$(echo $(kubectl get no | fzf --header-lines=1) | awk '{print $1}')
+    NODE=$(echo "$(kubectl get no | fzf --header-lines=1)" | awk '{print $1}')
   fi
   if [ -z "${NODE}" ]; then
     usage "You need to provide a node.\nTerminating...\n" >&2
@@ -90,12 +100,18 @@ if [ "$0" = "$BASH_SOURCE" ]; then
   fi
   shift
 
-  NODE=$(nodeIP "${NODE}")
+  cmd=""
+  if [[ ${EC2} == "true" ]]; then
+    NODE=$(providerID "${NODE}")
+    cmd="mssh ${NODE}"
+  else
+    NODE=$(nodeIP "${NODE}")
+    cmd="ssh -o StrictHostKeyChecking=no ${IDENTITY} -l ${USER} ${NODE} ${*}"
+  fi
 
   if [[ ${DEBUG} == "true" ]]; then
-    echo 'Executing: ssh -o StrictHostKeyChecking=no -l "'"${USER}"'" "'"${NODE}"'"' "${@}"
+    echo "Executing: ${cmd}"
   fi
-  cmd="ssh -o StrictHostKeyChecking=no ${IDENTITY} -l ${USER} ${NODE} ${*}"
   if [[ ${DEBUG} == "true" ]]; then
     echo "${cmd}"
   fi
