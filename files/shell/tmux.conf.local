@@ -62,6 +62,19 @@ set -as terminal-overrides ',*:smxx=\E[9m' # Strikeout
 set -as terminal-overrides ',*:Smulx=\E[4::%p1%dm'  # undercurl support
 set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'  # underscore colours - needs tmux-3.0
 
+# -- theming -------------------------------------------------------------------
+
+# enable or disable theming:
+#   - enabled (default)
+#   - disabled
+# when disabled, all tmux_conf_theme_xxx variables are ignored except:
+#   - tmux_conf_theme_pairing
+#   - tmux_conf_theme_prefix
+#   - tmux_conf_theme_mouse
+#   - tmux_conf_theme_root
+#   - tmux_conf_theme_synchronized
+tmux_conf_theme=enabled
+
 # default theme
 tmux_conf_theme_colour_1="#080808"    # dark gray
 tmux_conf_theme_colour_2="#303030"    # gray
@@ -120,6 +133,9 @@ tmux_conf_theme_pane_border_style=thin
 # pane borders colours:
 tmux_conf_theme_pane_border="$tmux_conf_theme_colour_2"
 tmux_conf_theme_pane_active_border="$tmux_conf_theme_colour_4"
+%if #{>=:#{version},3.2}
+tmux_conf_theme_pane_active_border="#{?pane_in_mode,$tmux_conf_theme_colour_9,#{?synchronize-panes,$tmux_conf_theme_colour_16,$tmux_conf_theme_colour_4}}"
+%endif
 
 # pane indicator colours (when you hit <prefix> + q)
 tmux_conf_theme_pane_indicator="$tmux_conf_theme_colour_4"
