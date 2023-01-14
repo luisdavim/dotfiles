@@ -84,6 +84,7 @@ displayplacer
 dive
 dnscrypt-proxy
 docker
+docker-buildx
 docker-compose
 docker-credential-helper
 docker-ls
