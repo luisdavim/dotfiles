@@ -89,6 +89,7 @@ docker-compose
 docker-credential-helper
 docker-ls
 docker-slim
+dog
 dust
 ec2-ami-tools
 ec2-api-tools

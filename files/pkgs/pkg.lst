@@ -37,6 +37,7 @@ debianutils
 dialog
 diffutils
 dnsutils
+dog
 dos2unix
 dpkg
 dust
