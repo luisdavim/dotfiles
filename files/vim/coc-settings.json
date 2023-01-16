@@ -58,6 +58,9 @@
   "explorer.focus": true,
   "explorer.previewAction.onHover": false,
   "explorer.icon.enableNerdfont": true,
+  "explorer.position": "floating",
+  "explorer.floating.position": "center",
+  "explorer.openAction.strategy": "sourceWindow",
   "explorer.keyMappings.global": {
     "<cr>": ["wait", "expanded?", "collapse", "expand"],
     "o": "open",
