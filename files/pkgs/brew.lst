@@ -175,6 +175,7 @@ jsonnet
 jsonnet-bundler
 jwt-cli
 k3d
+k6
 k9s
 kakoune
 kapp
