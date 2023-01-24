@@ -41,7 +41,8 @@
     au ColorScheme * hi! link CocPumVirtualText Comment
 
     au ColorScheme * hi! link ClapPreview Pmenu
-    " au ColorScheme * hi! link ClapDisplay PmenuSel
+    au ColorScheme * hi! link ClapDisplay Pmenu
+    au ColorScheme * hi! link ClapSelected PmenuSel
 
     " typographic ligatures {{{
     " from: https://maximewack.com/post/emulating_ligatures/
