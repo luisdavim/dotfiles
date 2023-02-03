@@ -72,8 +72,6 @@ if [[ "$DEBUG" == "true" ]]; then
   echo -e "Going to rollback:\n${failed}"
 fi
 
-exit 0
-
 for release in ${failed}; do
   revision=$(helm history "${release}" -n "${NAMESPACE}" | awk '/deployed/ {print $1}')
   if [[ "$DEBUG" == "true" ]]; then
