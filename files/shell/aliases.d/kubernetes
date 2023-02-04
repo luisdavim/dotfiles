@@ -27,7 +27,7 @@ function kctl() {
     COLOR="grc -es --colour=auto"
   fi
   local args=(${COLOR} \kubectl ${CMD})
-  for arg in ${@}; do
+  for arg in "${@}"; do
     args+=( "$(printf '%q' "$arg")" )
   done
   eval "${args[*]}"
@@ -230,7 +230,7 @@ function kubectl-cfg() {
 alias kcfg='kubectl-cfg'
 
 function kubectl-enter() {
-  \kubectl exec -ti ${@} -- sh
+  \kubectl exec -ti "${@}" -- sh
 }
 alias kctl-enter='kubectl-enter'
 
@@ -241,7 +241,7 @@ function krun() { name=$1; shift; image=$1; shift; \kubectl run -it --generator=
 alias kctl-run='krun'
 
 function kubectl-remote_shell() {
-  \kubectl ${@} run --restart=Never --rm -i --tty debug --image=quay.io/giantswarm/debug -- sh
+  \kubectl run "${@}" --restart=Never --rm -i --tty debug --image=quay.io/giantswarm/debug -- sh
 }
 alias kctl-shell='kubectl-remote_shell'
 alias kube-shell='kubectl-remote_shell'
@@ -251,7 +251,7 @@ alias kssh='kubectl-ssh'
 alias kpssh='kubectl-pssh'
 
 function kubectl-ingress-nslookup() {
-  for name in $(kubectl get ingress ${@} | awk -F '[[:space:]]+' '{$0=$4;sub(/,/,"\n");print}'); do
+  for name in $(kubectl get ingress "${@}" | awk -F '[[:space:]]+' '{$0=$4;sub(/,/,"\n");print}'); do
     dig +noall +answer "$name"
   done
 }
@@ -308,7 +308,7 @@ function helm-parallel() {
   fi
   echo ""
 
-  echo "${ctxs}" | xargs -P 10 -I {} -r -- sh -c 'C="${1}"; shift; eval "helm --kubeconfig=${C}/{} ${*} &> /tmp/{}.kout"' -- ${CFG_DIR} ${@}
+  echo "${ctxs}" | xargs -P 10 -I {} -r -- sh -c 'C="${1}"; shift; eval "helm --kubeconfig=${C}/{} ${*} &> /tmp/{}.kout"' -- "${CFG_DIR}" "${@}"
 
   for f in ${ctxs}; do
     echo ">> $f"
