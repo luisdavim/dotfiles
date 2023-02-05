@@ -55,12 +55,14 @@ tmux_conf_new_session_prompt=false
 tmux_conf_24b_colour=true
 
 # Undercurl
-# set -g default-terminal tmux-256color
-set -g default-terminal "${TERM}"
-set -as terminal-overrides ',*:sitm=\E[3m' # Italics support for older ncurses
-set -as terminal-overrides ',*:smxx=\E[9m' # Strikeout
-set -as terminal-overrides ',*:Smulx=\E[4::%p1%dm'  # undercurl support
-set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'  # underscore colours - needs tmux-3.0
+if-shell '[[ "$(uname -o)" != "Android" ]]' {
+  # set -g default-terminal tmux-256color
+  set -g default-terminal "${TERM}"
+  set -as terminal-overrides ',*:sitm=\E[3m' # Italics support for older ncurses
+  set -as terminal-overrides ',*:smxx=\E[9m' # Strikeout
+  set -as terminal-overrides ',*:Smulx=\E[4::%p1%dm'  # undercurl support
+  set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'  # underscore colours - needs tmux-3.0
+}
 
 # -- theming -------------------------------------------------------------------
 
