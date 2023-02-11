@@ -2,7 +2,7 @@
   if ! &diff
     if has('autocmd')
       " Open files allways in new tabs
-      au VimEnter * tab all
+      " au VimEnter * tab all
       " Make vim remember the line where you were the last time
       au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
     endif
