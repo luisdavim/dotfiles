@@ -60,8 +60,8 @@
   "explorer.icon.enableNerdfont": true,
   "explorer.position": "floating",
   "explorer.floating.position": "center",
-  "explorer.floating.width": -80,
-  "explorer.floating.height": -50,
+  "explorer.floating.width": -20,
+  "explorer.floating.height": -20,
   "explorer.openAction.strategy": "sourceWindow",
   "explorer.keyMappings.global": {
     "<cr>": ["wait", "expanded?", "collapse", "expand"],
