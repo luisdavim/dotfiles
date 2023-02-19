@@ -1,4 +1,6 @@
 # vim:set filetype=gitconfig:
+[init]
+  defaultBranch = main
 [user]
   email = ${EMAIL}
   name = ${NAME}
