@@ -41,6 +41,7 @@ alias kvs='kctl view-secret'
 alias keds='\kubectl modify-secret'
 alias ked='\kubectl edit'
 alias krr='kctl rollout restart'
+alias kdrain='\kubectl drain --ignore-daemonsets --delete-emptydir-data'
 # alias kubectl='kctl'
 
 function kgy() {
