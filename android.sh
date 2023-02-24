@@ -77,7 +77,9 @@ installThemes() {
 }
 
 osConfigs() {
-  termux-setup-storage
+  if [ ! -d "${HOME}/storage" ]; then
+    termux-setup-storage
+  fi
 }
 
 installAll() {
