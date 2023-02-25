@@ -2,6 +2,7 @@
 # github.com/gardener/gardenctl
 # github.com/git-hooks/git-hooks
 # github.com/hashicorp/terraform
+# github.com/testfabric/ypath
 # k8s.io/helm/cmd/helm
 # k8s.io/kubernetes/cmd/kubectl
 github.com/ChimeraCoder/gojson/gojson
@@ -37,7 +38,6 @@ github.com/spf13/viper
 github.com/sqs/goreturns
 github.com/talos-systems/conform
 github.com/tcnksm/ghr
-github.com/testfabric/ypath
 github.com/uber/astro/astro/cli/astro
 github.com/wagoodman/dive
 github.com/zegl/kube-score
