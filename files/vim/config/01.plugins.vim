@@ -192,7 +192,6 @@ let g:coc_global_extensions = [
       \ 'coc-markdownlint',
       \ 'coc-marketplace',
       \ 'coc-markmap',
-      \ 'coc-nav',
       \ 'coc-pairs',
       \ 'coc-phpls',
       \ 'coc-powershell',
@@ -219,4 +218,7 @@ let g:coc_global_extensions = [
       \ 'coc-webview',
       \ 'coc-yaml',
       \ ]
+"       \ 'coc-nav',
+"      \ 'coc-symbol-line',
+
 " }}}
