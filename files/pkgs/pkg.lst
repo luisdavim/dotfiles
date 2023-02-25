@@ -1,3 +1,4 @@
+abseil-cpp
 ack-grep
 amber
 ambr
@@ -113,6 +114,7 @@ htop
 iconv
 icu-devtools
 inetutils
+jo
 jq
 jsoncpp
 k9s
@@ -123,10 +125,12 @@ kubelogin
 ldns
 less
 lhasa
+libandroid-execinfo
 libandroid-glob
 libandroid-posix-semaphore
 libandroid-spawn
 libandroid-support
+libaom
 libarchive
 libassuan
 libbsd
@@ -138,7 +142,9 @@ libcompiler-rt
 libcroco
 libcrypt
 libcurl
+libdav1d
 libdb
+libde265
 libedit
 libevent
 libexpat
@@ -150,6 +156,7 @@ libgit2
 libgmp
 libgnutls
 libgpg-error
+libheif
 libice
 libiconv
 libicu
@@ -175,8 +182,10 @@ libnpth
 libpcap
 libpng
 libprotobuf
+librav1e
 libresolv-wrapper
 libsixel
+libsmartcols
 libsqlite
 libssh2
 libtalloc
@@ -191,6 +200,7 @@ libuuid
 libuv
 libvterm
 libwebp
+libx265
 libxml2
 libyaml
 lld
@@ -239,6 +249,7 @@ psmisc
 pv
 python
 python-cryptography
+python-ensurepip-wheels
 python-pip
 python2
 ranger
@@ -254,6 +265,7 @@ rust
 screenfetch
 sed
 shellcheck
+shfmt
 silversearcher-ag
 starship
 tar
