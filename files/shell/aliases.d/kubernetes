@@ -93,7 +93,9 @@ function kubectl-parallel() {
   ctxs=$(kubectl-get-ctx "${1}")
   shift
 
-  echo -e "Running:\n\tkubectl ${*}\non:\n${ctxs}\n---"
+  cmd="${*/kubectl/kubectl --kubeconfig=\${C\}/{\}}"
+
+  echo -e "Running:\n\tkubectl ${cmd}\non:\n${ctxs}\n---"
   echo -n "Are you sure? [y/N] "
   read REPLY
   if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -101,7 +103,7 @@ function kubectl-parallel() {
   fi
   echo ""
 
-  echo "${ctxs}" | xargs -P 10 -I {} -r -- sh -c 'C="${1}"; shift; eval "kubectl --kubeconfig=${C}/{} ${*} &> /tmp/{}.kout"' -- ${CFG_DIR} ${@}
+  echo "${ctxs}" | xargs -P 10 -I {} -r -- sh -c 'C="${1}"; shift; eval "kubectl --kubeconfig=${C}/{} ${*} &> /tmp/{}.kout"' -- ${CFG_DIR} ${cmd}
 
   for f in ${ctxs}; do
     echo ">> $f"
