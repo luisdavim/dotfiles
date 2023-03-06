@@ -51,9 +51,7 @@ if [[ ${FORCE} == "true" ]]; then
   FORCE="--grace-period=0 --force"
 fi
 
-# eval "kubectl get rs -A -o wide --no-headers | awk '{if ($3 + $4 + $5 == 0) print " -n "$1, $2 }' | xargs -L1 -r kubectl delete rs ${FORCE}"
-# kubectl get rs -A -o wide | tail -n +2 | awk '{if ($3 + $4 + $5 == 0) print "kubectl delete rs -n "$1, $2 }' | sh
-eval "kubectl get rs -A --no-headers | awk '/0\s+0\s+0/ {print \$2 \" -n \" \$1}' | xargs -L1 -r kubectl delete rs ${FORCE}"
+eval "kubectl get rs -A --no-headers | awk '{if (\$3 + \$4 + \$5 == 0) print \" -n \"\$1, \$2 }' | xargs -L1 -r kubectl delete rs ${FORCE}"
 
 eval "kubectl get job -A -o=go-template='{{range .items}}{{if or .status.succeeded .status.failed}}{{.metadata.name}} -n {{.metadata.namespace}}{{\"\n\"}}{{end}}{{end}}' | xargs -L1 -r kubectl delete job ${FORCE}"
 
