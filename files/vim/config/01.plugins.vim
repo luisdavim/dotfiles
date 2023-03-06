@@ -98,6 +98,7 @@
   endif
 
   Plug 'frazrepo/vim-rainbow'
+  " Plug 'HiPhish/nvim-ts-rainbow2'
   " Plug 'p00f/nvim-ts-rainbow'
   " Plug 'junegunn/rainbow_parentheses.vim'
 
