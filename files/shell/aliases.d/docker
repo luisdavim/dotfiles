@@ -27,7 +27,7 @@ function docker-enter() {
   docker exec -i -t $1 /bin/sh
 }
 
-alias dockerd-bootstrap='colima start --mount $HOME/workingCopies:w'
+alias dockerd-bootstrap='colima start --mount $HOME/workingCopies:w -c 8 -m 10'
 alias dockerd-stop='colima stop'
 alias dockerd-teardown='colima delete'
 
