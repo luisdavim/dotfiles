@@ -42,7 +42,7 @@ alias keds='\kubectl modify-secret'
 alias ked='\kubectl edit'
 alias krr='kctl rollout restart'
 alias kdrain='\kubectl drain --ignore-daemonsets --delete-emptydir-data'
-alias kubectl='kctl'
+# alias kubectl='kctl'
 
 function kgy() {
   \kubectl get ${@} -o yaml | bat --paging never --theme ${BAT_THEME:-TwoDark} -p -l yaml
