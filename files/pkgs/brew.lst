@@ -148,6 +148,7 @@ helix
 helm-docs
 helmenv
 helmfile
+helmify
 helmsman
 highlight
 homeport/tap/dyff
