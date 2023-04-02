@@ -29,6 +29,7 @@ jedi
 jedi-language-server
 jtbl
 k8s-handle
+kptop
 kube-shell
 kubernetes
 manage-fastapi
