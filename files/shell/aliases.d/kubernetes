@@ -232,6 +232,11 @@ function kubectl-cfg() {
 }
 alias kcfg='kubectl-cfg'
 
+# used to set the Prometheus host for kptop
+function kpctx() {
+  export KPTOP_PROMETHEUS_SERVER="https://$(\kubectl get ingress -A | awk '/prom|thanos/ { if ($4 ~ "prom|thanos") print $4}' | fzf --filter="${1}" | fzf)"
+}
+
 function kubectl-enter() {
   \kubectl exec -ti "${@}" -- sh
 }
