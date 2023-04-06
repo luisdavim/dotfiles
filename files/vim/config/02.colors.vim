@@ -117,7 +117,7 @@
 
   let g:gh_color = "soft"
 
-  let g:github_sidebars = ["qf", "vista_kind", "terminal", "packer"]
+  " let g:github_sidebars = ["qf", "vista_kind", "terminal", "packer"]
   " let g:github_transparent = 1
 
   let g:tokyonight_style = 'night' " available: night, storm
