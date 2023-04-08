@@ -3,6 +3,7 @@ ack-grep
 amber
 ambr
 ambs
+android-tools
 apt
 arj
 asciinema
@@ -20,6 +21,7 @@ binutils-gold
 binutils-libs
 bison
 boost
+brotli
 build-essential
 busybox
 bzip2
@@ -44,6 +46,7 @@ dpkg
 dust
 ed
 exa
+fakeroot
 fd
 file
 findutils
@@ -196,6 +199,7 @@ libtool
 libtreesitter
 libunibilium
 libunistring
+libusb
 libuuid
 libuv
 libvterm
