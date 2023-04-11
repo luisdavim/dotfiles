@@ -84,7 +84,7 @@
 
   if has('nvim')
     Plug 'folke/lsp-colors.nvim'
-    Plug 'projekt0n/github-nvim-theme'
+    Plug 'projekt0n/github-nvim-theme', { 'tag': 'v0.0.7' }
     Plug 'rcarriga/nvim-notify'
     Plug 'lukas-reineke/indent-blankline.nvim'
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
