@@ -308,7 +308,7 @@ function helm-parallel() {
   ctxs=$(kubectl-get-ctx "${1}")
   shift
 
-  echo -e "Running:\n\tkubectl ${*}\non:\n${ctxs}\n---"
+  echo -e "Running:\n\thelm ${*}\non:\n${ctxs}\n---"
   echo -n "Are you sure? [y/N] "
   read REPLY
   if [[ ! $REPLY =~ ^[Yy]$ ]]; then
