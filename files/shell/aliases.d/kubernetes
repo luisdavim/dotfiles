@@ -89,7 +89,7 @@ function kubectl-events() {
 alias kctl-events='kubectl-events'
 
 function kubectl-parallel() {
-  CFG_DIR=~/.kube/config.d
+  CFG_DIR=${CFG_DIR:-~/.kube/config.d}
   ctxs=$(kubectl-get-ctx "${1}")
   shift
 
@@ -116,7 +116,7 @@ function kubectl-parallel() {
 alias kparallel='kubectl-parallel'
 
 function kubectl-get-ctx() {
-  CFG_DIR=~/.kube/config.d
+  CFG_DIR=${CFG_DIR:-~/.kube/config.d}
   if [ -d "${CFG_DIR}" ] && [[ "$KUBECONFIG" != "~/.kube/config" ]]; then
     if [[ "${1}" == "-z" ]]; then
       shift
@@ -164,7 +164,7 @@ function kubectl-ctx() {
     kubectl-get-ctx -z "${1}"
     return
   fi
-  CFG_DIR=~/.kube/config.d
+  CFG_DIR=${CFG_DIR:-~/.kube/config.d}
   if [ -d "${CFG_DIR}" ] && [[ "$KUBECONFIG" != "~/.kube/config" ]]; then
     if [ -n "$1" ] && [ -f "${CFG_DIR}/${1}" ]; then
       export KUBECONFIG="${CFG_DIR}/${1}"
@@ -195,7 +195,7 @@ alias kctx='kubectl-ctx'
 
 function kubectl-cfg() {
   CFG=${KUBECONFIG:-~/.kube/config}
-  CFG_DIR=~/.kube/config.d
+  CFG_DIR=${CFG_DIR:-~/.kube/config.d}
   case "$1" in
     split)
       mkdir -p "${CFG_DIR}"
@@ -304,7 +304,7 @@ alias htp='helm template'
 alias helm-plugin-update='helm plugin list | awk '\''!/NAME/ {print $1}'\'' | xargs -L 1 -r helm plugin update'
 
 function helm-parallel() {
-  CFG_DIR=~/.kube/config.d
+  CFG_DIR=${CFG_DIR:-~/.kube/config.d}
   ctxs=$(kubectl-get-ctx "${1}")
   shift
 
