@@ -114,6 +114,7 @@
   Plug 'sebdah/vim-delve', {'for': ['go', 'vim-plug']}
 
   Plug 'mattn/emmet-vim', {'for': ['html', 'css', 'vim-plug']}
+  Plug 'fladson/vim-kitty'
   Plug 'maralla/vim-toml-enhance', {'for': ['toml', 'vim-plug']}
   Plug 'google/vim-jsonnet'
   Plug 'kevinoid/vim-jsonc'
