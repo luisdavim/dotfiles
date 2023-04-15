@@ -228,6 +228,7 @@ operator-sdk
 oras
 p7zip
 packer
+pam-reattach
 pdsh
 peco
 pet
