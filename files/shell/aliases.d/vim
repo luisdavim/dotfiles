@@ -11,6 +11,9 @@ function gn_sync_all() {
   for D in *; do gn_sync_notebook $D; done
 }
 
+alias vim-geeknote='vi -c Geeknote'
+alias geeknote-vim='vi -c Geeknote'
+
 # Vim aliases
 # Use neovim if available
 if [ -x "$(command -v nvim)" ]; then
@@ -23,8 +26,7 @@ else
 fi
 
 alias fzvi='vi "$(rg -g "!*vendor/*" -l . | fzf --height=100% --preview='\''pistol {}'\'')"'
-alias vim-geeknote='vi -c Geeknote'
-alias geeknote-vim='vi -c Geeknote'
+alias vzf='fzvi'
 
 # Aliases for vim Vundle
 # alias vim-install='vi +PluginInstall +qall'
