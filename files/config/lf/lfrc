@@ -20,6 +20,9 @@ set ifs "\n"
 # leave some space at the top and the bottom of the screen
 set scrolloff 10
 
+# Use the `dim` attribute instead of underline for the cursor in the preview pane
+set cursorpreviewfmt "\033[7;2m"
+
 # enable icons
 set icons
 
@@ -31,6 +34,9 @@ map <bs2> set hidden!
 
 # use enter for shell commands
 map <enter> shell
+
+# show the result of execution of previous commands
+map ` !true
 
 # execute current file (must be executable)
 map x $$f
@@ -57,6 +63,9 @@ cmd open ${{
     esac
 }}
 
+# mkdir command. See wiki if you want it to select created dir
+map a :push %mkdir<space>
+
 # define a custom 'rename' command without prompt for overwrite
 # cmd rename %[ -e $1 ] && printf "file exists" || mv $f $1
 # map r push :rename<space>
@@ -74,7 +83,7 @@ cmd trash %set -f; mv $fx ~/.trash
 #     printf "$fx\n"
 #     printf "delete?[y/n]"
 #     read ans
-#     [ $ans = "y" ] && rm -rf $fx
+#     [ "$ans" = "y" ] && rm -rf $fx
 # }}
 
 # use '<delete>' key for either 'trash' or 'delete' command
