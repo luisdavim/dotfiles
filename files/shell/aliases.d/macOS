@@ -16,11 +16,16 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 
   yabai-reload() {
     # stop, upgrade, start yabai
-    brew services stop skhd
-    brew services stop yabai
+    # brew services stop skhd
+    # brew services stop yabai
+    skhd --stop-service
+    yabai --stop-service
     brew upgrade yabai
-    brew services start yabai
-    brew services start skhd
+    brew upgrade skhd
+    # brew services start yabai
+    # brew services start skhd
+    yabai --start-service
+    skhd --start-service
 
     # reinstall the scripting addition
     sudo yabai --uninstall-sa
