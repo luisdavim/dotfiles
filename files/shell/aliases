@@ -190,7 +190,7 @@ function ssh() {
     command ssh "$@"
     tmux set-window-option automatic-rename "on" 1>/dev/null
   else
-    env TERM=xterm-256color ssh -o "SendEnv TERM"  "$@"
+    command env TERM=xterm-256color ssh -o "SendEnv TERM"  "$@"
   fi
 }
 
