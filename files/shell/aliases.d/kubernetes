@@ -22,11 +22,11 @@ function kctl() {
     "kubectl-${CMD}" "${@}"
     return $?
   fi
-  COLOR=""
-  if [ -x "$(command -v grc)" ]  && [[ "$CMD" != "modify-secret" ]]&& [[ "$CMD" != "edit" ]] && [[ "$CMD" != "exec" ]] && [[ "$CMD" != "ssh" ]] && [[ "$CMD" != "access-matrix" ]] && [[ "$CMD" != *"shell"* ]]; then
+  COLOR="command"
+  if [ -x "$(command -v grc)" ]  && [[ ',modify-secret,edit,exec,ssh,access-matrix,shell,remote_shell,' != *",${CMD},"* ]]; then
     COLOR="grc -es --colour=auto"
   fi
-  local args=(${COLOR} \kubectl ${CMD})
+  local args=(${COLOR} kubectl ${CMD})
   for arg in "${@}"; do
     args+=( "$(printf '%q' "$arg")" )
   done
@@ -38,10 +38,10 @@ alias k='kctl'
 alias kga='kctl get -A'
 alias kd='kctl describe'
 alias kvs='kctl view-secret'
-alias keds='\kubectl modify-secret'
-alias ked='\kubectl edit'
+alias keds='kctl modify-secret'
+alias ked='kctl edit'
 alias krr='kctl rollout restart'
-alias kdrain='\kubectl drain --ignore-daemonsets --delete-emptydir-data'
+alias kdrain='kctl drain --ignore-daemonsets --delete-emptydir-data'
 # alias kubectl='kctl'
 
 function kgy() {
