@@ -238,7 +238,7 @@ function kpctx() {
 }
 
 function kubectl-enter() {
-  \kubectl exec -ti "${@}" -- sh
+  command kubectl exec -ti "${@}" -- sh
 }
 alias kctl-enter='kubectl-enter'
 
@@ -249,7 +249,7 @@ function krun() { name=$1; shift; image=$1; shift; \kubectl run -it --generator=
 alias kctl-run='krun'
 
 function kubectl-remote_shell() {
-  \kubectl run "${@}" --restart=Never --rm -i --tty debug --image=quay.io/giantswarm/debug -- sh
+  command kubectl run "${@}" --restart=Never --rm -i --tty debug --image=quay.io/giantswarm/debug -- sh
 }
 alias kctl-shell='kubectl-remote_shell'
 alias kube-shell='kubectl-remote_shell'
@@ -349,7 +349,7 @@ function helm-getSecrets() {
 }
 
 function helmsman-adopt() {
-  kubectl label secret -n ${2} -l name=${1} --overwrite HELMSMAN_CONTEXT=${3:-default} MANAGED-BY=HELMSMAN NAMESPACE=${2}
+  \kubectl label secret -n ${2} -l name=${1} --overwrite HELMSMAN_CONTEXT=${3:-default} MANAGED-BY=HELMSMAN NAMESPACE=${2}
 }
 
 # Minikube
