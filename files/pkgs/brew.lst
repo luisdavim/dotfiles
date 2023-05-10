@@ -264,6 +264,7 @@ rke
 rm-improved
 rollup
 ruby-completion
+rush-parallel
 s3cmd
 samba
 sampler
