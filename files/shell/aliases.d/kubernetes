@@ -105,6 +105,11 @@ function kubectl-parallel() {
 
   echo "${ctxs}" | xargs -P 10 -I {} -r -- sh -c 'export KUBECONFIG=${1}/{}; shift; eval "kubectl ${*} &> /tmp/{}.kout"' -- ${CFG_DIR} ${cmd}
 
+  # if using gnu parallel, you can live tail the outputs with the following:
+  # parallel --tagstring "{}:" --line-buffer tail -f {} ::: /tmp/*.kout
+  # or with multitail
+  # multitail -f /tmp/*.kout
+
   for f in ${ctxs}; do
     echo ">> $f"
     cat "/tmp/${f}.kout"
