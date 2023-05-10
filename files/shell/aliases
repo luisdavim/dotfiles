@@ -108,7 +108,7 @@ function hbtween() {
   start="$(echo ${1} | tr -d '\- :')"
   finish="$(echo ${2} | tr -d '\- :')"
   echo -e '#ID\t#USER\t#SEQ\t#DATE TIME\t#DURATION\t#COMMAND'
-  awk -v s=${start} -v f=${finish} 'match($4$5, "([0-9]+)-([0-9]+)-([0-9]+)([0-9]+):([0-9]+)", ary) {D=ary[1] ary[2] ary[3] ary[4] ary[5]; if (D > s && D < f) print}' $_eternal_history_histfile | grep "${3}"
+  gawk -v s=${start} -v f=${finish} 'match($4$5, "([0-9]+)-([0-9]+)-([0-9]+)\s?([0-9]+):([0-9]+)", ary) {D=ary[1] ary[2] ary[3] ary[4] ary[5]; if (D > s && D < f) print}' $_eternal_history_histfile | grep "${3}"
 }
 alias histg='hgrep'
 
