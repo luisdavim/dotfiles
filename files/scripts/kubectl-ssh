@@ -10,7 +10,7 @@
 
 # Defaults
 DEBUG=false
-USER=${USER:-app}
+USER=${USER:-ec2-user}
 IP=InternalIP
 IDENTITY=""
 EC2=false
@@ -96,7 +96,6 @@ if [ "$0" = "${BASH_SOURCE[0]}" ]; then
   fi
   if [ -z "${NODE}" ]; then
     usage "You need to provide a node.\nTerminating...\n" >&2
-    exit 1
   fi
   shift
 

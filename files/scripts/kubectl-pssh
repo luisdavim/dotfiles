@@ -12,6 +12,7 @@
 # Defaults
 DEBUG=false
 NODES=all
+LABELS=""
 USER=${USER:-app}
 IP=InternalIP
 TIMEOUT=0
@@ -29,6 +30,8 @@ function usage {
   echo '  -d, --debug                           enable debug output'
   echo '  -e, --external-ip                     use the external IP'
   echo "  -f, --filter <all|healthy|unhealthy>  Filter nodes by their state default: ${NODES}"
+  echo '                                        You can also pass a partial node name.'
+  echo '  -l, --selector <label selector>       Filter nodes by labels'
   echo "  -u, --user <user>                     ssh user default: ${USER}"
   echo "  -t, --timeout <seconds>               kill ssh process after <seconds> default: ${TIMEOUT}"
   echo "  -i, --indentity <file>                Path to the identity file"
@@ -38,10 +41,15 @@ function usage {
 }
 
 function inventory() {
-  ip='ip:(.status.addresses[] | select(.type=="'${IP}'")| .address)'
-  status='status:(.status.conditions[] | select(.type=="Ready") | .status)'
-  query="[.items[] | {name:.metadata.name, ${ip}, ${status}}]"
-  nodes=$(kubectl get no -o json | jq -r "${query}")
+  local ip='ip:(.status.addresses[] | select(.type=="'${IP}'")| .address)'
+  local status='status:(.status.conditions[] | select(.type=="Ready") | .status)'
+  local query="[.items[] | {name:.metadata.name, ${ip}, ${status}}]"
+  local selector=""
+  if [ -n "${LABELS}" ]; then
+    selector="-l ${LABELS}"
+  fi
+
+  nodes=$(kubectl get no ${selector} -o json | jq -r "${query}")
 
   case "${NODES,,}" in
   "healthy" | "ok" | "ready")
@@ -60,7 +68,7 @@ function inventory() {
   echo -ne "${nodes}" | tr -s '[[:space:]]' '\n'
 }
 
-OPTS=$(getopt -o hdef:u:t:i: --long help,debug,external-ip,filter:,user:,timeout:,identity: -n "$(basename "$0")" -- "$@")
+OPTS=$(getopt -o hdef:l:u:t:i: --long help,debug,external-ip,filter:,selector:,user:,timeout:,identity: -n "$(basename "$0")" -- "$@")
 
 if [ $? != 0 ]; then usage "Terminating...\n" >&2; fi
 
@@ -79,6 +87,10 @@ while true; do
     ;;
   -f | --filter)
     NODES="$2"
+    shift 2
+    ;;
+  -l | --selector)
+    LABELS="$2"
     shift 2
     ;;
   -u | --user)
@@ -106,7 +118,6 @@ if [ "$0" = "${BASH_SOURCE[0]}" ]; then
   CMD="${*}"
   if [ -z "${CMD}" ]; then
     usage "You need to provide a command.\nTerminating...\n" >&2
-    exit 1
   fi
 
   if ! [ -x "$(command -v jq)" ]; then
