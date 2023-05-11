@@ -90,10 +90,38 @@ alias kctl-events='kubectl-events'
 
 function kubectl-parallel() {
   CFG_DIR=${CFG_DIR:-~/.kube/config.d}
-  ctxs=$(kubectl-get-ctx "${1}")
-  shift
 
-  echo -e "Running:\n\tkubectl ${*}\non:\n${ctxs}\n---"
+  local args=()
+  local cmd="kubectl"
+  local follow="false"
+  while [[ $# -gt 0 ]]; do
+    key="$1"
+
+    case $key in
+    -f | --follow)
+      follow="true"
+      shift
+      ;;
+    -c | --command)
+      cmd="$2"
+      shift 2
+      ;;
+    --)
+      shift
+      args+="${@}"
+      break
+      ;;
+    *)
+      args+=("$1")
+      shift
+      ;;
+    esac
+  done
+
+  ctxs=$(kubectl-get-ctx "${args[1]}")
+  args[1]="${cmd}"
+
+  echo -e "Running:\n\t${args}\non:\n${ctxs}\n---"
   echo -n "Are you sure? [y/N] "
   read REPLY
   if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -101,7 +129,12 @@ function kubectl-parallel() {
   fi
   echo ""
 
-  echo "${ctxs}" | xargs -P 10 -I {} -r -- sh -c 'export KUBECONFIG=${1}/{}; shift; eval "kubectl ${*} &> /tmp/{}.kout"' -- "${CFG_DIR}" "${@}"
+  if [[ "${follow}" == "true" ]] && [ -x "$(command -v multitail)" ] && [ -n "$TMUX" ]; then
+    echo "${ctxs}" | xargs -P 10 -I {} touch /tmp/{}.kout
+    tmux split-window "multitail -f /tmp/*.kout"
+  fi
+
+  echo "${ctxs}" | xargs -P 10 -I {} -r -- sh -c 'export KUBECONFIG=${1}/{}; shift; eval "${*} &> /tmp/{}.kout"' -- "${CFG_DIR}" "${args}"
 
   # if using gnu parallel, you can live tail the outputs with the following:
   # parallel --tagstring "{}:" --line-buffer tail -f {} ::: /tmp/*.kout
@@ -117,6 +150,7 @@ function kubectl-parallel() {
   rm -f /tmp/*.kout
 }
 alias kparallel='kubectl-parallel'
+alias hparallel='kubectl-parallel -c helm'
 
 function kubectl-get-ctx() {
   CFG_DIR=${CFG_DIR:-~/.kube/config.d}
@@ -305,31 +339,6 @@ alias htpl='helm template'
 alias htp='helm template'
 
 alias helm-plugin-update='helm plugin list | awk '\''!/NAME/ {print $1}'\'' | xargs -L 1 -r helm plugin update'
-
-function helm-parallel() {
-  CFG_DIR=${CFG_DIR:-~/.kube/config.d}
-  ctxs=$(kubectl-get-ctx "${1}")
-  shift
-
-  echo -e "Running:\n\thelm ${*}\non:\n${ctxs}\n---"
-  echo -n "Are you sure? [y/N] "
-  read REPLY
-  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    return
-  fi
-  echo ""
-
-  echo "${ctxs}" | xargs -P 10 -I {} -r -- sh -c 'export KUBECONFIG=${1}/{}; shift; eval "helm ${*} &> /tmp/{}.kout"' --  "${CFG_DIR}" "${@}"
-
-  for f in ${ctxs}; do
-    echo ">> $f"
-    cat "/tmp/${f}.kout"
-    echo "---"
-  done
-
-  rm /tmp/*.kout
-}
-alias hparallel='helm-parallel'
 
 function helm-clean() {
   NS=${1:-kube-system}

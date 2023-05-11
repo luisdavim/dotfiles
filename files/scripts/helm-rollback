@@ -73,7 +73,10 @@ if [[ "$DEBUG" == "true" ]]; then
 fi
 
 for release in ${failed}; do
-  revision=$(helm history "${release}" -n "${NAMESPACE}" | awk '/(deployed|superseded)/ {print $1}')
+  revision=$(helm history "${release}" -n "${NAMESPACE}" | awk '/deployed/ {print $1}')
+  if [ -z "${revision}" ]; then
+    revision=$(helm history "${release}" -n "${NAMESPACE}" | awk '/(deployed|superseded)/ {print $1}' | tail -n 1)
+  fi
   if [[ "$DEBUG" == "true" ]]; then
     helm history "${release}" -n "${NAMESPACE}"
   fi
