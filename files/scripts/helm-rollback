@@ -54,7 +54,7 @@ fi
 failed=$(echo "${*}" | sed -r -e 's/(\s|\n|,|;)+/\n/g')
 
 if [ -z "${failed}" ]; then
-  failed=$(helm ls -a -n "${NAMESPACE}" | awk '!/(deployed|NAME)/ {print $1}')
+  failed=$(helm ls -a -n "${NAMESPACE}" | awk '!/(deployed|superseded|NAME)/ {print $1}')
 fi
 
 if [ -n "${failed}" ] && [ -n "${REV}" ]; then
@@ -73,7 +73,7 @@ if [[ "$DEBUG" == "true" ]]; then
 fi
 
 for release in ${failed}; do
-  revision=$(helm history "${release}" -n "${NAMESPACE}" | awk '/deployed/ {print $1}')
+  revision=$(helm history "${release}" -n "${NAMESPACE}" | awk '/(deployed|superseded)/ {print $1}')
   if [[ "$DEBUG" == "true" ]]; then
     helm history "${release}" -n "${NAMESPACE}"
   fi
