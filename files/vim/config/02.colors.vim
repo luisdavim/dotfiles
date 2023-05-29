@@ -126,9 +126,13 @@
   " let g:tokyonight_transparent_background = 1
   let g:tokyonight_current_word = 'underline' " available: 'bold', 'underline', 'italic', 'grey background'
 
+  if has("nvim")
+  let g:airline_theme = 'github_dark_tritanopia'
+  else
   " let g:airline_theme = 'github'
   " let g:airline_theme = 'ghdark'
   let g:airline_theme = 'base16_black_metal'
+  endif
 
   let g:lightline = { 'colorscheme': 'github' }
   " let g:lightline = {'colorscheme' : 'ghdark'}
@@ -137,7 +141,7 @@
   " let g:clap_theme = 'onehalfdark'
 
   if has("nvim")
-    colorscheme github_dark_high_contrast
+    colorscheme github_dark_tritanopia
   else
     colorscheme ghdark
   endif
