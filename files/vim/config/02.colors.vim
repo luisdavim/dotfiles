@@ -137,7 +137,7 @@
   " let g:clap_theme = 'onehalfdark'
 
   if has("nvim")
-    colorscheme github_dark_default
+    colorscheme github_dark_high_contrast
   else
     colorscheme ghdark
   endif
