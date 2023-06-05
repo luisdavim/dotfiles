@@ -242,6 +242,7 @@
   let g:clap_preview_size = 10
   let g:clap_layout = {'relative': 'editor', 'width': '67%', 'height': '15%', 'row': '15%', 'col': '17%'}
   let g:clap_open_action = { 'ctrl-t': 'tab split', 'ctrl-x': 'split', 'ctrl-v': 'vsplit' }
+  let g:clap_enable_icon = 1
   if has('nvim')
     let g:clap_popup_border = 'single'
   else
