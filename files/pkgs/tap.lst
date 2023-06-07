@@ -1,3 +1,5 @@
+# homebrew/cask
+# homebrew/core
 # reactiveops/tap
 FairwindsOps/tap
 aws/tap
@@ -22,7 +24,6 @@ golangci/tap
 habitat-sh/habitat
 hashicorp/tap
 helix-editor/helix
-homebrew/cask
 homebrew/cask-drivers
 homebrew/cask-fonts
 homebrew/cask-fonts
