@@ -90,6 +90,16 @@ brew_launchctl_restart() {
   launchctl load "${HOME}/Library/LaunchAgents/$plist" >/dev/null
 }
 
+installPamReattach() {
+  # Enable touchID for sudo
+  if [ ! -f "$(brew --prefix)/lib/pam/pam_reattach.so" ]; then
+    brew install pam-reattach
+  fi
+  FILE='/etc/pam.d/sudo'
+  LINE="auth       optional       $(brew --prefix)/lib/pam/pam_reattach.so ignore_ssh\nauth       sufficient     pam_tid.so\n"
+  grep -qz -- "$LINE" "$FILE" || sudo sed -i'' "1s@^@${LINE}@" "${FILE}"
+}
+
 osConfigs() {
   # Enable Key Repeat
   defaults write -g ApplePressAndHoldEnabled -bool false
@@ -127,6 +137,8 @@ osConfigs() {
 
   # Enable Developer Mode using XCode
   sudo /usr/sbin/DevToolsSecurity -enable
+
+  installPamReattach
 
   echo 'You may need to restart for some changes to take effect!'
 }
@@ -237,12 +249,12 @@ installDotFiles() {
     fi
   done
 
-  mkdir -p $(brew --prefix)/etc/bash_completion.d
-  cp files/shell/bash/bash_aliases_completion $(brew --prefix)/etc/bash_completion.d/
+  mkdir -p "$(brew --prefix)/etc/bash_completion.d"
+  cp files/shell/bash/bash_aliases_completion "$(brew --prefix)/etc/bash_completion.d/"
   curl -sfLo knife_autocomplete https://raw.githubusercontent.com/wk8/knife-bash-autocomplete/master/knife_autocomplete.sh
-  mv knife_autocomplete $(brew --prefix)/etc/bash_completion.d/
+  mv knife_autocomplete "$(brew --prefix)/etc/bash_completion.d/"
   curl -sfLo kitchen-completion https://raw.githubusercontent.com/MarkBorcherding/test-kitchen-bash-completion/master/kitchen-completion.bash
-  mv kitchen-completion $(brew --prefix)/etc/bash_completion.d/
+  mv kitchen-completion "$(brew --prefix)/etc/bash_completion.d/"
 
   cd "${INSTALLDIR}" || exit
 }
@@ -267,6 +279,9 @@ case "$1" in
   ;;
 "itermcolors" | "termColors" | "termProfiles")
   installItermColors "${@:2}"
+  ;;
+"pam" | "touchID" | "sudo")
+  installPamReattach
   ;;
 *)
   installAll
