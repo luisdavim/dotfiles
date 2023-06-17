@@ -7,7 +7,7 @@
 #   kubectl trim pod/metac-0
 #   kubectl trim pod metac-0 -t .metadata,.status,.apiVersion,.kind
 
-FIELDS=(.status '.metadata.annotations."kubectl.kubernetes.io/last-applied-configuration"' .metadata.creationTimestamp .metadata.finalizers .metadata.generation .metadata.uid .metadata.resourceVersion .metadata.selfLink .metadata.ownerReferences .metadata.managedFields)
+FIELDS=(.status '.metadata.annotations."kubectl.kubernetes.io/last-applied-configuration"' .metadata.creationTimestamp .metadata.deletionTimestamp .metadata.finalizers .metadata.generation .metadata.uid .metadata.resourceVersion .metadata.selfLink .metadata.ownerReferences .metadata.managedFields)
 OUTPUT="yaml"
 CONVERT=""
 
