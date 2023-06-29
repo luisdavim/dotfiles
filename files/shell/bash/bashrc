@@ -60,6 +60,7 @@ export HISTIGNORE="&:ls:bg:fg:cd"
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
 export HISTSIZE=10000
 export HISTFILESIZE=200000
+# export HISTTIMEFORMAT="%F %T "
 export HISTTIMEFORMAT="%d-%m-%Y %H:%M:%S "
 
 __bash_history_sync() {
