@@ -455,3 +455,9 @@ function garden() {
   esac
 }
 
+# flux aliases
+function flux-retry-failed() {
+  kubectl get hr -A | awk '/False/ {print $2 " -n " $1}' | xargs -r -L1 kubectl patch hr --type='json' -p='[{"op": "replace", "path": "/spec/suspend", "value": true}]'
+  sleep 1
+  kubectl get hr -A | awk '/False/ {print $2 " -n " $1}' | xargs -r -L1 kubectl patch hr --type='json' -p='[{"op": "replace", "path": "/spec/suspend", "value": false}]'
+}
