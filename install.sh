@@ -68,8 +68,8 @@ installKrew() {
   fi
 
   # install krew packages
-  kubectl krew update
-  installPkgList "kubectl krew install" files/pkgs/krew.lst
+  kubectl-krew update
+  installPkgList "kubectl-krew install" files/pkgs/krew.lst
 }
 
 installKubeScripts() {

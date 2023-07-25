@@ -150,8 +150,8 @@
     "typescript",
     "typescript.tsx",
     "typescriptreact",
-    "json",
-    "yaml"
+    "json"
+   // "yaml"
   ],
   "coc.preferences.rootPatterns": [".git", ".hg", ".projections.json", "requirements.txt", "setup.cfg", "package.json", "go.mod", "Makefile"],
   "git.conflict.enabled": true,
