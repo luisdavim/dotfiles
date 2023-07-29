@@ -304,8 +304,10 @@ installVimPlugins() {
   cp -r files/vim/config/* "${HOME}/.vim/config/"
   cp -r files/vim/ft* "${HOME}/.vim/"
   cp files/vim/init.lua "${HOME}/.config/nvim/"
-  if [ ! -s ~/.config/nvim/init.lua ]; then
+  if [ ! -e ~/.config/nvim/init.lua ]; then
     ln -s "${HOME}"/.vimrc "${HOME}/.config/nvim/init.vim"
+  else
+    rm -f "${HOME}/.config/nvim/init.vim"
   fi
   if [ ! -s ~/.config/nvim/coc-settings.json ]; then
     ln -s "${HOME}"/.vim/autoload/ "${HOME}/.config/nvim/autoload"
