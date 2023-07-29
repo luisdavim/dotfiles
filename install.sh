@@ -303,8 +303,11 @@ installVimPlugins() {
   cp files/vim/coc-settings.json "${HOME}/.vim/"
   cp -r files/vim/config/* "${HOME}/.vim/config/"
   cp -r files/vim/ft* "${HOME}/.vim/"
-  if [ ! -s ~/.config/nvim/init.vim ]; then
+  cp files/vim/init.lua "${HOME}/.config/nvim/"
+  if [ ! -s ~/.config/nvim/init.lua ]; then
     ln -s "${HOME}"/.vimrc "${HOME}/.config/nvim/init.vim"
+  fi
+  if [ ! -s ~/.config/nvim/coc-settings.json ]; then
     ln -s "${HOME}"/.vim/autoload/ "${HOME}/.config/nvim/autoload"
     ln -s "${HOME}"/.vim/ftdetect/ "${HOME}/.config/nvim/ftdetect"
     ln -s "${HOME}"/.vim/ftplugin/ "${HOME}/.config/nvim/ftplugin"
@@ -316,7 +319,8 @@ installVimPlugins() {
     curl -sLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   fi
   vim +PlugInstall +qall
-  nvim +'TSInstall all' +qall
+  nvim +PlugInstall +qall
+  # nvim +'TSInstall all' +qall
 }
 
 installKakPlugins() {
