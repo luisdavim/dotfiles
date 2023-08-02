@@ -240,6 +240,7 @@ function kubectl-cfg() {
         \kubectl --kubeconfig="${CFG}" config view --minify --flatten --raw --context=${ctx} > "${CFG_DIR}/${ctx}"
       done
       chmod 600 "${CFG_DIR}"/*
+      rename 's/:/./g' "${CFG_DIR}"/*
       if [[ "$2" == "-p" ]] || [[ "$2" == "--purge" ]]; then
         rm "${CFG}"
       fi
