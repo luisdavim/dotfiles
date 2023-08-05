@@ -149,4 +149,5 @@
   set wildmode=longest:full,full
 
   " autocmd BufRead,BufNewFile *.vue setfiletype html
+  command! -nargs=0 Q :q!
 " }}}

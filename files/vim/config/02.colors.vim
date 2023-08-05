@@ -36,9 +36,12 @@
     " au ColorScheme * hi! CocErrorHighlight ctermfg=red guisp=red guifg=#c4384b gui=undercurl term=undercurl
     " au ColorScheme * hi! CocWarningHighlight ctermfg=yellow guisp=yellow guifg=#c4ab39 gui=undercurl term=undercurl
 
-    au ColorScheme * hi! link CocMenuSel PmenuSel
-    au ColorScheme * hi! link CocPumMenu Pmenu
-    au ColorScheme * hi! link CocPumVirtualText Comment
+    " au ColorScheme * hi! link CocMenuSel PmenuSel
+    " au ColorScheme * hi! link CocPumMenu Pmenu
+    " au ColorScheme * hi! link CocPumVirtualText Comment
+
+    " au ColorScheme *  hi! link CocFloating Pmenu
+    " au ColorScheme *  hi! CocErrorFloat ctermfg={fg color} ctermbg={bg color} gui={gui color}
 
     au ColorScheme * hi! link ClapPreview Pmenu
     au ColorScheme * hi! link ClapDisplay Pmenu
