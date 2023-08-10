@@ -24,6 +24,7 @@ golangci/tap
 habitat-sh/habitat
 hashicorp/tap
 helix-editor/helix
+helm/tap
 homebrew/cask-drivers
 homebrew/cask-fonts
 homebrew/cask-fonts

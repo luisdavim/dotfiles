@@ -57,6 +57,7 @@ certbot
 cf-cli
 cfssl
 chafa
+chart-releaser
 checkov
 chpharos
 chrome-cli
