@@ -348,9 +348,9 @@ function helm-clean() {
   fi
   for N in ${NS}; do
     echo "Looking for ConfigMaps in ${N}:"
-    kubectl delete cm -n ${N} -l 'OWNER=TILLER' -l 'STATUS in (FAILED,SUPERSEDED,DELETED)'
+    \kubectl delete cm -n ${N} -l 'owner=helm' -l 'status in (failed,superseded,deleted)'
     echo "Looking for Secrets in ${N}:"
-    kubectl delete secrets -n ${N} -l 'OWNER=TILLER' -l 'STATUS in (FAILED,SUPERSEDED,DELETED)'
+    \kubectl delete secrets -n ${N} -l 'owner=helm' -l 'status in (failed,superseded,deleted)'
   done
 }
 
@@ -458,7 +458,22 @@ function garden() {
 
 # flux aliases
 function flux-retry-failed() {
-  kubectl get hr -A | awk '/False/ {print $2 " -n " $1}' | xargs -r -L1 kubectl patch hr --type='json' -p='[{"op": "replace", "path": "/spec/suspend", "value": true}]'
+  local force=""
+  case ${1} in
+    -f | --force) force="true";;
+    *) force="false";;
+  esac
+
+  local releases=""
+  releases="$(kubectl get hr -A | awk '/False/ {print $2 " -n " $1}')"
+  if [[ "${releases}" == "" ]]; then
+    return
+  fi
+
+  echo "${releases}" | xargs -r -L1 kubectl patch hr --type='json' -p='[{"op": "replace", "path": "/spec/suspend", "value": true}]'
+  if [[ "${force}" == "true" ]]; then
+    echo "${releases}" | awk '{print "kubectl delete secret -n " $3 " -l name="$1}' | xargs -r -I {} sh -c "{}"
+  fi
   sleep 1
-  kubectl get hr -A | awk '/False/ {print $2 " -n " $1}' | xargs -r -L1 kubectl patch hr --type='json' -p='[{"op": "replace", "path": "/spec/suspend", "value": false}]'
+  echo "${releases}" | xargs -r -L1 kubectl patch hr --type='json' -p='[{"op": "replace", "path": "/spec/suspend", "value": false}]'
 }
