@@ -1,4 +1,4 @@
-  access-matrix
+access-matrix
 bulk-action
 ca-cert
 ctx
@@ -21,6 +21,7 @@ pod-dive
 pod-inspect
 pod-logs
 pod-shell
+pv-migrate
 rbac-lookup
 rbac-view
 resource-capacity
