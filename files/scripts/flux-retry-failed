@@ -1,0 +1,56 @@
+#! /usr/bin/env bash
+
+POSITIONAL=()
+DEBUG="false"
+FORCE="false"
+
+function usage {
+  if [ -n "${1}" ]; then
+    echo -e "${1}"
+    echo ''
+  fi
+  echo "Usage: $(basename "$0") [<flags>] <node> [<command>]"
+  echo ''
+  echo 'Flags:'
+  echo '  -h, --help                            display help'
+  echo '  -d, --debug                           enable debug output'
+  echo '  -f, --force                           force reset helm state'
+  echo ''
+  exit 1
+}
+
+while [[ $# -gt 0 ]]; do
+  key="$1"
+
+  case $key in
+  -h | --help) usage "" ;;
+  -d | --debug)
+    DEBUG="true"
+    shift
+    ;;
+  -f | --force)
+    FORCE="true"
+    shift
+    ;;
+  *)
+    POSITIONAL+=("$1") # save it in an array for later
+    shift              # past argument
+    ;;
+  esac
+done
+
+set -- "${POSITIONAL[@]}" # restore positional parameters
+
+releases=""
+releases="$(kubectl get hr -A | awk '/False/ {print $2 " -n " $1}')"
+if [[ "${releases}" == "" ]]; then
+  exit 0
+fi
+
+echo "${releases}" | xargs -r -L1 kubectl patch hr --type='json' -p='[{"op": "replace", "path": "/spec/suspend", "value": true}]'
+if [[ "${FORCE}" == "true" ]]; then
+  echo "${releases}" | awk '{print "kubectl delete secret -n " $3 " -l name="$1}' | xargs -r -I {} sh -c "{}"
+fi
+sleep 1
+echo "${releases}" | xargs -r -L1 kubectl patch hr --type='json' -p='[{"op": "replace", "path": "/spec/suspend", "value": false}]'
+

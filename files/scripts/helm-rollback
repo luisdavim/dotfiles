@@ -4,6 +4,7 @@ NAMESPACE="${NAMESPACE:-default}"
 DEBUG="false"
 POSITIONAL=()
 REV=""
+PENDING="false"
 
 function usage {
   if [ -n "${1}" ]; then
@@ -15,6 +16,7 @@ function usage {
   echo 'Flags:'
   echo '  -h, --help                            display help'
   echo '  -d, --debug                           enable debug output'
+  echo '  -p, --pending                         retry pending releases'
   echo '  -n, --namespace <name>                namespace name'
   echo '  -r, --revision <number>               revision number'
   echo ''
@@ -28,6 +30,10 @@ while [[ $# -gt 0 ]]; do
   -h | --help) usage "" ;;
   -d | --debug)
     DEBUG="true"
+    shift
+    ;;
+  -p | --pending)
+    PENDING="true"
     shift
     ;;
   -n | --namespace)
@@ -53,8 +59,9 @@ fi
 
 failed=$(echo "${*}" | sed -r -e 's/(\s|\n|,|;)+/\n/g')
 
+filter='(deployed|superseded|NAME)'
 if [ -z "${failed}" ]; then
-  failed=$(helm ls -a -n "${NAMESPACE}" | awk '!/(deployed|superseded|NAME)/ {print $1}')
+  failed=$(helm ls -a -n "${NAMESPACE}" | awk -v filter="${filter}" '$0 !~ filter {print $1}')
 fi
 
 if [ -n "${failed}" ] && [ -n "${REV}" ]; then
@@ -72,10 +79,18 @@ if [[ "$DEBUG" == "true" ]]; then
   echo -e "Going to rollback:\n${failed}"
 fi
 
+filter='(deployed|superseded)'
+if [[ "${PENDING}" == "true" ]]; then
+  filter='(deployed|superseded|pending)'
+fi
+revision=""
+
 for release in ${failed}; do
-  revision=$(helm history "${release}" -n "${NAMESPACE}" | awk '/deployed/ {print $1}')
+  if [[ "${PENDING}" != "true" ]]; then
+    revision=$(helm history "${release}" -n "${NAMESPACE}" | awk '/deployed/ {print $1}')
+  fi
   if [ -z "${revision}" ]; then
-    revision=$(helm history "${release}" -n "${NAMESPACE}" | awk '/(deployed|superseded)/ {print $1}' | tail -n 1)
+    revision=$(helm history "${release}" -n "${NAMESPACE}" | awk -v filter="${filter}" '$0 ~ filter {print $1}' | tail -n 1)
   fi
   if [[ "$DEBUG" == "true" ]]; then
     helm history "${release}" -n "${NAMESPACE}"
