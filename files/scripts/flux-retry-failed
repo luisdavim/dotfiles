@@ -3,6 +3,7 @@
 POSITIONAL=()
 DEBUG="false"
 FORCE="false"
+ROLLBACK="false"
 
 function usage {
   if [ -n "${1}" ]; then
@@ -14,6 +15,7 @@ function usage {
   echo 'Flags:'
   echo '  -h, --help                            display help'
   echo '  -d, --debug                           enable debug output'
+  echo '  -r, --rollback                        rollback failed helm releases'
   echo '  -f, --force                           force reset helm state'
   echo ''
   exit 1
@@ -32,6 +34,10 @@ while [[ $# -gt 0 ]]; do
     FORCE="true"
     shift
     ;;
+  -r | --rollback)
+    ROLLBACK="true"
+    shift
+    ;;
   *)
     POSITIONAL+=("$1") # save it in an array for later
     shift              # past argument
@@ -48,6 +54,9 @@ if [[ "${releases}" == "" ]]; then
 fi
 
 echo "${releases}" | xargs -r -L1 kubectl patch hr --type='json' -p='[{"op": "replace", "path": "/spec/suspend", "value": true}]'
+if [[ "${ROLLBACK}" == "true" ]]; then
+  echo "${releases}" | awk '{print "helm-rollback -p " $0}' | xargs -r -I {} sh -c "{}"
+fi
 if [[ "${FORCE}" == "true" ]]; then
   echo "${releases}" | awk '{print "kubectl delete secret -n " $3 " -l name="$1}' | xargs -r -I {} sh -c "{}"
 fi

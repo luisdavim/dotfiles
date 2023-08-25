@@ -59,7 +59,11 @@ fi
 
 failed=$(echo "${*}" | sed -r -e 's/(\s|\n|,|;)+/\n/g')
 
-filter='(deployed|superseded|NAME)'
+filter='(deployed|superseded|pending|NAME)'
+if [[ "${PENDING}" == "true" ]]; then
+  filter='(deployed|superseded|NAME)'
+fi
+
 if [ -z "${failed}" ]; then
   failed=$(helm ls -a -n "${NAMESPACE}" | awk -v filter="${filter}" '$0 !~ filter {print $1}')
 fi
@@ -83,9 +87,9 @@ filter='(deployed|superseded)'
 if [[ "${PENDING}" == "true" ]]; then
   filter='(deployed|superseded|pending)'
 fi
-revision=""
 
 for release in ${failed}; do
+  revision=""
   if [[ "${PENDING}" != "true" ]]; then
     revision=$(helm history "${release}" -n "${NAMESPACE}" | awk '/deployed/ {print $1}')
   fi
