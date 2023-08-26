@@ -133,12 +133,13 @@ function kubectl-parallel() {
   fi
   echo ""
 
+  suffix="$(tr -dc A-Za-z0-9 </dev/urandom | head -c 13 ; echo '')"
   if [[ "${follow}" == "true" ]] && [ -x "$(command -v multitail)" ] && [ -n "$TMUX" ]; then
-    echo "${ctxs}" | xargs -P 10 -I {} touch /tmp/{}.kout
-    tmux split-window "multitail -f /tmp/*.kout"
+    echo "${ctxs}" | xargs -P 10 -I {} touch /tmp/{}-${suffix}.kout
+    tmux split-window "multitail -f /tmp/*-${suffix}.kout"
   fi
 
-  echo "${ctxs}" | xargs -P 10 -I {} -r -- sh -c 'export KUBECONFIG=${1}/{}; shift; eval "${*} &> /tmp/{}.kout"' -- "${CFG_DIR}" "${args}"
+  echo "${ctxs}" | xargs -P 10 -I {} -r -- sh -c 'export KUBECONFIG=${1}/{}; out="/tmp/{}-${2}.kout"; shift 2; eval "${*} &> ${out}"' -- "${CFG_DIR}" "${suffix}" "${args}"
 
   # if using gnu parallel, you can live tail the outputs with the following:
   # parallel --tagstring "{}:" --line-buffer tail -f {} ::: /tmp/*.kout
@@ -147,11 +148,11 @@ function kubectl-parallel() {
 
   for f in ${ctxs}; do
     echo ">> $f"
-    cat "/tmp/${f}.kout"
+    cat "/tmp/${f}-${suffix}.kout"
     echo "---"
   done
 
-  rm -f /tmp/*.kout
+  rm -f /tmp/*-${suffix}.kout
 }
 alias kparallel='kubectl-parallel'
 alias hparallel='kubectl-parallel -c helm'
