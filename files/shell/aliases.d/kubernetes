@@ -370,6 +370,11 @@ function helmsman-adopt() {
   \kubectl label secret -n ${2} -l name=${1} --overwrite HELMSMAN_CONTEXT=${3:-default} MANAGED-BY=HELMSMAN NAMESPACE=${2}
 }
 
+function helm-adopt() {
+  \kubectl annotate ${3} ${4} -n ${2} meta.helm.sh/release-name=${1} meta.helm.sh/release-namespace=${2} --overwrite
+  \kubectl label ${3} ${4} -n ${2} app.kubernetes.io/managed-by=Helm --overwrite
+}
+
 # Minikube
 function mk() {
   export KUBECONFIG=~/.kube/config.d/minikube
