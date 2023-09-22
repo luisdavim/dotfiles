@@ -139,7 +139,7 @@ function kubectl-parallel() {
     tmux split-window "multitail -f /tmp/*-${suffix}.kout"
   fi
 
-  echo "${ctxs}" | xargs -P 10 -I {} -r -- sh -c 'export KUBECONFIG=${1}/{}; out="/tmp/{}-${2}.kout"; shift 2; eval "${*} &> ${out}"' -- "${CFG_DIR}" "${suffix}" "${args}"
+  echo "${ctxs}" | xargs -P 10 -I {} -r -- sh -c 'export KUBECONFIG=${1}/{}; out="/tmp/{}-${2}.kout"; shift 2; eval "${*} > ${out} 2>&1"' -- "${CFG_DIR}" "${suffix}" "${args}"
 
   # if using gnu parallel, you can live tail the outputs with the following:
   # parallel --tagstring "{}:" --line-buffer tail -f {} ::: /tmp/*.kout

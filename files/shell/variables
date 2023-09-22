@@ -80,9 +80,9 @@ export AWS_PAGER="bat -p ${AWS_PAGER_OPTS}"
 export GRC_ALIASES=true
 
 # GO config
-GOPROXY="https://proxy.golang.org,direct"
-GO111MODULE=on
-GOVIM_GOPLS_FLAGS=-remote=auto
+export GOPROXY="https://proxy.golang.org,direct"
+export GO111MODULE=on
+export GOVIM_GOPLS_FLAGS=-remote=auto
 
 if [ -f "${HOME}/.config/gh/hosts.yml" ]; then
   export GITHUB_TOKEN=$(yq '."github.com".oauth_token' ~/.config/gh/hosts.yml | tr -d '[:blank:]')
