@@ -23,7 +23,7 @@ function kctl() {
     return $?
   fi
   COLOR="command"
-  if [ -x "$(command -v grc)" ]  && [[ ',modify-secret,edit,exec,ssh,access-matrix,shell,remote_shell,debug,' != *",${CMD},"* ]]; then
+  if [ -x "$(command -v grc)" ]  && [[ ',modify-secret,edit,exec,ssh,access-matrix,shell,remote_shell,debug,ephemeral,' != *",${CMD},"* ]]; then
     COLOR="grc -es --colour=auto"
   fi
   local args=(${COLOR} kubectl ${CMD})

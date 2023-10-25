@@ -16,6 +16,7 @@ function usage() {
   echo '  -h, --help                            display help'
   echo '  -d, --debug                           enable debug output'
   echo '  -f, --force                           force delete pods'
+  echo '  -n, --namespace <namespace>           on this namespace only'
   exit 1
 }
 

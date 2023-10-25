@@ -109,6 +109,7 @@ installKubeScripts() {
   fi
 
   curl -sL https://raw.githubusercontent.com/crossplane/crossplane/master/install.sh | sh
+  mv crossplane "${HOME}/.local/bin/"
   mv kubectl-crossplane "${HOME}/.local/bin/"
 
   installHelmPlugins
