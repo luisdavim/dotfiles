@@ -135,7 +135,7 @@ plugins=(
   zsh-autopair
   zsh-autosuggestions
   zsh-history-substring-search
-  zsh_codex
+  # zsh_codex
   # kube-ps1
 )
 
