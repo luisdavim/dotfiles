@@ -39,6 +39,7 @@ github.com/sqs/goreturns
 github.com/talos-systems/conform
 github.com/tcnksm/ghr
 github.com/uber/astro/astro/cli/astro
+github.com/updatecli/updatecli
 github.com/wagoodman/dive
 github.com/zegl/kube-score
 golang.org/x/lint
