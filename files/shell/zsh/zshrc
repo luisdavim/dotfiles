@@ -133,6 +133,9 @@ plugins=(
 )
 
 if [[ -x "$(command -v zellij)" ]] && [[ "${ZELLIJ_AUTOSTART}" == "true" ]] ; then
+  if [ -f "${HOME}/.config/zellij/config.kdl" ]; then
+    export ZELLIJ_CONFIG_DIR="${HOME}/.config/zellij/config.kdl"
+  fi
   eval "$(zellij setup --generate-auto-start zsh)"
 else
   # Tmux plugin config
