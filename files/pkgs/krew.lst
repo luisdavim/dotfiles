@@ -10,6 +10,7 @@ exec-all
 get-all
 konfig
 krew
+kubescape
 modify-secret
 mtail
 neat
