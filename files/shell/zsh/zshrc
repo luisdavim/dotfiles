@@ -106,12 +106,6 @@ add-zsh-hook precmd _eternal_history_save
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
-# Tmux plugin config
-export ZSH_TMUX_AUTOSTART=true
-export ZSH_TMUX_AUTOSTART_ONCE=true
-export ZSH_TMUX_AUTOQUIT=true
-export ZSH_TMUX_AUTOCONNECT=false
-
 export GIT_AUTO_FETCH_INTERVAL=60 #in seconds
 
 # Which plugins would you like to load?
@@ -120,7 +114,6 @@ export GIT_AUTO_FETCH_INTERVAL=60 #in seconds
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-  tmux
   history
   ssh-agent
   git
@@ -138,6 +131,18 @@ plugins=(
   # zsh_codex
   # kube-ps1
 )
+
+if [[ -x "$(command -v zellij)" ]] && [[ "${ZELLIJ_AUTOSTART}" == "true" ]] ; then
+  eval "$(zellij setup --generate-auto-start zsh)"
+else
+  # Tmux plugin config
+  export ZSH_TMUX_AUTOSTART=true
+  export ZSH_TMUX_AUTOSTART_ONCE=true
+  export ZSH_TMUX_AUTOQUIT=true
+  export ZSH_TMUX_AUTOCONNECT=false
+
+  plugins[1,0]=(tmux)
+fi
 
 if [[ $OSTYPE != *"android"* ]]; then
   plugins=(${plugins[@]} thefuck)
