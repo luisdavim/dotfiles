@@ -53,6 +53,7 @@
 
   Plug 'ryanoasis/vim-devicons'
 
+  Plug 'tpope/vim-abolish'
   Plug 'tpope/vim-sleuth'
   Plug 'tpope/vim-eunuch'
   Plug 'tpope/vim-surround'
@@ -60,7 +61,6 @@
   Plug 'tpope/vim-commentary'
   "Plug 'tpope/vim-unimpaired'"
   "Plug 'tpope/vim-endwise'
-  "Plug 'tpope/vim-abolish'
   Plug 'nvie/vim-togglemouse'
   Plug 'Konfekt/FastFold'
   Plug 'luisdavim/pretty-folds'
