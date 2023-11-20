@@ -125,7 +125,9 @@ function diffs() {
 }
 
 function diff-dir() {
-  diff -bur ${1} ${2:-./} --exclude '.git' | delta -s
+  diff -bur "${1}" "${2:-./}" --exclude '.git' | delta -s
+  echo "Summary:"
+  diff -q "${1}" "${2:-./}"
 }
 
 # Syntax highlighting in cat and less

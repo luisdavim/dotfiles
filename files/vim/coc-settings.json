@@ -53,6 +53,7 @@
   "jedi.workspace.symbols.ignoreFolders": [".nox", ".tox", ".venv", "__pycache__", "venv"],
   "pyright.enable": true,
   "python.formatting.provider": "black",
+  "Lua.diagnostics.globals": ["vim"],
   "explorer.quitOnOpen": true,
   "explorer.toggle": true,
   "explorer.focus": true,

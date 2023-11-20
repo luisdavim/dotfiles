@@ -7,3 +7,7 @@ require'nvim-treesitter.configs'.setup {
     enable = true,
   }
 }
+
+require("ibl").setup{
+  scope = { enabled = false },
+}
