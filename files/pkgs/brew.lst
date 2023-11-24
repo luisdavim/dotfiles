@@ -92,6 +92,7 @@ docker-credential-helper
 docker-ls
 docker-slim
 dog
+dos2unix
 dust
 ec2-ami-tools
 ec2-api-tools

@@ -44,6 +44,25 @@ alias krr='kctl rollout restart'
 alias kdrain='kctl drain --ignore-daemonsets --delete-emptydir-data'
 alias kubectl='kctl'
 
+# generate aliases for each context
+if [ -d ~/.kube/config.d ]; then
+  for CTX in $(find ~/.kube/config.d/ -type f -printf "%f\n"); do
+    local cmd="alias k8s-${CTX/#${USER}-}='kubectl --kubeconfig ${HOME}/.kube/config.d/${CTX}'"
+    eval "${cmd}"
+    local cmd="alias helm-${CTX/#${USER}-}='helm --kubeconfig ${HOME}/.kube/config.d/${CTX}'"
+    eval "${cmd}"
+  done
+fi
+
+if [ -f ~/.kube/config ]; then
+  for CTX in $(\kubectl config get-contexts -o name); do
+    local cmd="alias k8s-${CTX/#${USER}-}='kubectl --context ${CTX}'"
+    eval "${cmd}"
+    local cmd="alias helm-${CTX/#${USER}-}='helm --context ${CTX}'"
+    eval "${cmd}"
+  done
+fi
+
 function kgy() {
   \kubectl get ${@} -o yaml | bat --paging never --theme ${BAT_THEME:-TwoDark} -p -l yaml
 }
@@ -162,7 +181,7 @@ function kubectl-get-ctx() {
   if [ -d "${KFG_DIR}" ] && [[ "$KUBECONFIG" != "~/.kube/config" ]]; then
     if [[ "${1}" == "-z" ]]; then
       shift
-      ls -1 "${KFG_DIR}/" | fzf --filter="${1}"
+      find "${KFG_DIR}/" -type f | fzf --filter="${1}"
     else
       find "${KFG_DIR}/" -type f -name "*${1}*" -printf "%f\n"
     fi
@@ -177,24 +196,6 @@ function kubectl-get-ctx() {
     \kubectl config get-contexts -o name | grep "${re}"
   fi
 }
-
-if [ -d ~/.kube/config.d ]; then
-  for CTX in $(find ~/.kube/config.d/ -type f -printf "%f\n"); do
-    local cmd="alias k8s-${CTX/#${USER}-}='kubectl --kubeconfig ${HOME}/.kube/config.d/${CTX}'"
-    eval "${cmd}"
-    local cmd="alias helm-${CTX/#${USER}-}='helm --kubeconfig ${HOME}/.kube/config.d/${CTX}'"
-    eval "${cmd}"
-  done
-fi
-
-if [ -f ~/.kube/config ]; then
-  for CTX in $(\kubectl config get-contexts -o name); do
-    local cmd="alias k8s-${CTX/#${USER}-}='kubectl --context ${CTX}'"
-    eval "${cmd}"
-    local cmd="alias helm-${CTX/#${USER}-}='helm --context ${CTX}'"
-    eval "${cmd}"
-  done
-fi
 
 function kubectl-ctx() {
   if [[ "${1}" == "kind" ]]; then
