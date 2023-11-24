@@ -14,7 +14,7 @@
 # function kubectl() { echo "+ kubectl $@">&2; \kubectl $@; }
 
 function kctl() {
-  CMD="${1}"
+  local CMD="${1}"
   if [ ${#} -gt 0 ]; then
     shift
   fi
@@ -56,9 +56,9 @@ fi
 
 if [ -f ~/.kube/config ]; then
   for CTX in $(\kubectl config get-contexts -o name); do
-    local cmd="alias k8s-${CTX/#${USER}-}='kubectl --context ${CTX}'"
+    local cmd="alias k8s-${CTX/#${USER}-}='kubectl --kubeconfig ${HOME}/.kube/config --context ${CTX}'"
     eval "${cmd}"
-    local cmd="alias helm-${CTX/#${USER}-}='helm --context ${CTX}'"
+    local cmd="alias helm-${CTX/#${USER}-}='helm --kubeconfig ${HOME}/.kube/config --context ${CTX}'"
     eval "${cmd}"
   done
 fi
@@ -83,8 +83,8 @@ function kubectl-diff() {
 alias kdiff='kubectl-diff'
 
 function kubectl-getNotReady(){
-  filter='.items[]| select(.status != null)|select(.status.conditions[] != null)|select([.status.conditions[]|select(.type == "Ready" and .status == "False")]|length == 1)'
-  table="([\"NAMESPACE\",\"NAME\"] | (., map(length*\"-\"))),(${filter} | [.metadata.namespace, .metadata.name]) | @tsv"
+  local filter='.items[]| select(.status != null)|select(.status.conditions[] != null)|select([.status.conditions[]|select(.type == "Ready" and .status == "False")]|length == 1)'
+  local table="([\"NAMESPACE\",\"NAME\"] | (., map(length*\"-\"))),(${filter} | [.metadata.namespace, .metadata.name]) | @tsv"
   \kubectl get ${@} -o json | jq -r "${table}"
 }
 alias kgnr='kctl getNotReady'
@@ -103,11 +103,11 @@ function kubectl-default-ingressclass() {
 alias kgdic='kubectl-default-ingressclass'
 
 function kubectl-events() {
-  FILTER=""
+  local filter=""
   if [ -n "$1" ]; then
-    FILTER="--field-selector involvedObject.name=${@}"
+    filter="--field-selector involvedObject.name=${@}"
   fi
-  kubectl get event ${FILTER}
+  kubectl get event ${filter}
 }
 alias kctl-events='kubectl-events'
 
@@ -237,18 +237,18 @@ function kubectl-ctx() {
 alias kctx='kubectl-ctx'
 
 function kubectl-cfg() {
-  CFG=${KUBECONFIG:-~/.kube/config}
+  KFG=${KUBECONFIG:-~/.kube/config}
   KFG_DIR=${KFG_DIR:-~/.kube/config.d}
   case "$1" in
     split)
       mkdir -p "${KFG_DIR}"
-      for ctx in $(\kubectl --kubeconfig="${CFG}" config get-contexts -o name); do
-        \kubectl --kubeconfig="${CFG}" config view --minify --flatten --raw --context=${ctx} > "${KFG_DIR}/${ctx}"
+      for ctx in $(\kubectl --kubeconfig="${KFG}" config get-contexts -o name); do
+        \kubectl --kubeconfig="${KFG}" config view --minify --flatten --raw --context=${ctx} > "${KFG_DIR}/${ctx}"
       done
       chmod 600 "${KFG_DIR}"/*
       rename -f 's/:/./g' "${KFG_DIR}"/*
       if [[ "$2" == "-p" ]] || [[ "$2" == "--purge" ]]; then
-        rm "${CFG}"
+        rm "${KFG}"
       fi
       ;;
     merge)
@@ -269,7 +269,7 @@ function kubectl-cfg() {
       ;;
     *)
       echo -e "Unknown command!\n  Available commands are:"
-      echo -e " split\tSplit ${CFG} into separate files under ${KFG_DIR}/ (-p to delete ${CFG} in the end)"
+      echo -e " split\tSplit ${KFG} into separate files under ${KFG_DIR}/ (-p to delete ${KFG} in the end)"
       echo -e " merge\tMerge two kubectl config files (kcfg merge <source_cfg> [<dest_cfg>])"
       ;;
   esac
