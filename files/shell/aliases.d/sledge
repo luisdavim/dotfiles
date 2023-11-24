@@ -13,30 +13,30 @@ function slg-login() {
 }
 
 function slg-setup() {
-  CFG_DIR=~/.kube/config.d
+  KFG_DIR=${KFG_DIR:-~/.kube/config.d}
   SPLIT=FALSE
 
   if [[ "$1" == "-s" ]] || [[ "$1" == "--split" ]]; then
     SPLIT=TRUE
-    mkdir -p "${CFG_DIR}"
+    mkdir -p "${KFG_DIR}"
   fi
 
   for CTX in $(sledge get cluster | jq -r '.[].clusterID'); do
     if [[ "${SPLIT}" == "TRUE" ]]; then
-      export KUBECONFIG="${CFG_DIR}/${CTX}"
+      export KUBECONFIG="${KFG_DIR}/${CTX}"
     fi
     sledge connect "${CTX}"
   done
 }
 
 function slg-ctx() {
-  CFG_DIR=~/.kube/config.d
+  KFG_DIR=${KFG_DIR:-~/.kube/config.d}
   CTX=$1
-  if [ -d "${CFG_DIR}" ] && [[ "$KUBECONFIG" != "~/.kube/config" ]]; then
+  if [ -d "${KFG_DIR}" ] && [[ "$KUBECONFIG" != "~/.kube/config" ]]; then
     if [ -z "${CTX}" ]; then
-      CTX=$(ls -1 ${CFG_DIR}/ | fzf)
+      CTX=$(ls -1 ${KFG_DIR}/ | fzf)
     fi
-    export KUBECONFIG="${CFG_DIR}/${CTX}"
+    export KUBECONFIG="${KFG_DIR}/${CTX}"
   fi
   if [ -z "${CTX}" ]; then
     CTX=$(sledge get cluster -o json | jq -r '.[].clusterID' | fzf)

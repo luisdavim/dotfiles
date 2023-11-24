@@ -117,7 +117,7 @@ function actr() {
 
 # switch EKS contexts
 function ekctx() {
-  CFG_DIR=~/.kube/config.d
+  KFG_DIR=${KFG_DIR:-~/.kube/config.d}
   CTX="${1-}"
   if [ -z "${CTX}" ]; then
     CTX="$(aws --output json eks list-clusters | jq -r '.clusters[]' | fzf)"
@@ -130,6 +130,6 @@ function ekctx() {
   # if [ -n "${role}" ]; then
   #   role="--role-arn ${role}"
   # fi
-  export KUBECONFIG="${CFG_DIR}/${CTX}"
+  export KUBECONFIG="${KFG_DIR}/${CTX}"
   aws eks update-kubeconfig --name "${CTX}" ${role}
 }

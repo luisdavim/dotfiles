@@ -93,7 +93,7 @@ function kubectl-events() {
 alias kctl-events='kubectl-events'
 
 function kubectl-parallel() {
-  CFG_DIR=${CFG_DIR:-~/.kube/config.d}
+  KFG_DIR=${KFG_DIR:-~/.kube/config.d}
 
   local args=()
   local cmd="kubectl"
@@ -139,7 +139,7 @@ function kubectl-parallel() {
     tmux split-window "multitail -f /tmp/*-${suffix}.kout"
   fi
 
-  echo "${ctxs}" | xargs -P 10 -I {} -r -- sh -c 'export KUBECONFIG=${1}/{}; out="/tmp/{}-${2}.kout"; shift 2; eval "( ${*} ) > ${out} 2>&1"' -- "${CFG_DIR}" "${suffix}" "${args}"
+  echo "${ctxs}" | xargs -P 10 -I {} -r -- sh -c 'export KUBECONFIG=${1}/{}; out="/tmp/{}-${2}.kout"; shift 2; eval "( ${*} ) > ${out} 2>&1"' -- "${KFG_DIR}" "${suffix}" "${args}"
 
   # if using gnu parallel, you can live tail the outputs with the following:
   # parallel --tagstring "{}:" --line-buffer tail -f {} ::: /tmp/*.kout
@@ -158,13 +158,13 @@ alias kparallel='kubectl-parallel'
 alias hparallel='kubectl-parallel -c helm'
 
 function kubectl-get-ctx() {
-  CFG_DIR=${CFG_DIR:-~/.kube/config.d}
-  if [ -d "${CFG_DIR}" ] && [[ "$KUBECONFIG" != "~/.kube/config" ]]; then
+  KFG_DIR=${KFG_DIR:-~/.kube/config.d}
+  if [ -d "${KFG_DIR}" ] && [[ "$KUBECONFIG" != "~/.kube/config" ]]; then
     if [[ "${1}" == "-z" ]]; then
       shift
-      ls -1 "${CFG_DIR}/" | fzf --filter="${1}"
+      ls -1 "${KFG_DIR}/" | fzf --filter="${1}"
     else
-      find "${CFG_DIR}/" -type f -name "*${1}*" -printf "%f\n"
+      find "${KFG_DIR}/" -type f -name "*${1}*" -printf "%f\n"
     fi
     return
   fi
@@ -206,29 +206,29 @@ function kubectl-ctx() {
     kubectl-get-ctx -z "${1}"
     return
   fi
-  CFG_DIR=${CFG_DIR:-~/.kube/config.d}
-  if [ -d "${CFG_DIR}" ] && [[ "$KUBECONFIG" != "~/.kube/config" ]]; then
-    if [ -n "$1" ] && [ -f "${CFG_DIR}/${1}" ]; then
-      export KUBECONFIG="${CFG_DIR}/${1}"
+  KFG_DIR=${KFG_DIR:-~/.kube/config.d}
+  if [ -d "${KFG_DIR}" ] && [[ "$KUBECONFIG" != "~/.kube/config" ]]; then
+    if [ -n "$1" ] && [ -f "${KFG_DIR}/${1}" ]; then
+      export KUBECONFIG="${KFG_DIR}/${1}"
       return
     fi
-    # files=$(find "${CFG_DIR}/" -type f -name "*${1}*" -printf "%f\n")
-    files=$(ls -1 "${CFG_DIR}/" | fzf --filter="${1}")
+    # files=$(find "${KFG_DIR}/" -type f -name "*${1}*" -printf "%f\n")
+    files=$(ls -1 "${KFG_DIR}/" | fzf --filter="${1}")
     l=$(echo -n "${files}" | grep -c '^')
     if [ $l -eq 0 ]; then
       echo "no matching context found"
       return
     fi
     if [ $l -eq 1 ]; then
-      export KUBECONFIG="${CFG_DIR}/${files}"
+      export KUBECONFIG="${KFG_DIR}/${files}"
       return
     fi
     CTX=$(echo -n "${files}"| fzf)
-    if [ ! -f "${CFG_DIR}/${CTX}" ]; then
+    if [ ! -f "${KFG_DIR}/${CTX}" ]; then
       echo "no matching context found"
       return
     fi
-    export KUBECONFIG="${CFG_DIR}/${CTX}"
+    export KUBECONFIG="${KFG_DIR}/${CTX}"
     return
   fi
   kubectx "${@}"
@@ -237,15 +237,15 @@ alias kctx='kubectl-ctx'
 
 function kubectl-cfg() {
   CFG=${KUBECONFIG:-~/.kube/config}
-  CFG_DIR=${CFG_DIR:-~/.kube/config.d}
+  KFG_DIR=${KFG_DIR:-~/.kube/config.d}
   case "$1" in
     split)
-      mkdir -p "${CFG_DIR}"
+      mkdir -p "${KFG_DIR}"
       for ctx in $(\kubectl --kubeconfig="${CFG}" config get-contexts -o name); do
-        \kubectl --kubeconfig="${CFG}" config view --minify --flatten --raw --context=${ctx} > "${CFG_DIR}/${ctx}"
+        \kubectl --kubeconfig="${CFG}" config view --minify --flatten --raw --context=${ctx} > "${KFG_DIR}/${ctx}"
       done
-      chmod 600 "${CFG_DIR}"/*
-      rename -f 's/:/./g' "${CFG_DIR}"/*
+      chmod 600 "${KFG_DIR}"/*
+      rename -f 's/:/./g' "${KFG_DIR}"/*
       if [[ "$2" == "-p" ]] || [[ "$2" == "--purge" ]]; then
         rm "${CFG}"
       fi
@@ -259,8 +259,8 @@ function kubectl-cfg() {
         return 1
       fi
       if [[ "$2" == "all" ]]; then
-        for CTX in $(ls -1 ${CFG_DIR}); do
-          KUBECONFIG="${DST}:${CFG_DIR}/${CTX}" \kubectl config view --flatten --raw >> ${DST}
+        for CTX in $(ls -1 ${KFG_DIR}); do
+          KUBECONFIG="${DST}:${KFG_DIR}/${CTX}" \kubectl config view --flatten --raw >> ${DST}
         done
       else
         KUBECONFIG="${DST}:${2}" \kubectl config view --flatten --raw >> ${DST}
@@ -268,7 +268,7 @@ function kubectl-cfg() {
       ;;
     *)
       echo -e "Unknown command!\n  Available commands are:"
-      echo -e " split\tSplit ${CFG} into separate files under ${CFG_DIR}/ (-p to delete ${CFG} in the end)"
+      echo -e " split\tSplit ${CFG} into separate files under ${KFG_DIR}/ (-p to delete ${CFG} in the end)"
       echo -e " merge\tMerge two kubectl config files (kcfg merge <source_cfg> [<dest_cfg>])"
       ;;
   esac
