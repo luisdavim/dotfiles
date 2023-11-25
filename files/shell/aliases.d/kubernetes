@@ -32,8 +32,7 @@ function kctl() {
   done
   eval "${args[*]}"
 }
-# alias k='kubectl "--context=${KUBECTL_CONTEXT:-$(kubectl config current-context)}" ${KUBECTL_NAMESPACE/[[:alnum:]-]*/--namespace=${KUBECTL_NAMESPACE}}'
-# alias kubectl="kubectl --context \${KUBE_CONTEXT:-\$(\kubectl config current-context)}"
+
 alias k='kctl'
 alias kga='kctl get -A'
 alias kd='kctl describe'
@@ -41,8 +40,12 @@ alias kvs='kctl view-secret'
 alias keds='kctl modify-secret'
 alias ked='kctl edit'
 alias krr='kctl rollout restart'
+alias ktop='kctl top'
 alias kdrain='kctl drain --ignore-daemonsets --delete-emptydir-data'
 alias kubectl='kctl'
+
+# alias k='kubectl "--context=${KUBECTL_CONTEXT:-$(kubectl config current-context)}" ${KUBECTL_NAMESPACE/[[:alnum:]-]*/--namespace=${KUBECTL_NAMESPACE}}'
+# alias kubectl="kubectl --context \${KUBE_CONTEXT:-\$(\kubectl config current-context)}"
 
 # generate aliases for each context
 if [ -d ~/.kube/config.d ]; then

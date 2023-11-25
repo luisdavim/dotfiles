@@ -2,7 +2,7 @@
 
 # helper function used in other aliases
 function _isFunction() {
-  check='declare -F --'
+  local check='declare -F --'
   if [[ "$(ps -p "$$" -o comm=)" == *"zsh" ]]; then
     check='print -l ${(ok)functions[(I)[^_+]*]} | grep -w'
   fi
@@ -105,8 +105,8 @@ function hbtween() {
   # Example:
   #   hbtween 202203301320 202203301530
   #   hbtween '2022-03-30 13:20' '2022-03-30 15:35' mysql
-  start="$(echo ${1} | tr -d '\- :')"
-  finish="$(echo ${2} | tr -d '\- :')"
+  local start="$(echo ${1} | tr -d '\- :')"
+  local finish="$(echo ${2} | tr -d '\- :')"
   echo -e '#ID\t#USER\t#SEQ\t#DATE TIME\t#DURATION\t#COMMAND'
   gawk -v s=${start} -v f=${finish} 'match($4$5, "([0-9]+)-([0-9]+)-([0-9]+)\s?([0-9]+):([0-9]+)", ary) {D=ary[1] ary[2] ary[3] ary[4] ary[5]; if (D > s && D < f) print}' $_eternal_history_histfile | grep "${3}"
 }
@@ -254,9 +254,9 @@ function set_var() {
 }
 
 function dedup_pathvar() {
-  pathvar_name="$1"
-  pathvar_value="$(get_var "$pathvar_name")"
-  deduped_path="$(perl -e 'print join(":",grep { not $seen{$_}++ } split(/:/, $ARGV[0]))' "$pathvar_value")"
+  local pathvar_name="$1"
+  local pathvar_value="$(get_var "$pathvar_name")"
+  local deduped_path="$(perl -e 'print join(":",grep { not $seen{$_}++ } split(/:/, $ARGV[0]))' "$pathvar_value")"
   set_var "$pathvar_name" "$deduped_path"
 }
 
@@ -276,7 +276,7 @@ alias autoshellcheck='shellcheck $(shfmt -f .) -f diff | git apply'
 
 # https://github.com/idank/explainshell/issues/4#issuecomment-354709120
 function explain-shell() {
-  response=$(w3m -dump 'http://explainshell.com/explain?cmd='$(echo $@ | tr ' ' '+'))
+  local response=$(w3m -dump 'http://explainshell.com/explain?cmd='$(echo $@ | tr ' ' '+'))
   cat -s <(grep -v -e explainshell -e • -e □ -e 'source manpages' <<< "$response")
 }
 

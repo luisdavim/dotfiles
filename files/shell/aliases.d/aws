@@ -7,8 +7,10 @@
 # fi
 
 function aws-assume-role() {
-  role="${1-}"
-  assumed_role=""
+  local role="${1-}"
+  local sessionName="${2-}"
+  local assumed_role=""
+  local result=""
   if [ -z "${role}" ]; then
     assumed_role="$(aws sts get-caller-identity --output text --query 'Arn')"
     role=${"${assumed_role%/*}/assumed-/"}
@@ -17,7 +19,6 @@ function aws-assume-role() {
     echo "failed to get role ARN"
     return
   fi
-  sessionName="${2-}"
   if [ -z "${sessionName}" ]; then
     if [ -n "${assumed_role}" ]; then
       sessionName="${assumed_role##*/}"
