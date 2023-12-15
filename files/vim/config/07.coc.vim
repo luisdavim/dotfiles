@@ -10,7 +10,7 @@ set nowritebackup
 set updatetime=300
 
 " Give more space for displaying messages.
-set cmdheight=2
+" set cmdheight=2
 
 " Don't pass messages to |ins-completion-menu|.
 set shortmess+=c

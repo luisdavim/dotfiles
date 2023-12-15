@@ -128,9 +128,25 @@
     "typeParameter": "\uf728",
     "default": "\uf29c"
   },
+  "hover.floatConfig":{
+    "border": true,
+    "shadow": true
+  },
+  "suggest.floatConfig":{
+    "border": true,
+    "shadow": true
+  },
+  "diagnostic.floatConfig":{
+    "border": true,
+    "shadow": true
+  },
+  "signature.floatConfig":{
+    "border": true,
+    "shadow": true
+  },
   "suggest.pumFloatConfig": {
-    "border": false,
-    "shadow": false,
+    "border": true,
+    "shadow": true,
     "rounded": false,
     "winblend": 0
   },
