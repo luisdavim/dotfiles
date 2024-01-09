@@ -107,6 +107,7 @@ exiftool
 faq
 fd
 fff
+ffmpegthumbnailer
 figlet
 findutils
 fluxctl
@@ -243,6 +244,7 @@ pipenv
 pipx
 pluto
 popeye
+poppler
 pre-commit
 prettyping
 procs
@@ -321,6 +323,7 @@ ttyd
 ttyplot
 tubekit
 ufraw
+unar
 unzip
 updatecli
 vagrant-completion
@@ -340,6 +343,7 @@ yabai
 yamllint
 yarn
 yarn-completion
+yazi
 ydiff
 yq
 ytt

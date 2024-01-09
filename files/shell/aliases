@@ -34,7 +34,10 @@ if [ -x "$(command -v els)" ]; then
   alias els='els --els-icons=fontawesome'
   # alias ls='els --els-icons=fontawesome'
 fi
-if [ -x "$(command -v exa)" ]; then
+if [ -x "$(command -v eza)" ]; then
+  alias ls='eza --color-scale'
+  alias tree='eza -T --color-scale --icons --ignore-glob "*node_modules*|*vendor*"'
+elif [ -x "$(command -v exa)" ]; then
   alias ls='exa --color-scale'
   alias tree='exa -T --color-scale --icons --ignore-glob "*node_modules*|*vendor*"'
 fi
@@ -42,7 +45,10 @@ alias lc='colorls'
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
-if [ -x "$(command -v exa)" ]; then
+if [ -x "$(command -v eza)" ]; then
+  alias lt='ls -lhmr --sort=modified && echo "------Oldest------"'
+  alias ltr='ls -lhm --sort=modified && echo "------Newest------"'
+elif [ -x "$(command -v exa)" ]; then
   alias lt='ls -lhmr --sort=modified && echo "------Oldest------"'
   alias ltr='ls -lhm --sort=modified && echo "------Newest------"'
 else

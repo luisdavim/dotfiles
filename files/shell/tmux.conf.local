@@ -462,6 +462,11 @@ tmux_conf_uninstall_plugins_on_reload=true
 #set -g @plugin 'tmux-plugins/tmux-sensible'
 #set -g @continuum-restore 'on'
 
+# -- custom options ------------------------------------------------------------
+
+set -g allow-passthrough on
+set -ga update-environment TERM
+set -ga update-environment TERM_PROGRAM
 
 # -- custom variables ----------------------------------------------------------
 

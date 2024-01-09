@@ -46,6 +46,7 @@ dpkg
 dust
 ed
 exa
+eza
 fakeroot
 fd
 file
@@ -303,6 +304,7 @@ xh
 xxhash
 xz-utils
 yarn
+yazi
 yq
 zellij
 zip
