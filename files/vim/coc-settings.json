@@ -54,6 +54,14 @@
   "pyright.enable": true,
   "python.formatting.provider": "black",
   "Lua.diagnostics.globals": ["vim"],
+  "workspace.ignoredFolders": [
+    "$HOME",
+    "$HOME/go/**",
+    "$HOME/.cargo/**",
+    "$HOME/.rustup/**",
+    "$HOMEBREW_PREFIX",
+    "$HOMEBREW_PREFIX/**"
+  ],
   "explorer.quitOnOpen": true,
   "explorer.toggle": true,
   "explorer.focus": true,
