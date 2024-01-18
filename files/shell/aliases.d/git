@@ -89,7 +89,7 @@ alias masterDiff='git diff $(git merge-base --fork-point master)'
 alias latestTag='git describe --tags `git rev-list --tags --max-count=1`'
 alias latestTagDiff='git show --name-only `git describe --tags` `git rev-list --tags --max-count=1`..'
 
-alias standup='cd code/; git standup -s -L -m4 -d3; back'
+alias standup='cd code/; git standup -L -m4 -d3; back'
 
 # if [ -x "$(command -v lab)" ]; then
 #   alias git=lab
