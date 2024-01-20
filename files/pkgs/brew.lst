@@ -191,6 +191,7 @@ kdash
 kind
 kompose
 kops
+krr
 kube-aws
 kubebuilder
 kubeconform
