@@ -101,6 +101,7 @@ ec2-metadata-mock
 egison
 eksctl
 elktail
+entr
 exa
 exif
 exiftool

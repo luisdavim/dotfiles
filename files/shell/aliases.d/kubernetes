@@ -44,6 +44,12 @@ alias ktop='kctl top'
 alias kdrain='kctl drain --ignore-daemonsets --delete-emptydir-data'
 alias kubectl='kctl'
 
+alias kube='kubectl'
+alias kns='kubens'
+alias kc='kubectl'
+alias krew='kubectl krew'
+alias kindenv='export KUBECONFIG=~/.kube/kind-config'
+
 # alias k='kubectl "--context=${KUBECTL_CONTEXT:-$(kubectl config current-context)}" ${KUBECTL_NAMESPACE/[[:alnum:]-]*/--namespace=${KUBECTL_NAMESPACE}}'
 # alias kubectl="kubectl --context \${KUBE_CONTEXT:-\$(\kubectl config current-context)}"
 
@@ -104,6 +110,10 @@ function kubectl-default-ingressclass() {
   \kubectl get ingressclass -o yaml | yq '.items[]|select(.metadata.annotations."ingressclass.kubernetes.io/is-default-class" == "true")'
 }
 alias kgdic='kubectl-default-ingressclass'
+
+function kubectl-missing-ds-pods() {
+  \kubectl get no --no-headers | grep -v -f <(\kubectl get po -owide -A --no-headers | grep "${1}" | awk '{print $8}' | grep -v '<none>')
+}
 
 function kubectl-events() {
   local filter=""
@@ -325,12 +335,6 @@ alias kctl-clean_crd='kubectl-purge_crd'
 alias kctl-list_images='kubectl get pods --all-namespaces -o jsonpath="{..image}" | tr -s "[[:space:]]" "\n" | sort | uniq -c'
 alias kctl-drain='kubectl drain --delete-local-data --ignore-daemonsets'
 alias kctl-httpie='kubectl run --restart=Never --rm -i --tty httpie-tmp --image=alpine/httpie'
-
-alias kube='kubectl'
-alias kns='kubens'
-alias kc='kubectl'
-alias krew='kubectl krew'
-alias kindenv='export KUBECONFIG=~/.kube/kind-config'
 
 # Helm aliases
 alias hup='helm upgrade --install --atomic --cleanup-on-fail'
