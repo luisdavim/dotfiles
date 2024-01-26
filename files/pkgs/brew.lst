@@ -244,6 +244,7 @@ pet
 pip-completion
 pipenv
 pipx
+pkgx
 pluto
 popeye
 poppler
