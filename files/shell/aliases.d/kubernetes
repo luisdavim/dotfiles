@@ -194,9 +194,9 @@ function kubectl-get-ctx() {
   if [ -d "${KFG_DIR}" ] && [[ "$KUBECONFIG" != "~/.kube/config" ]]; then
     if [[ "${1}" == "-z" ]]; then
       shift
-      find "${KFG_DIR}/" -type f | fzf --filter="${1}"
+      find "${KFG_DIR}/" -type f -printf "%f\n" | fzf --filter="${1}"
     else
-      find "${KFG_DIR}/" -type f -name "*${1}*" -printf "%f\n"
+      find "${KFG_DIR}/" -type f -regex ".*${1}.*" -printf "%f\n"
     fi
     return
   fi
