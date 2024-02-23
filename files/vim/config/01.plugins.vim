@@ -146,7 +146,7 @@
   Plug 'puremourning/vimspector', {'for': ['c', 'cpp', 'go', 'python', 'java', 'javascript', 'sh', 'vim-plug'], 'do': function('BuildVimspector')}
 
   " Plug 'neoclide/coc.nvim', {'branch': 'release'}
-  Plug 'neoclide/coc.nvim', {'branch': 'master', 'do': 'yarn install --frozen-lockfile'}
+  Plug 'neoclide/coc.nvim', {'branch': 'master', 'do': 'npm ci'}
 
   " Plug 'tom-doerr/vim_codex'
   " Plug 'github/copilot.vim'
