@@ -112,6 +112,7 @@ haskell-unordered-containers
 haskell-uuid-types
 haskell-vector
 haskell-witherable
+helix
 helm
 hors
 htop

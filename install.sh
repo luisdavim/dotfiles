@@ -285,6 +285,11 @@ installTmuxConf() {
   fi
 }
 
+installHelix() {
+  hx -g fetch
+  hx -g build
+}
+
 installVimPlugins() {
   if [ -x "$(command -v pip)" ]; then
     pip install -U neovim
