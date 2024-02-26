@@ -63,6 +63,9 @@ if [ -x "$(command -v brew)" ]; then
   if [ -d "${BREW_PREFIX}/opt/findutils/libexec/gnubin" ]; then
     PATH="${BREW_PREFIX}/opt/findutils/libexec/gnubin:$PATH"
   fi
+  if [ -d "${BREW_PREFIX}/opt/inetutils/libexec/gnubin" ]; then
+    PATH="${BREW_PREFIX}/opt/inetutils/libexec/gnubin:$PATH"
+  fi
   if [ -d "${BREW_PREFIX}/opt/coreutils/libexec/gnubin" ]; then
     PATH="${BREW_PREFIX}/opt/coreutils/libexec/gnubin:$PATH"
   fi

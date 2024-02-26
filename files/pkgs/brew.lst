@@ -12,6 +12,7 @@
 # kubernetes-cli
 # macvim
 # rust
+# telnet
 # tldr
 # uutils-coreutils
 # godep
@@ -168,6 +169,7 @@ hyperkit
 iam-policy-json-to-terraform
 imagemagick
 imgpkg
+inetutils
 inframap
 inlets
 ipcalc
@@ -300,7 +302,6 @@ tanka
 tcptraceroute
 tealdeer
 telepresence
-telnet
 terrafile
 terraform
 terraform-docs

@@ -286,6 +286,11 @@ installTmuxConf() {
 }
 
 installHelix() {
+  if [ ! -x "$(command -v hx)" ]; then
+    return
+  fi
+  mkdir -p "${HOME}/.config/helix/"
+  cp -r files/config/helix/* "${HOME}/.config/helix/"
   hx -g fetch
   hx -g build
 }
