@@ -139,7 +139,7 @@ installAsdfPlugins() {
 installCargo() {
   if ! [ -x "$(command -v cargo)" ]; then
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-    source "${HOME}/.cargo/env"
+    [ -f "${HOME}/.cargo/env" ] && source "${HOME}/.cargo/env"
     rustup component add rls rust-analysis rust-src
   fi
 
@@ -297,7 +297,7 @@ installHelix() {
 
 installVimPlugins() {
   if [ -x "$(command -v pip)" ]; then
-    pip install -U neovim
+    pip install -U neovim # --break-system-packages
   fi
 
   mkdir -p "${HOME}/.vim/config/"
@@ -379,8 +379,15 @@ installShellConf() {
   cp files/shell/variables "${HOME}/.variables"
   cp files/shell/profile "${HOME}/.profile"
   cp -r files/shell/aliases.d/* "${HOME}/.aliases.d"
-
   #cp files/shell/aliases ${HOME}/.aliases
+
+  if [ -z "${SHELLVARS}" ]; then
+    SHELLVARS=$(comm -3 <(compgen -v | sort) <(compgen -e | sort) | grep -v '^_')
+    source config.sh
+    CONF=$(comm -3 <(compgen -v | sort) <(compgen -e | sort) | grep -v '^_')
+    CONF=$(comm -3 <(echo "${CONF}" | tr ' ' '\n' | sort -u) <(echo "${SHELLVARS}" | tr ' ' '\n' | sort -u) | grep -v 'SHELLVARS')
+  fi
+
   sedcmd=''
   for var in $(echo "${CONF}"); do
     printf -v sc 's|${%s}|%s|;' "${var}" "${!var//\//\\/}"
@@ -401,13 +408,6 @@ installShellConf() {
 }
 
 installBashConf() {
-  if [ -z "${SHELLVARS}" ]; then
-    SHELLVARS=$(comm -3 <(compgen -v | sort) <(compgen -e | sort) | grep -v '^_')
-    source config.sh
-    CONF=$(comm -3 <(compgen -v | sort) <(compgen -e | sort) | grep -v '^_')
-    CONF=$(comm -3 <(echo "${CONF}" | tr ' ' '\n' | sort -u) <(echo "${SHELLVARS}" | tr ' ' '\n' | sort -u) | grep -v 'SHELLVARS')
-  fi
-
   mkdir -p "${HOME}"/.bash/
 
   cd "${INSTALLDIR}" || exit
