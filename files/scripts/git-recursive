@@ -17,7 +17,7 @@ function recursive-cmd() {
   if [ -n "$2" ]; then
     bdir=${2}
   fi
-  repos=$(find "${bdir}" -type d -name .git -exec sh -c "dirname '{}/'" \; | grep -Ev '.*\/\..*')
+  repos=$(find "${bdir}" -type d -name .git -exec sh -c "dirname '{}/'" \; | grep -Ev '.*/\..*')
   for d in $repos; do
     echo -e "\n${COL_BLUE}>>>${COL_RESET} $d" >&2
     cd "$d" || exit
@@ -35,6 +35,9 @@ sb)
   ;;
 clean)
   recursive-cmd 'git clean -fdX' "${2}"
+  ;;
+gc)
+  recursive-cmd 'git gc --prune=all' "${2}"
   ;;
 reset)
   recursive-cmd 'git fetch origin; git reset --hard $(git remote | head -1)/$(git name-rev --name-only HEAD); git clean -fdx' "${2}"
