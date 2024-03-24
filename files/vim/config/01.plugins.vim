@@ -124,6 +124,8 @@
 
   " Plug 'iamcco/markdown-preview.nvim', {'for': ['markdown', 'vim-plug'], 'do': 'cd app & yarn install' }
 
+  Plug 'Exafunction/codeium.vim', { 'branch': 'main' }
+
   " function! BuildComposer(info)
   "   if a:info.status != 'unchanged' || a:info.force
   "     if has('nvim')
