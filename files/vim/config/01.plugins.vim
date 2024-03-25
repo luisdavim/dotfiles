@@ -126,13 +126,13 @@
 
   " Plug 'Exafunction/codeium.vim', { 'branch': 'main' }
 
-  if has('nvim')
-    Plug 'sourcegraph/sg.nvim', { 'do': 'nvim -l build/init.lua' }
-    " Required for various utilities
-    " Plug 'nvim-lua/plenary.nvim'
-    " Required if you want to use some of the search functionality
-    " Plug 'nvim-telescope/telescope.nvim'
-  endif
+  " if has('nvim')
+  "   Plug 'sourcegraph/sg.nvim', { 'do': 'nvim -l build/init.lua' }
+  "   " Required for various utilities
+  "   " Plug 'nvim-lua/plenary.nvim'
+  "   " Required if you want to use some of the search functionality
+  "   " Plug 'nvim-telescope/telescope.nvim'
+  " endif
 
   " function! BuildComposer(info)
   "   if a:info.status != 'unchanged' || a:info.force

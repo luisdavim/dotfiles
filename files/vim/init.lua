@@ -30,4 +30,4 @@ safe_require("ibl").setup{
   scope = { enabled = false },
 }
 
-safe_require("sg").setup()
+-- safe_require("sg").setup()
