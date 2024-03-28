@@ -29,7 +29,7 @@
   findtag = rev-list -n 1
   findbranch = branch -a --contains
   findtagbranch = "!git findbranch `git findtag`"
-  cleanup = "!git clean -fdX && git branch --merged | grep  -v '\\*\\|master\\|main\\|develop' | xargs -n 1 git branch -d"
+  cleanup = "!git clean -fdX && git for-each-ref --format '%(refname:short)' refs/heads | grep -Ev 'master|main' | xargs -r git branch -D"
   remove-untacked = "!git sb | grep '??' | awk '{print $2}' | xargs rm -rf"
   accept-ours = "!f() { git checkout --ours -- \"${@:-.}\"; git add -u \"${@:-.}\"; }; f"
   accept-theirs = "!f() { git checkout --theirs -- \"${@:-.}\"; git add -u \"${@:-.}\"; }; f"
