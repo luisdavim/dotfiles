@@ -79,6 +79,11 @@ export AWS_PAGER="bat -p ${AWS_PAGER_OPTS}"
 
 export GRC_ALIASES=true
 
+# Dockr config
+if [ -x "$(command -v colima)" ]; then
+  export DOCKER_HOST="unix://${HOME}/.colima/docker.sock"
+fi
+
 # GO config
 export GOPROXY="https://proxy.golang.org,direct"
 export GO111MODULE=on
