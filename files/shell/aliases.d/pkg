@@ -35,14 +35,6 @@ function cargoclean() {
   rm -rf ~/.cargo/registry
 }
 
-function clear-cache() {
-  goclean
-  npmclean
-  cargoclean
-  pip-clean
-  rm -rf ~/.cache
-}
-
 # Python aliases
 # alias python='python3'
 # alias pip='pip3'
@@ -210,5 +202,13 @@ function update-all-things() {
   if [ -x "$(command -v vagrant)" ]; then
     vagrant plugin update
   fi
+}
+
+function clear-cache() {
+  goclean
+  npmclean
+  cargoclean
+  pip-clean
+  rm -rf ~/.cache
 }
 
