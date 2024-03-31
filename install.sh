@@ -166,6 +166,7 @@ installNpms() {
 installGoPkgs() {
   # goinstall "${PKG}"
   installPkgList "go install" <(sed 's|$|@latest|g' files/pkgs/go.lst)
+  cleanGoPkgs
 }
 
 installGhExtensions() {

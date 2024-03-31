@@ -24,6 +24,25 @@ function goclean() {
 }
 alias go-clean='goclean'
 
+function npmclean() {
+  rm -rf ~/.npm/_logs
+  rm -rf ~/.npm/_cacache
+}
+alias npm-clean='npmcliean'
+
+function cargoclean() {
+  rm -rf ~/.cargo/git
+  rm -rf ~/.cargo/registry
+}
+
+function clear-cache() {
+  goclean
+  npmclean
+  cargoclean
+  pip-clean
+  rm -rf ~/.cache
+}
+
 # Python aliases
 # alias python='python3'
 # alias pip='pip3'
