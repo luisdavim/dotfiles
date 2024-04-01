@@ -23,6 +23,16 @@ installAwless() {
   mv awless ~/.local/bin/
 }
 
+installUdocker() {
+  mkdir -p ~/.local
+  pushd ~/.local
+  python3 -m venv udockervenv
+  source udockervenv/bin/activate
+  pip install udocker
+  udockervenv/bin/udocker install
+  popd
+}
+
 installFastPath() {
   # https://github.com/mfornasa/docker-fastpath
   mkdir -p ~/.local/bin/

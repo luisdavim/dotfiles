@@ -33,3 +33,11 @@ alias dockerd-teardown='colima delete'
 
 alias containerd-start='colima start --runtime containerd --mount $HOME/workingCopies:w'
 alias nerdctl='colima nerdctl'
+
+if [ -x "${HOME}/.local/udockervenv/bin/udocker" ]; then
+  alias udocker='~/.local/udockervenv/bin/udocker'
+  function udocker-clean() {
+  ~/.local/udockervenv/bin/udocker ps | awk '!/CONTAINER/ {print $1}' | xargs -r ~/.local/udockervenv/bin/udocker rm
+  ~/.local/udockervenv/bin/udocker images | awk '!/REPOSITORY/ {print $1}' | xargs -r ~/.local/udockervenv/bin/udocker rmi
+  }
+fi
