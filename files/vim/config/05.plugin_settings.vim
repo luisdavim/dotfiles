@@ -108,7 +108,7 @@
   "   " Set vim current working directory to the current project root
   "   autocmd VimEnter * if exists(":Rooter") | au BufEnter * :Rooter
   " endif
-  let g:rooter_patterns = ['.git', '.hg', '.projections.json', 'requirements.txt', 'setup.cfg', 'package.json', 'go.mod', 'Makefile']
+  let g:rooter_patterns = ['requirements.txt', 'setup.cfg', 'package.json', 'go.mod', 'Cargo.toml', '.projections.json', 'Makefile', '.root', '.repo', '.git', '.git/', '.hg', '.bzr', '.svn']
   " }}}
 
   " lf {{{
@@ -242,6 +242,7 @@
   let g:clap_preview_size = 10
   let g:clap_layout = {'relative': 'editor', 'width': '67%', 'height': '15%', 'row': '15%', 'col': '17%'}
   let g:clap_open_action = { 'ctrl-t': 'tab split', 'ctrl-x': 'split', 'ctrl-v': 'vsplit' }
+  let g:clap_project_root_markers = ['requirements.txt', 'setup.cfg', 'package.json', 'go.mod', 'Cargo.toml', '.projections.json', 'Makefile', '.root', '.repo', '.git', '.git/', '.hg', '.bzr', '.svn']
   let g:clap_enable_icon = 1
   if has('nvim')
     let g:clap_popup_border = 'single'

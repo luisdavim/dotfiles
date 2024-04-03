@@ -178,7 +178,7 @@
     "json"
    // "yaml"
   ],
-  "coc.preferences.rootPatterns": [".projections.json", "requirements.txt", "setup.cfg", "package.json", "go.mod", "Makefile", ".git", ".hg",],
+  "workspace.rootPatterns": ["requirements.txt", "setup.cfg", "package.json", "go.mod", "Cargo.toml", ".projections.json", "Makefile", ".root", ".repo", ".git", ".git/", ".hg", ".bzr", ".svn"],
   "git.conflict.enabled": true,
   "git.enableGlobalStatus": true,
   "git.addGBlameToVirtualText": false,
