@@ -111,7 +111,7 @@
   let g:minimap_git_colors = 1
 
   let base16colorspace=256
-  set guifont=JetBrainsMono\ Nerd\ Font:h12
+  set guifont=JetBrainsMono\ NFM:h12
 
   " use a slightly darker background, like GitHub inline code blocks
   let g:github_colors_soft = 0

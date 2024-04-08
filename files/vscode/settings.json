@@ -7,8 +7,8 @@
     "editor.renderWhitespace": "all",
     "editor.renderControlCharacters": true,
     "editor.minimap.renderCharacters": false,
-    "editor.fontFamily": "'JetBrainsMono Nerd Font', 'FuraCode Nerd Font Mono', Menlo, Monaco, 'Courier New', monospace",
-    "terminal.integrated.fontFamily": "'JetBrainsMono Nerd Font', 'FuraCode Nerd Font Mono', Menlo, Monaco, 'Courier New', monospace",
+    "editor.fontFamily": "'JetBrainsMono NFM', 'FuraCode Nerd Font Mono', Menlo, Monaco, 'Courier New', monospace",
+    "terminal.integrated.fontFamily": "'JetBrainsMono NFM', 'FuraCode Nerd Font Mono', Menlo, Monaco, 'Courier New', monospace",
     "workbench.sideBar.location": "left",
     "gitlens.advanced.messages": {
         "suppressCommitHasNoPreviousCommitWarning": false,
@@ -47,6 +47,6 @@
     "go.formatTool": "goimports",
     "editor.inlineSuggest.enabled": true,
     "redhat.telemetry.enabled": true,
-    "editor.codeLensFontFamily": "'JetBrainsMono Nerd Font'",
+    "editor.codeLensFontFamily": "'JetBrainsMono NFM'",
     "codestream.serverUrl": "https://api.codestream.com"
 }
