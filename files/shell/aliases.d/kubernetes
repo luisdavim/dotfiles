@@ -313,6 +313,13 @@ alias kctl-shell='kubectl-remote_shell'
 alias kube-shell='kubectl-remote_shell'
 alias kshell='kubectl-remote_shell'
 
+function kubectl-node_shell() {
+  command kubectl debug "${@}" -it --image=quay.io/giantswarm/debug -- chroot /host
+  command kubectl killall node-debugger
+}
+alias kctl-node-shell='kubectl-node_shell'
+alias kube-node-shell='kubectl-node_shell'
+
 alias kssh='kubectl-ssh'
 alias kpssh='kubectl-pssh'
 
