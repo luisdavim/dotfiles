@@ -41,3 +41,10 @@ if [ -x "${HOME}/.local/udockervenv/bin/udocker" ]; then
   ~/.local/udockervenv/bin/udocker images | awk '!/REPOSITORY/ {print $1}' | xargs -r ~/.local/udockervenv/bin/udocker rmi
   }
 fi
+
+if [ -x "$(command -v udocker)" ]; then
+  function udocker-clean() {
+  udocker ps | awk '!/CONTAINER/ {print $1}' | xargs -r udocker rm
+  udocker images | awk '!/REPOSITORY/ {print $1}' | xargs -r udocker rmi
+  }
+fi

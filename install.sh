@@ -29,6 +29,7 @@ installUdocker() {
   python3 -m venv udockervenv
   source udockervenv/bin/activate
   pip install udocker
+  # udocker install
   udockervenv/bin/udocker install
   popd
 }
