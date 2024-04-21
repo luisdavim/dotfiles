@@ -32,6 +32,20 @@ installUdocker() {
   # udocker install
   udockervenv/bin/udocker install
   popd
+  if [[ $OSTYPE != *"android"* ]]; then
+    # https://github.com/indigo-dc/udocker/issues/424
+    # Force use Termux provided proot
+    mkdir -p "${HOME}/.udocker/lib"
+    cat << EOF > "${HOME}/.udocker/udocker.conf"
+[DEFAULT]
+use_proot_executable = ${PREFIX}/bin/proot
+proot_link2symlink = True
+verbose_level = 3
+EOF
+    # Create dummy VERSION to suppress redundant download of Android-incompatible udockertools
+    # https://github.com/indigo-dc/udocker/issues/376#issuecomment-1300626183
+    echo "9.9.9" > "${HOME}/.udocker/lib/VERSION"
+  fi
 }
 
 installFastPath() {
