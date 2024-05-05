@@ -17,12 +17,16 @@ function usage() {
   echo '  -d, --debug                           enable debug output'
   echo '  -m, --etcd-manager                    use etcd-manager'
   echo '  -n, --namespace <namespace>           kube-system is used by default'
+  echo '  -p, --pod <pod>                       specify the pod to use'
+  echo ''
   exit 1
 }
 
 export NAMESPACE="kube-system"
-DEBUG="false"
 ETCD_MANAGER="false"
+ETCD_POD=""
+
+DEBUG="false"
 POSITIONAL=()
 
 while [[ $# -gt 0 ]]; do
@@ -42,6 +46,14 @@ while [[ $# -gt 0 ]]; do
     NAMESPACE="$2"
     shift 2
     ;;
+  -p | --pod)
+    ETCD_POD="$2"
+    shift 2
+    ;;
+  --)
+    shift
+    break
+    ;;
   *)
     POSITIONAL+=("$1")
     shift
@@ -50,7 +62,7 @@ while [[ $# -gt 0 ]]; do
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters
 
-k8s_cmd='kubectl exec -i --stdin $(kubectl get po -n ${NAMESPACE} -l component=etcd -o name | head -n1) -n ${NAMESPACE} -- sh'
+pod='$(kubectl get po -n ${NAMESPACE} -l component=etcd -o name | head -n1)'
 
 read -r -d '' cmd_prefix <<'EOF'
 export ETCDCTL_API=3
@@ -58,7 +70,7 @@ alias etcdctl='etcdctl --command-timeout=120s --cacert=/etc/kubernetes/pki/etcd/
 EOF
 
 if [[ ${ETCD_MANAGER} == "true" ]]; then
-  k8s_cmd='kubectl exec -i --stdin $(kubectl get po -n ${NAMESPACE} -l k8s-app=etcd-manager-main -o name | head -n1) -n ${NAMESPACE} -- sh'
+  pod='$(kubectl get po -n ${NAMESPACE} -l k8s-app=etcd-manager-main -o name | head -n1)'
   read -r -d '' cmd_prefix <<'EOF'
 export ETCDCTL_API=3
 export DIRNAME="/opt/$(ls /opt -1 | tail -n 1)"
@@ -66,6 +78,12 @@ export CERTDIR=/rootfs/srv/kubernetes/kube-apiserver/
 alias etcdctl="$DIRNAME/etcdctl --cacert=$CERTDIR/etcd-ca.crt --cert=$CERTDIR/etcd-client.crt --key=$CERTDIR/etcd-client.key --endpoints=https://127.0.0.1:4001"
 EOF
 fi
+
+if [[ -n "${ETCD_POD}" ]]; then
+  pod="${ETCD_POD}"
+fi
+
+k8s_cmd='kubectl exec -i --stdin ${pod} -n ${NAMESPACE} -- sh'
 
 case ${1} in
   'compact')
@@ -75,6 +93,10 @@ etcdctl compact $rev
 etcdctl defrag
 etcdctl alarm disarm
 EOF
+    ;;
+  '-c' | '--command')
+    shift
+    cmd="${*}"
     ;;
   *)
     cmd="etcdctl ${*}"

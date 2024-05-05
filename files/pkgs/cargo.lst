@@ -1,5 +1,6 @@
 amber
 cargo-update
+cargo-xtask
 click
 docuum
 flexlint
