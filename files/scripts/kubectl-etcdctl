@@ -20,9 +20,9 @@ function usage() {
   exit 1
 }
 
+export NAMESPACE="kube-system"
 DEBUG="false"
 ETCD_MANAGER="false"
-NAMESPACE="kube-system"
 POSITIONAL=()
 
 while [[ $# -gt 0 ]]; do
@@ -59,12 +59,11 @@ EOF
 
 if [[ ${ETCD_MANAGER} == "true" ]]; then
   k8s_cmd='kubectl exec -i --stdin $(kubectl get po -n ${NAMESPACE} -l k8s-app=etcd-manager-main -o name | head -n1) -n ${NAMESPACE} -- sh'
-  # TODO: find the latest etcdctl
   read -r -d '' cmd_prefix <<'EOF'
-export DIRNAME="/opt/etcd-v3.2.18"
+export ETCDCTL_API=3
+export DIRNAME="/opt/$(ls /opt -1 | tail -n 1)"
 export CERTDIR=/rootfs/srv/kubernetes/kube-apiserver/
-alias etcdctl="ETCDCTL_API=3 $DIRNAME/etcdctl --cacert=$CERTDIR/etcd-ca.crt --cert=$CERTDIR/etcd-client.crt --key=$CERTDIR/etcd-client.key --endpoints=https://127.0.0.1:4001"
-rev=$(etcdctl endpoint status -w json | egrep -o '"revision":[0-9]*' | egrep -o '[0-9]*')
+alias etcdctl="$DIRNAME/etcdctl --cacert=$CERTDIR/etcd-ca.crt --cert=$CERTDIR/etcd-client.crt --key=$CERTDIR/etcd-client.key --endpoints=https://127.0.0.1:4001"
 EOF
 fi
 
@@ -82,10 +81,10 @@ EOF
     ;;
 esac
 
-printf -v cmd "\n%s\n%s" "${cmd_prefix}" "${cmd}"
+printf -v cmd "cat << 'EOF' | %s\n%s\n%s\nEOF" "${k8s_cmd}" "${cmd_prefix}" "${cmd}"
 
 if [[ ${DEBUG} == "true" ]]; then
-  echo -e "Running:\n${cmd}"
+  echo -e "Running:\n${cmd}\n"
 fi
 
-eval "${k8s_cmd} <<< ${cmd}"
+eval "${cmd}"
