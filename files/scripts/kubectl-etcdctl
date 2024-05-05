@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+
+# Script to run etcdctl commands in the etcd pods
+# This scritp can be used as a kubectl plugin and invoked as a sub-command
+# Examples:
+#   kubectl etcdctl compact
+
+function usage() {
+  if [ -n "${1}" ]; then
+    echo -e "${1}"
+    echo ''
+  fi
+  echo "Usage: $(basename "$0") [<flags>] <keyword>"
+  echo ''
+  echo 'Flags:'
+  echo '  -h, --help                            display help'
+  echo '  -d, --debug                           enable debug output'
+  echo '  -m, --etcd-manager                    use etcd-manager'
+  echo '  -n, --namespace <namespace>           kube-system is used by default'
+  exit 1
+}
+
+DEBUG="false"
+ETCD_MANAGER="false"
+NAMESPACE="kube-system"
+POSITIONAL=()
+
+while [[ $# -gt 0 ]]; do
+  key="$1"
+
+  case $key in
+  -h | --help) usage "" ;;
+  -d | --debug)
+    DEBUG=true
+    shift
+    ;;
+  -m | --etcd-manager)
+    ETCD_MANAGER=true
+    shift
+    ;;
+  -n | --namespace)
+    NAMESPACE="$2"
+    shift 2
+    ;;
+  *)
+    POSITIONAL+=("$1")
+    shift
+    ;;
+  esac
+done
+set -- "${POSITIONAL[@]}" # restore positional parameters
+
+k8s_cmd='kubectl exec -i --stdin $(kubectl get po -n ${NAMESPACE} -l component=etcd -o name | head -n1) -n ${NAMESPACE} -- sh'
+
+read -r -d '' cmd_prefix <<'EOF'
+export ETCDCTL_API=3
+alias etcdctl='etcdctl --command-timeout=120s --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key --endpoints=https://127.0.0.1:2379'
+EOF
+
+if [[ ${ETCD_MANAGER} == "true" ]]; then
+  k8s_cmd='kubectl exec -i --stdin $(kubectl get po -n ${NAMESPACE} -l k8s-app=etcd-manager-main -o name | head -n1) -n ${NAMESPACE} -- sh'
+  # TODO: find the latest etcdctl
+  read -r -d '' cmd_prefix <<'EOF'
+export DIRNAME="/opt/etcd-v3.2.18"
+export CERTDIR=/rootfs/srv/kubernetes/kube-apiserver/
+alias etcdctl="ETCDCTL_API=3 $DIRNAME/etcdctl --cacert=$CERTDIR/etcd-ca.crt --cert=$CERTDIR/etcd-client.crt --key=$CERTDIR/etcd-client.key --endpoints=https://127.0.0.1:4001"
+rev=$(etcdctl endpoint status -w json | egrep -o '"revision":[0-9]*' | egrep -o '[0-9]*')
+EOF
+fi
+
+case ${1} in
+  'compact')
+    read -r -d '' cmd <<'EOF'
+rev=$(etcdctl endpoint status -w json | egrep -o '"revision":[0-9]*' | egrep -o '[0-9]*')
+etcdctl compact $rev
+etcdctl defrag
+etcdctl alarm disarm
+EOF
+    ;;
+  *)
+    cmd="etcdctl ${*}"
+    ;;
+esac
+
+printf -v cmd "\n%s\n%s" "${cmd_prefix}" "${cmd}"
+
+if [[ ${DEBUG} == "true" ]]; then
+  echo -e "Running:\n${cmd}"
+fi
+
+eval "${k8s_cmd} <<< ${cmd}"
