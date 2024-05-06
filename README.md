@@ -2,22 +2,22 @@
 
 ## What's included
 
-- a bashrc file
-- a set of bash aliases
+- a bash and zsh configuration
+- a set of shell aliases
+- some kubectl plugins
 - some useful scripts
 - installs https://github.com/magicmonty/bash-git-prompt.git
 - installs https://github.com/jonmosco/kube-ps1
 - a custom theme for bash-git-prompt that includes kube-ps1
 - installs https://github.com/gpakosz/.tmux
 - a custom theme for tmux
-- a vimrc file
+- vim/neovim configuration
 - Atom configuration including list of installed packages
 - VSCode configuration including list of installed packages
 - i3 and compton configuration files
 - i3blocks scripts
 - iTerm profile
 - Hammerspoon configuration scripts
-- Some kubectl plugins
 
 ## The install script
 

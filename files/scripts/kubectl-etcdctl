@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Script to run etcdctl commands in the etcd pods
-# This scritp can be used as a kubectl plugin and invoked as a sub-command
+# This script can be used as a kubectl plugin and invoked as a sub-command
 # Examples:
 #   kubectl etcdctl compact
 
@@ -18,6 +18,8 @@ function usage() {
   echo '  -m, --etcd-manager                    use etcd-manager'
   echo '  -n, --namespace <namespace>           kube-system is used by default'
   echo '  -p, --pod <pod>                       specify the pod to use'
+  echo '  -c, --command <command>               endpoint command, defaults to etcdctl'
+  echo '  -s, --script <script>                 read the commands to run from a script file'
   echo ''
   exit 1
 }
@@ -100,8 +102,15 @@ etcdctl defrag
 etcdctl alarm disarm
 EOF
     ;;
+  '-s' | '--script')
+    shift
+    cmd="$(cat "${1}")"
+    ;;
   '-c' | '--command')
     shift
+    cmd="${*}"
+    ;;
+  'etcdctl')
     cmd="${*}"
     ;;
   *)

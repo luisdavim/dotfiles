@@ -2,7 +2,7 @@
 
 # Script to trim kubectl objects by removing some properties
 # By default it will skip all k8s managed properties
-# This scritp can be used as a kubectl plugin and invoked as a sub-command
+# This script can be used as a kubectl plugin and invoked as a sub-command
 # Examples:
 #   kubectl trim pod/metac-0
 #   kubectl trim pod metac-0 -t .metadata,.status,.apiVersion,.kind

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# This scritp can be used as a git plugin
+# This script can be used as a git plugin
 # Show how many commits each branch is ahead or behind its upstream.
 
 # Colors

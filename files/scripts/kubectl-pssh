@@ -6,7 +6,7 @@
 #    kubectl-pssh 'sudo docker system prune -a -f'
 #    kubectl-pssh -u myUser 'sudo docker system prune -a -f'
 #    kubectl-pssh -f ko 'sudo systemctl restart docker'
-# This scritp can be used as a kubectl plugin and invoked as a sub-command
+# This script can be used as a kubectl plugin and invoked as a sub-command
 #    kubectl pssh -u myUser 'sudo docker system prune -a -f'
 
 # Defaults

@@ -5,7 +5,7 @@
 # Examples:
 #    kubectl-ssh -u myUser workernode-01
 #    kubectl-ssh master-k8-01 uptime
-# This scritp can be used as a kubectl plugin and invoked as a sub-command
+# This script can be used as a kubectl plugin and invoked as a sub-command
 #    kubectl ssh master-k8-01 uptime
 
 # Defaults

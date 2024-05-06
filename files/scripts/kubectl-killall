@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Script to kill all pods matching a keyword
-# This scritp can be used as a kubectl plugin and invoked as a sub-command
+# This script can be used as a kubectl plugin and invoked as a sub-command
 # Examples:
 #   kubectl killall metrics
 
