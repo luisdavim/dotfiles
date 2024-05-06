@@ -81,9 +81,15 @@ fi
 
 if [[ -n "${ETCD_POD}" ]]; then
   pod="${ETCD_POD}"
+else
+  pod=$(eval echo "${pod}")
 fi
 
-k8s_cmd='kubectl exec -i --stdin ${pod} -n ${NAMESPACE} -- sh'
+if [[ -z "${pod}" ]]; then
+  echo "could not find etcd pod"; exit 1
+fi
+
+k8s_cmd="kubectl exec -i --stdin ${pod} -n ${NAMESPACE} -- sh"
 
 case ${1} in
   'compact')
