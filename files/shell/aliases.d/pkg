@@ -24,6 +24,8 @@ function goclean() {
 }
 alias go-clean='goclean'
 
+alias go-upgrade='awk '\''/require \(/,/\)/ {x = ($0 !~ /(require|\)|.*indirect)/) ? $0 : ""; split(x,a," "); print a[1]}'\'' go.mod | sed '\''/^$$/d'\'' | xargs -L1 go get -u'
+
 function npmclean() {
   rm -rf ~/.npm/_logs
   rm -rf ~/.npm/_cacache
