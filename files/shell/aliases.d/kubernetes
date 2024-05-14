@@ -112,7 +112,7 @@ function kubectl-default-ingressclass() {
 alias kgdic='kubectl-default-ingressclass'
 
 function kubectl-missing-ds-pods() {
-  \kubectl get no --no-headers | grep -v -f <(\kubectl get po -owide -A --no-headers | grep "${1}" | awk '{print $8}' | grep -v '<none>')
+  \kubectl get no --no-headers | \grep -v -f <(\kubectl get po -owide -A --no-headers | grep "${1}" | awk '{print $8}' | grep -v '<none>')
 }
 alias kgmdsp='kubectl-missing-ds-pods'
 
