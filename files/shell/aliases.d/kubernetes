@@ -307,14 +307,14 @@ function krun() { name=$1; shift; image=$1; shift; \kubectl run -it --generator=
 alias kctl-run='krun'
 
 function kubectl-remote_shell() {
-  command kubectl run "${@}" --restart=Never --rm -i --tty debug --image=quay.io/giantswarm/debug -- sh
+  command kubectl run "${@}" --restart=Never --rm -i --tty debug --image=ghcr.io/luisdavim/debug:main -- sh
 }
 alias kctl-shell='kubectl-remote_shell'
 alias kube-shell='kubectl-remote_shell'
 alias kshell='kubectl-remote_shell'
 
 function kubectl-node_shell() {
-  command kubectl debug "${@}" -it --image=quay.io/giantswarm/debug -- chroot /host
+  command kubectl debug "${@}" -it --image=ghcr.io/luisdavim/debug:main -- chroot /host
   command kubectl killall node-debugger
 }
 alias kctl-node-shell='kubectl-node_shell'

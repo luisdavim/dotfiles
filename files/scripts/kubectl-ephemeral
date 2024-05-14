@@ -2,7 +2,7 @@
 
 DEBUG="false"
 NAMESPACE="default"
-IMAGE="quay.io/giantswarm/debug"
+IMAGE="ghcr.io/luisdavim/debug:main"
 POSITIONAL=()
 
 function usage() {
@@ -24,7 +24,7 @@ function ephemeralContainer() {
   pod_name="$1"
   container_name="$2"
   namespace="${3:-default}"
-  image="${4:-quay.io/giantswarm/debug}"
+  image="${4:-ghcr.io/luisdavim/debug:main}"
   if [[ -z "${pod_name}" || -z "${container_name}" ]]; then
     echo "requires pod name as first argument and container name as second argument"
     return 1
