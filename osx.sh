@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 dotfiles_dir="$(dirname "$0")"
+
+# shellcheck source=./lib.sh
 source "${dotfiles_dir}/lib.sh"
 
 export HOMEBREW_NO_AUTO_UPDATE=1

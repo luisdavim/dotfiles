@@ -9,8 +9,12 @@ fi
 dotfiles_dir="${dotfiles_dir:-$(dirname "$0")}"
 INSTALLDIR=$(pwd)
 
+# shellcheck source=./files/scripts/hubinstall
 source "${dotfiles_dir}/files/scripts/hubinstall"
+# shellcheck source=./files/scripts/hashinstall
 source "${dotfiles_dir}/files/scripts/hashinstall"
+# shellcheck source=./lib.sh
+source "${dotfiles_dir}/lib.sh"
 
 fancy_echo() {
   # red=`tput setaf 1`
@@ -31,8 +35,8 @@ detectRelease() {
   if [ -f /etc/os-release ]; then
     # freedesktop.org and systemd
     . /etc/os-release
-    OS=$NAME
-    VER=$VERSION_ID
+    OS=${NAME:-}
+    VER=${VERSION_ID:-}
   elif type lsb_release >/dev/null 2>&1; then
     # linuxbase.org
     OS=$(lsb_release -si)
@@ -57,12 +61,14 @@ detectRelease() {
     OS=$(uname -s)
     VER=$(uname -r)
   fi
+  export OS
+  export VER
   echo "${OS}"
 }
 
 installTerragrunt() {
-  os=${2:-$(uname -s | tr '[:upper:]' '[:lower:]')}
-  arch="${3:-64}"
+  os=${1:-$(uname -s | tr '[:upper:]' '[:lower:]')}
+  arch="${2:-64}"
   installFromGithub 'gruntwork-io/terragrunt' "${os}" "${arch}"
 }
 
@@ -105,7 +111,7 @@ installFonts() {
 
   curl -fLo DroidSansMonoForPowerlinePlusNerdFileTypes.otf https://raw.githubusercontent.com/ryanoasis/nerd-fonts/1.0.0/patched-fonts/DroidSansMono/complete/Droid%20Sans%20Mono%20for%20Powerline%20Nerd%20Font%20Complete.otf
   chmod 664 DroidSansMonoForPowerlinePlusNerdFileTypes.otf
-  mv *.otf "${HOME}/.fonts/"
+  mv ./*.otf "${HOME}/.fonts/"
   wget https://github.com/powerline/powerline/raw/develop/font/PowerlineSymbols.otf
   sudo mv PowerlineSymbols.otf /usr/share/fonts/
   wget https://github.com/powerline/powerline/raw/develop/font/10-powerline-symbols.conf

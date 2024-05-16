@@ -9,9 +9,13 @@ CMD="${1:-all}"
 shift
 ARGS=("${@}")
 
+# shellcheck source=./files/scripts/hubinstall
 source "${dotfiles_dir}/files/scripts/hubinstall"
+# shellcheck source=./files/scripts/hashinstall
 source "${dotfiles_dir}/files/scripts/hashinstall"
+# shellcheck source=./files/scripts/gobinaries
 source "${dotfiles_dir}/files/scripts/gobinaries"
+# shellcheck source=./lib.sh
 source "${dotfiles_dir}/lib.sh"
 
 installEls() {
