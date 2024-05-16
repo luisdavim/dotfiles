@@ -1,0 +1,110 @@
+#!/usr/bin/env bash
+
+# Script to check TLS secrets
+# This script can be used as a kubectl plugin and invoked as a sub-command
+# Examples:
+#   kubectl tls_check my-domain-secret -n my-ns
+#   kubectl tls_check -n infra-system domain-tls -e '1 month'
+
+# TODO: add a --ingress and fetch the cert from the host
+
+function usage() {
+  if [ -n "${1}" ]; then
+    echo -e "${1}"
+    echo ''
+  fi
+  echo "Usage: $(basename "$0") [<flags>] <keyword>"
+  echo ''
+  echo 'Flags:'
+  echo '  -h, --help                            display help'
+  echo '  -d, --debug                           enable debug output'
+  echo '  -e, --expiry-threshold                threshold for cert expiration'
+  echo '  -n, --namespace <namespace>           on this namespace only'
+  exit 1
+}
+
+function is_int() { case ${1#[-+]} in '' | *[!0-9]* ) return 1;; esac ; }
+
+DEBUG="false"
+NAMESPACE="--all-namespaces"
+THRESHOLD="86400"
+POSITIONAL=()
+
+while [[ $# -gt 0 ]]; do
+  key="$1"
+
+  case $key in
+  -h | --help) usage "" ;;
+  -d | --debug)
+    DEBUG=true
+    shift
+    ;;
+  -n | --namespace)
+    NAMESPACE="-n $2"
+    shift 2
+    ;;
+  -e | --expiry-threshold)
+    THRESHOLD="-n $2"
+    shift 2
+    ;;
+  *)
+    POSITIONAL+=("$1") # save it in an array for later
+    shift              # past argument
+    ;;
+  esac
+done
+set -- "${POSITIONAL[@]}" # restore positional parameters
+
+if ! is_int "${THRESHOLD}"; then
+  THRESHOLD="$(date -ud "19700101 ${THRESHOLD}" '+%s')"
+fi
+
+SECRET_NAME="${1}"
+
+cmd="kubectl get secret ${NAMESPACE} ${SECRET_NAME} -o yaml"
+if [[ ${DEBUG} == "true" ]]; then
+  echo -e "${cmd}\n"
+fi
+
+SECRET=$(eval "${cmd}")
+
+KEY=$(echo "${SECRET}" | yq '.data."tls.key" | @base64d')
+CERT=$(echo "${SECRET}" | yq '.data."tls.crt" | @base64d')
+
+cmd="echo '${CERT}' | openssl x509 -modulus -noout | openssl md5"
+if [[ ${DEBUG} == "true" ]]; then
+  echo -e "${cmd}\n"
+fi
+CERT_SUM=$(eval "${cmd}")
+
+cmd="echo '${KEY}' | openssl rsa -modulus -noout | openssl md5"
+if [[ ${DEBUG} == "true" ]]; then
+  echo -e "${cmd}\n"
+fi
+KEY_SUM=$(eval "${cmd}")
+
+msg="checksums: key${KEY_SUM}; cert${CERT_SUM}"
+if [[ "${KEY_SUM}" != "${CERT_SUM}" ]]; then
+  echo "${msg} don't match"
+  exit 1
+fi
+echo "${msg} match"
+
+echo ""
+
+cmd="echo '${CERT}' | openssl x509 -noout -dates"
+if [[ ${DEBUG} == "true" ]]; then
+  echo -e "${cmd}\n"
+fi
+eval "${cmd}"
+
+cmd="echo '${CERT}' | openssl x509 -checkend '${THRESHOLD}'"
+if [[ ${DEBUG} == "true" ]]; then
+  echo -e "${cmd}\n"
+fi
+
+echo ""
+
+if ! eval "${cmd}"; then
+  exit 2
+fi
