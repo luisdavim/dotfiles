@@ -27,24 +27,29 @@ function docker-enter() {
   docker exec -i -t $1 /bin/sh
 }
 
-alias dockerd-bootstrap='colima start --mount $HOME/workingCopies:w -c 10 -m 16 --disk 200'
-alias dockerd-stop='colima stop'
-alias dockerd-teardown='colima delete'
+# Colima aliases
+if [ -x "$(command -v colima)" ]; then
+  alias dockerd-bootstrap='colima start --mount $HOME/workingCopies:w -c 10 -m 16 --disk 200'
+  alias dockerd-stop='colima stop'
+  alias dockerd-teardown='colima delete'
+  alias dockerd-cleanup='rm -rf ~/Library/Caches/lima ~/.colima ~/.lima'
 
-alias containerd-start='colima start --runtime containerd --mount $HOME/workingCopies:w'
-alias nerdctl='colima nerdctl'
+  alias containerd-start='colima start --runtime containerd --mount $HOME/workingCopies:w'
+  alias nerdctl='colima nerdctl'
+fi
 
+# Udocker aliases
 if [ -x "${HOME}/.local/udockervenv/bin/udocker" ]; then
   alias udocker='~/.local/udockervenv/bin/udocker'
   function udocker-clean() {
-  ~/.local/udockervenv/bin/udocker ps | awk '!/CONTAINER/ {print $1}' | xargs -r ~/.local/udockervenv/bin/udocker rm
-  ~/.local/udockervenv/bin/udocker images | awk '!/REPOSITORY/ {print $1}' | xargs -r ~/.local/udockervenv/bin/udocker rmi
+    ~/.local/udockervenv/bin/udocker ps | awk '!/CONTAINER/ {print $1}' | xargs -r ~/.local/udockervenv/bin/udocker rm
+    ~/.local/udockervenv/bin/udocker images | awk '!/REPOSITORY/ {print $1}' | xargs -r ~/.local/udockervenv/bin/udocker rmi
   }
 fi
 
 if [ -x "$(command -v udocker)" ]; then
   function udocker-clean() {
-  udocker ps | awk '!/CONTAINER/ {print $1}' | xargs -r udocker rm
-  udocker images | awk '!/REPOSITORY/ {print $1}' | xargs -r udocker rmi
+    udocker ps | awk '!/CONTAINER/ {print $1}' | xargs -r udocker rm
+    udocker images | awk '!/REPOSITORY/ {print $1}' | xargs -r udocker rmi
   }
 fi
