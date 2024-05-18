@@ -7,6 +7,13 @@
       "filetypes": ["terraform", "tf"],
       "initializationOptions": {},
       "settings": {}
+    },
+    "helm-ls": {
+      // "command": "helm-ls",
+      "command": "helm_ls",
+      "args": ["serve"],
+      "filetypes": ["helm", "helmfile", "yaml.gotexttmpl"],
+      "rootPatterns": ["Chart.yaml"]
     }
   },
   "go.enable": true,
@@ -25,9 +32,9 @@
   "yaml.hover": true,
   "yaml.completion": true,
   "yaml.validate": true,
-  "yaml.schemas": {
-    "https://gist.githubusercontent.com/simnalamburt/2c3263b783ed3f4471bda9ca901bb69f/raw/9c2cd17d6f4683cf80b6360a2d53b33fd49556d7/allow-all-json-schema.json": "*template*/**/*"
-  },
+  //  "yaml.schemas": {
+  //    "https://gist.githubusercontent.com/simnalamburt/2c3263b783ed3f4471bda9ca901bb69f/raw/9c2cd17d6f4683cf80b6360a2d53b33fd49556d7/allow-all-json-schema.json": "*template*/**/*"
+  //  },
   "solargraph.definitions": true,
   "solargraph.diagnostics": true,
   "solargraph.useBundler": false,
@@ -54,14 +61,7 @@
   "pyright.enable": true,
   "python.formatting.provider": "black",
   "Lua.diagnostics.globals": ["vim"],
-  "workspace.ignoredFolders": [
-    "$HOME",
-    "$HOME/go/**",
-    "$HOME/.cargo/**",
-    "$HOME/.rustup/**",
-    "$HOMEBREW_PREFIX",
-    "$HOMEBREW_PREFIX/**"
-  ],
+  "workspace.ignoredFolders": ["$HOME", "$HOME/go/**", "$HOME/.cargo/**", "$HOME/.rustup/**", "$HOMEBREW_PREFIX", "$HOMEBREW_PREFIX/**"],
   "explorer.quitOnOpen": true,
   "explorer.toggle": true,
   "explorer.focus": true,
@@ -136,19 +136,19 @@
     "typeParameter": "\uf728",
     "default": "\uf29c"
   },
-  "hover.floatConfig":{
+  "hover.floatConfig": {
     "border": true,
     "shadow": true
   },
-  "suggest.floatConfig":{
+  "suggest.floatConfig": {
     "border": true,
     "shadow": true
   },
-  "diagnostic.floatConfig":{
+  "diagnostic.floatConfig": {
     "border": true,
     "shadow": true
   },
-  "signature.floatConfig":{
+  "signature.floatConfig": {
     "border": true,
     "shadow": true
   },
@@ -175,10 +175,26 @@
     "typescript",
     "typescript.tsx",
     "typescriptreact",
-    "json"
-   // "yaml"
+    "json",
+    "jsonc"
+    // "yaml"
   ],
-  "workspace.rootPatterns": ["requirements.txt", "setup.cfg", "package.json", "go.mod", "Cargo.toml", ".projections.json", "Makefile", ".root", ".repo", ".git", ".git/", ".hg", ".bzr", ".svn"],
+  "workspace.rootPatterns": [
+    "requirements.txt",
+    "setup.cfg",
+    "package.json",
+    "go.mod",
+    "Cargo.toml",
+    ".projections.json",
+    "Makefile",
+    ".root",
+    ".repo",
+    ".git",
+    ".git/",
+    ".hg",
+    ".bzr",
+    ".svn"
+  ],
   "git.conflict.enabled": true,
   "git.enableGlobalStatus": true,
   "git.addGBlameToVirtualText": false,

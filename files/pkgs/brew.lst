@@ -154,6 +154,7 @@ hadolint
 helix
 helix
 helm-docs
+helm-ls
 helmenv
 helmfile
 helmify

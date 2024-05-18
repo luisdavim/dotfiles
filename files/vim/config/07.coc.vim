@@ -85,7 +85,7 @@ autocmd FileType go nmap gty :CocCommand go.tags.add yaml<cr>
 autocmd FileType go nmap gtx :CocCommand go.tags.clear<cr>
 
 " Disable diagnostics for helm templates
-autocmd FileType yaml.gotexttmpl call CocActionAsync('diagnosticToggleBuffer')
+" autocmd FileType yaml.gotexttmpl call CocActionAsync('diagnosticToggleBuffer')
 
 " Symbol renaming
 nmap <leader>rn <Plug>(coc-rename)

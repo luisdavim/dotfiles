@@ -26,6 +26,7 @@ github.com/kubicorn/kubicorn
 github.com/kyoh86/richgo
 github.com/liggitt/audit2rbac
 github.com/m-zajac/json2go/cmd/json2go
+github.com/mrjosh/helm-ls@latest
 github.com/pbnj/ephor
 github.com/pkg/errors
 github.com/posener/goreadme/cmd/goreadme
