@@ -100,8 +100,10 @@ function fawk() {
 # History
 function hgrep() {
   if [ ! -z "$1" ]; then
-    echo -e '#ID\t#USER\t#SEQ\t#DATE TIME\t#DURATION\t#COMMAND'
+  (
+    echo -e '#ID\t#USER\t#SEQ\t#DATE#t#TIME\t#DURATION\t#COMMAND'
     grep --text "${@}" $_eternal_history_histfile
+  ) | column -ts $'\t'
   else
     history
   fi
