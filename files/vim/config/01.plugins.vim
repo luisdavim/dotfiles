@@ -119,6 +119,7 @@
   Plug 'google/vim-jsonnet'
   Plug 'kevinoid/vim-jsonc'
   Plug 'jjo/vim-cue'
+  Plug 'towolf/vim-helm'
   " Plug 'posva/vim-vue'
   " Plug 'sheerun/vim-polyglot' " see: https://github.com/sheerun/vim-polyglot/issues/779
 
