@@ -12,7 +12,7 @@
       // "command": "helm-ls",
       "command": "helm_ls",
       "args": ["serve"],
-      "filetypes": ["helm", "helmfile"],
+      "filetypes": ["helm", "helmfile", "mustache", "text"],
       "rootPatterns": ["Chart.yaml"]
     }
   },
