@@ -68,15 +68,15 @@ if [ -z "${failed}" ]; then
   failed=$(helm ls -a -n "${NAMESPACE}" | awk -v filter="${filter}" '$0 !~ filter {print $1}')
 fi
 
-if [ -n "${failed}" ] && [ -n "${REV}" ]; then
-  echo "Rolling back ${release} to revision ${REV}"
-  helm rollback "${release}" -n "${NAMESPACE}" "${REV}"
-  exit $?
-fi
-
 if [ -z "${failed}" ]; then
   echo "No failed releases found"
   exit 0
+fi
+
+if [ -n "${REV}" ]; then
+  echo "Rolling back ${failed} to revision ${REV}"
+  helm rollback "${failed}" -n "${NAMESPACE}" "${REV}"
+  exit $?
 fi
 
 if [[ "$DEBUG" == "true" ]]; then
