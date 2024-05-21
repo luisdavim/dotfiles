@@ -94,7 +94,7 @@ _eternal_history_mark_for_save() {
 
 _eternal_history_save() {
   if $__eternal_history_command_entered; then
-    echo -e "$$\t${USER}\t$(fc -liD -1 | sed 's/ /\t/;s/ /\t/;s/ /\t/;s/ /\t/;s/ /\t/;s/ /\t/;s/ /\t/')" >> $_eternal_history_histfile
+    echo -e "$$\t${USER}\t$(fc -liD -1 | sed 's/ /\t/;s/ /\t/;s/ /\t/;s/ /\t/;s/ /\t/;s/ /\t/;s/ /\t/' | tr -s '\t')" >> $_eternal_history_histfile
   fi
   __eternal_history_command_entered=false
 }
