@@ -3,8 +3,8 @@ function! s:isHelm()
   let filename = expand("%:t")
   if filepath =~ '\v/(templates|charts)/.*\.(ya?ml|gotmpl|tpl|txt)$' | return 1 | en
   if filename =~ '\v(helmfile).ya?ml' | return 1 | en
-  if getline(1) =~ '^apiVersion:' || getline(2) =~ '^apiVersion:' | return 1 | en
-  if !empty(findfile("Chart.yaml", expand('%:p:h').';')) | return 1 | en
+  " if getline(1) =~ '^apiVersion:' || getline(2) =~ '^apiVersion:' | return 1 | en
+  " if !empty(findfile("Chart.yaml", expand('%:p:h').';')) | return 1 | en
   return 0
 endfunction
 
