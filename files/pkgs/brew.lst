@@ -50,6 +50,7 @@ brew-pip
 broot
 browsh
 btop
+ca-certificates
 calicoctl
 cask
 catimg
