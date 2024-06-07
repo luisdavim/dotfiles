@@ -116,6 +116,17 @@ function kubectl-missing-ds-pods() {
 }
 alias kgmdsp='kubectl-missing-ds-pods'
 
+function kubectl-get-all() {
+  local args=( "$@" )
+  local namespaced='true'
+  if [ $# -eq 0 ]; then
+    namespaced='false'
+    args+=( '-A' )
+  fi
+  \kubectl api-resources --verbs=list --namespaced="${namespaced}" -o name | xargs -n 1 kubectl get --show-kind --ignore-not-found ${args[@]}
+}
+alias kgaa='kubectl-get-all'
+
 function kubectl-events() {
   local filter=""
   if [ -n "$1" ]; then
