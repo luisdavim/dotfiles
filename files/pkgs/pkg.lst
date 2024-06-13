@@ -115,6 +115,7 @@ haskell-vector
 haskell-witherable
 helix
 helm
+helm-ls
 hors
 htop
 iconv
