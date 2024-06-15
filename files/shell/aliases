@@ -16,58 +16,9 @@ for f in $HOME/.aliases.d/*; do
   fi
 done
 
-# enable color support of ls and also add handy aliases
-if [ -x "$(command -v dircolors)" ]; then
-  test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-  alias ls='ls --color=auto'
-  alias dir='dir --color=auto'
-  alias vdir='vdir --color=auto'
-
-  alias grep='grep --color=auto'
-  alias fgrep='fgrep --color=auto'
-  alias egrep='egrep --color=auto'
-  alias watch='watch --color'
-fi
-
-# some more ls aliases
-if [ -x "$(command -v els)" ]; then
-  alias els='els --els-icons=fontawesome'
-  # alias ls='els --els-icons=fontawesome'
-fi
-if [ -x "$(command -v eza)" ]; then
-  alias ls='eza --color-scale'
-  alias tree='eza -T --color-scale --icons --ignore-glob "*node_modules*|*vendor*"'
-elif [ -x "$(command -v exa)" ]; then
-  alias ls='exa --color-scale'
-  alias tree='exa -T --color-scale --icons --ignore-glob "*node_modules*|*vendor*"'
-fi
-alias lc='colorls'
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
-if [ -x "$(command -v eza)" ]; then
-  alias lt='ls -lhmr --sort=modified && echo "------Oldest------"'
-  alias ltr='ls -lhm --sort=modified && echo "------Newest------"'
-elif [ -x "$(command -v exa)" ]; then
-  alias lt='ls -lhmr --sort=modified && echo "------Oldest------"'
-  alias ltr='ls -lhm --sort=modified && echo "------Newest------"'
-else
-  alias lt='ls -lht && echo "------Oldest--"'
-  alias ltr='ls -lhtr && echo "------Newest--"'
-fi
-if [ -x "$(command -v yazi)" ]; then
-  alias lf='yazi'
-fi
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-
-# Location aliases
-alias ..='cd ..'
-alias ...='cd ../../'
-alias ....='cd ../../../'
-alias .....='cd ../../../../'
-alias back='cd $OLDPWD'
 
 # Grep aliases
 alias gr='rg -g "!*vendor/*"'
@@ -199,6 +150,9 @@ if ! [ -x "$(command -v pbpaste)" ]; then
   fi
 fi
 
+# Screen aliases
+alias screen-killall='for sess in $(screen -ls); do $ screen -X -S $sess quit'
+
 # Fix window title after ssh
 function ssh() {
   if [[ "$TERM" =~ "screen" ]] && [ -n "$TMUX" ]; then
@@ -209,46 +163,17 @@ function ssh() {
   fi
 }
 
-# Screen aliases
-alias screen-killall='for sess in $(screen -ls); do $ screen -X -S $sess quit'
-
 # Vagrant aliases
 alias vagrant-clean='vagrant nuke && vagrant global-status --prune'
 
 alias psg='ps aux | grep -v grep | grep -i -e VSZ -e'
 alias sysState="top -l 1 -s 0 | awk ' /Processes/ || /PhysMem/ || /Load Avg/{print}'"
 
-alias lstcp='lsof -nP | grep TCP | grep LISTEN'
-alias lsudp='lsof -nP | grep UDP | grep LISTEN'
-alias lsservers='lsof -nP | grep LISTEN'
-
 alias fzkill='kill $(ps -ef|fzf --header-lines 1)'
 
 # key management aliases: fingerprint a pubkey and retrieve pubkey from a private key
 alias fingerprint='ssh-keygen -lf'
 alias pubkey='ssh-keygen -y -f'
-
-# Get all records from a domain
-alias dig-all='dig +nocmd +multiline +noall +answer any'
-
-alias headers='curl -ISs'
-
-# get TLS cert info
-function certinfo() {
-  echo | openssl s_client -showcerts -servername ${1} -connect ${1}:${2:-443} 2>/dev/null | openssl x509 -inform pem -noout -text
-}
-
-# get external ip address
-function ipinfo() {
-  # we could also use curl ifconfig.co
-  echo "Egress address: $(curl -s http://ipinfo.io/ip || echo 'Unable to connect!')"
-  ip route get default 2>/dev/null || ip route ls
-  ping -c 1 google.com >/dev/null 2>&1 && echo -e "Connection: ${COL_GREEN}✔${COL_RESET}" || echo -e "Connection: ${COL_RED}✘${COL_RESET}"
-}
-
-# get internet speed
-# alias speedtest='wget -O /dev/null http://speedtest.wdc01.softlayer.com/downloads/test500.zip'
-alias speedtest='speedtest-cli'
 
 alias netdata='docker run --rm --cap-add SYS_PTRACE -v /proc:/host/proc:ro -v /sys:/host/sys:ro -p 19999:19999 titpetric/netdata'
 

@@ -1,0 +1,59 @@
+# vim:set filetype=bash:
+
+# enable color support of ls and also add handy aliases
+if [ -x "$(command -v dircolors)" ]; then
+  test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+  alias ls='ls --color=auto'
+  alias dir='dir --color=auto'
+  alias vdir='vdir --color=auto'
+
+  alias grep='grep --color=auto'
+  alias fgrep='fgrep --color=auto'
+  alias egrep='egrep --color=auto'
+  alias watch='watch --color'
+fi
+
+# some more ls aliases
+if [ -x "$(command -v els)" ]; then
+  alias els='els --els-icons=fontawesome'
+  # alias ls='els --els-icons=fontawesome'
+fi
+if [ -x "$(command -v eza)" ]; then
+  alias ls='eza --color-scale'
+  alias tree='eza -T --color-scale --icons --ignore-glob "*node_modules*|*vendor*"'
+elif [ -x "$(command -v exa)" ]; then
+  alias ls='exa --color-scale'
+  alias tree='exa -T --color-scale --icons --ignore-glob "*node_modules*|*vendor*"'
+fi
+alias lc='colorls'
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+if [ -x "$(command -v eza)" ]; then
+  alias lt='ls -lhmr --sort=modified && echo "------Oldest------"'
+  alias ltr='ls -lhm --sort=modified && echo "------Newest------"'
+elif [ -x "$(command -v exa)" ]; then
+  alias lt='ls -lhmr --sort=modified && echo "------Oldest------"'
+  alias ltr='ls -lhm --sort=modified && echo "------Newest------"'
+else
+  alias lt='ls -lht && echo "------Oldest--"'
+  alias ltr='ls -lhtr && echo "------Newest--"'
+fi
+if [ -x "$(command -v yazi)" ]; then
+  alias lf='yazi'
+  function yy() {
+    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+    yazi "$@" --cwd-file="$tmp"
+    if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+      cd -- "$cwd"
+    fi
+    rm -f -- "$tmp"
+  }
+fi
+
+# Location aliases
+alias ..='cd ..'
+alias ...='cd ../../'
+alias ....='cd ../../../'
+alias .....='cd ../../../../'
+alias back='cd $OLDPWD'

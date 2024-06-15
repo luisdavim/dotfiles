@@ -1,0 +1,27 @@
+# vim:set filetype=bash:
+
+alias lstcp='lsof -nP | grep TCP | grep LISTEN'
+alias lsudp='lsof -nP | grep UDP | grep LISTEN'
+alias lsservers='lsof -nP | grep LISTEN'
+
+# Get all records from a domain
+alias dig-all='dig +nocmd +multiline +noall +answer any'
+
+alias headers='curl -ISs'
+
+# get TLS cert info
+function certinfo() {
+  echo | openssl s_client -showcerts -servername ${1} -connect ${1}:${2:-443} 2>/dev/null | openssl x509 -inform pem -noout -text
+}
+
+# get external ip address
+function ipinfo() {
+  # we could also use curl ifconfig.co
+  echo "Egress address: $(curl -s http://ipinfo.io/ip || echo 'Unable to connect!')"
+  ip route get default 2>/dev/null || ip route ls
+  ping -c 1 google.com >/dev/null 2>&1 && echo -e "Connection: ${COL_GREEN}✔${COL_RESET}" || echo -e "Connection: ${COL_RED}✘${COL_RESET}"
+}
+
+# get internet speed
+# alias speedtest='wget -O /dev/null http://speedtest.wdc01.softlayer.com/downloads/test500.zip'
+alias speedtest='speedtest-cli'
