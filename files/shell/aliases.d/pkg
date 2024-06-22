@@ -140,7 +140,7 @@ EOF
   alias dist-upgrade='brew-upgrade && brew-cask-upgrade -y'
 
 elif [[ "$OSTYPE" == *"android"* ]]; then
-  alias apt-upgrade='apt update; apt full-upgrade'
+  alias apt-upgrade='apt update; apt dist-upgrade; apt autoremove; apt autoclean'
   alias dist-upgrade=apt-upgrade
 fi
 
