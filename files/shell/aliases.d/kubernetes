@@ -325,7 +325,7 @@ alias kube-shell='kubectl-remote_shell'
 alias kshell='kubectl-remote_shell'
 
 function kubectl-node_shell() {
-  command kubectl debug "${@}" -it --image=ghcr.io/luisdavim/debug:main -- chroot /host
+  command kubectl debug "node/${@}" -it --image=ghcr.io/luisdavim/debug:main -- chroot /host
   command kubectl killall node-debugger
 }
 alias kctl-node-shell='kubectl-node_shell'
