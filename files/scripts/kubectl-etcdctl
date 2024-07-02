@@ -102,6 +102,11 @@ etcdctl defrag
 etcdctl alarm disarm
 EOF
     ;;
+  'count')
+    read -r -d '' cmd <<'EOF'
+etcdctl get /registry --prefix=true --keys-only | grep -v ^$ | awk -F'/' '{ if ($3 ~ /\./) {h[$3"/"$4]++} else { h[$3]++ }} END { for(k in h) print h[k], k }' | sort -n
+EOF
+    ;;
   '-s' | '--script')
     shift
     cmd="$(cat "${1}")"
