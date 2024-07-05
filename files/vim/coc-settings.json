@@ -25,7 +25,7 @@
     "completeUnimported": true,
     "completionDocumentation": true,
     "deepCompletion": true,
-    "fuzzyMatching": true
+    "matcher": "Fuzzy"
   },
   "yaml.format.bracketSpacing": false,
   "yaml.schemaStore.enable": true,
