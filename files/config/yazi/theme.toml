@@ -189,6 +189,10 @@ rules = [
 	{ name = "*", is = "orphan", bg = "red" },
 	{ name = "*", is = "exec"  , fg = "green" },
 
+	# Dummy files
+	{ name = "*", is = "dummy", bg = "red" },
+	{ name = "*/", is = "dummy", bg = "red" },
+
 	# Fallback
 	# { name = "*", fg = "white" },
 	{ name = "*/", fg = "blue" }
@@ -764,18 +768,19 @@ exts = [
 ]
 conds = [
 	# Special files
-	{ cond = "orphan", text = "" },
-	{ cond = "link"  , text = "" },
-	{ cond = "block" , text = "" },
-	{ cond = "char"  , text = "" },
-	{ cond = "fifo"  , text = "" },
-	{ cond = "sock"  , text = "" },
-	{ cond = "sticky", text = "" },
+	{ if = "orphan", text = "" },
+	{ if = "link"  , text = "" },
+	{ if = "block" , text = "" },
+	{ if = "char"  , text = "" },
+	{ if = "fifo"  , text = "" },
+	{ if = "sock"  , text = "" },
+	{ if = "sticky", text = "" },
+	{ if = "dummy",  text = "" },
 
 	# Fallback
-	{ cond = "dir", text = "" },
-	{ cond = "exec", text = "" },
-	{ cond = "!dir", text = "" },
+	{ if = "dir", text = "󰉋" },
+	{ if = "exec", text = "" },
+	{ if = "!dir", text = "󰈔" },
 ]
 
 # : }}}
