@@ -139,6 +139,20 @@ EOF
   alias brew-upgrade='brew update && brew upgrade && brew cleanup && check-keg_only'
   alias dist-upgrade='brew-upgrade && brew-cask-upgrade -y'
 
+  brew-list() {
+    brew list --formula | grep -E "^${1}(@\d*.*)?\$"
+  }
+
+  brew-switch() {
+    PKG="${1%%@*}"
+    NEW="${2:-${1}}"
+    if [ "${NEW}" != "${PKG}"* ]; then
+      NEW="${PKG}@${2}"
+    fi
+    brew unlink "${PKG}"
+    brew link "${NEW}"
+  }
+
 elif [[ "$OSTYPE" == *"android"* ]]; then
   alias apt-upgrade='apt update; apt dist-upgrade; apt autoremove; apt autoclean'
   alias dist-upgrade=apt-upgrade
