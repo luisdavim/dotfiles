@@ -21,8 +21,8 @@ done
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 # Grep aliases
-alias gr='rg -g "!*vendor/*"'
-alias todos="rg -n --nogroup '(TODO|FIX(ME)?):'"
+alias gr='rg --hidden -g "!*vendor/*"'
+alias todos="rg --hidden -n --nogroup '(TODO|FIX(ME)?):'"
 
 function envgrep() {
   printenv | awk "/${1}/ {print \$1}"
@@ -33,7 +33,7 @@ function fr() {
   if ! [ -z "${3}" ]; then
     type="-t ${3}"
   fi
-  perl -p -i -e "s/${1}/${2}/g" $(rg -g '!*vendor/*' ${type} -l "${1}")
+  perl -p -i -e "s/${1}/${2}/g" $(rg --hidden -g '!*vendor/*' ${type} -l "${1}")
 }
 
 # Usage: df -h|fawk 2 ; replaces: df -h | awk '{print $2}'
