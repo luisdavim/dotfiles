@@ -146,7 +146,7 @@ EOF
   brew-switch() {
     PKG="${1%%@*}"
     NEW="${2:-${1}}"
-    if [ "${NEW}" != "${PKG}"* ]; then
+    if [[ "${NEW}" != "${PKG}"* ]]; then
       NEW="${PKG}@${2}"
     fi
     brew unlink "${PKG}"
