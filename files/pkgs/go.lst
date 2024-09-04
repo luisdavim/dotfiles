@@ -43,6 +43,7 @@ github.com/uber/astro/astro/cli/astro
 github.com/updatecli/updatecli
 github.com/wagoodman/dive
 github.com/zegl/kube-score
+github.com/zyedidia/eget@latest
 golang.org/x/lint
 golang.org/x/tools/...
 kubepack.dev/chart-doc-gen
