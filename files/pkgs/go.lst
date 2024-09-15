@@ -8,6 +8,7 @@
 github.com/ChimeraCoder/gojson/gojson
 github.com/axw/gocov/gocov
 github.com/azer/yolo
+github.com/bevane/repocheck
 github.com/charmbracelet/gum
 github.com/cloudposse/slack-notifier
 github.com/doronbehar/pistol/cmd/pistol
