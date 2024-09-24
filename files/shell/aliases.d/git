@@ -88,6 +88,7 @@ alias gcpo='git cherry-pick --strategy-option=ours'
 alias grp='git recursive pull'
 alias ggc='git gc --prune=all'
 alias grgc='git recursive gc --prune=all'
+alias gstaku='git stash push -ku'
 
 alias masterDiff='git diff $(git merge-base --fork-point master)'
 alias latestTag='git describe --tags `git rev-list --tags --max-count=1`'
