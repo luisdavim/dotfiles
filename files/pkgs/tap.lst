@@ -21,6 +21,7 @@ eth-p/software
 gardener/tap
 git-chglog/git-chglog
 golangci/tap
+grishka/grishka
 habitat-sh/habitat
 hashicorp/tap
 helix-editor/helix
