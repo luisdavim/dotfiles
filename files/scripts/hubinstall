@@ -20,6 +20,8 @@ if [ -n "${GITHUB_TOKEN}" ]; then
   AUTH_HEADER=( -H "Authorization: bearer ${GITHUB_TOKEN}" )
 fi
 
+CURL_FLAGS="-sfL"
+
 function usage {
   if [ -n "${1}" ]; then
     echo -e "${1}"
@@ -79,12 +81,19 @@ function installFromGithub() {
     os='(darwin|osx|macos)'
   fi
 
-  mkdir -p "${install_to}"
+  if [[ ${arch} == "arm64" ]]; then
+    arch='(arm64|aarch64)'
+  fi
 
-  url=$(curl -sfL "https://api.github.com/repos/${project}/releases/latest" "${AUTH_HEADER[@]}" | jq -r ".assets[]? | select(.name | test(\"${os}.*${arch}\";\"i\") and (test(\"sha[0-9]+\";\"i\")|not)) | .browser_download_url?" | grep -Ev '(md5|sha[0-9]+)$')
+  mkdir -p "${install_to}"
+  filter="select(.name | test(\"${os}\";\"i\") and test(\"${arch}\";\"i\") and (test(\"sha[0-9]+\";\"i\")|not))"
+  releases_url="https://api.github.com/repos/${project}/releases/latest"
+
+  url=$(curl ${CURL_FLAGS} "${releases_url}" "${AUTH_HEADER[@]}" | jq -r ".assets[]? | ${filter} | .browser_download_url?" | grep -Ev '(md5|sha[0-9]+)$')
+  [[ ${DEBUG} == "true" ]] && echo -e "URL: \n${url}"
 
   if [ -z "${url}" ]; then
-    url=$(curl -sfL "https://api.github.com/repos/${project}/releases/latest" "${AUTH_HEADER[@]}" | jq -r '.body' | grep -Eo 'https://github.com/user-attachments/files/[0-9a-zA-Z]+/[a-zA-Z0-9_.-]+' | grep -E "${os}" | grep -E "${arch}")
+    url=$(curl ${CURL_FLAGS} "${releases_url}" "${AUTH_HEADER[@]}" | jq -r '.body' | grep -Eo 'https://github.com/user-attachments/files/[0-9a-zA-Z]+/[a-zA-Z0-9_.-]+' | grep -E "${os}" | grep -E "${arch}")
   fi
 
   if [[ $(echo -e "${url}" | wc -l) -gt 1 ]]; then
@@ -95,6 +104,7 @@ function installFromGithub() {
 
   if [ -z "${url}" ]; then
     echo 'Error: no releases found, note that pre-releases are not supported!'
+    echo "Check if the project has builds for ${os} and ${arch}"
     return 1
   fi
   artifact=$(basename "${url}")
@@ -107,7 +117,7 @@ function installFromGithub() {
     if [[ ${DEBUG} == "true" ]]; then
       echo "Artifact ${artifact_name} is a tarball (${artifact_ext})"
     fi
-    curl -sfLo "${artifact}" "${url}" "${AUTH_HEADER[@]}"
+    curl ${CURL_FLAGS} -o "${artifact}" "${url}" "${AUTH_HEADER[@]}"
     if [[ $artifact_ext == "zip" ]]; then
       unzip "${artifact}" -d "${artifact_folder}"
     else
@@ -128,7 +138,7 @@ function installFromGithub() {
     rm -rf "${artifact_name}"
     rm -rf ${artifact_folder}
   else
-    curl -sfLo "${name}" "${url}" "${AUTH_HEADER[@]}"
+    curl ${CURL_FLAGS} -o "${name}" "${url}" "${AUTH_HEADER[@]}"
     install "${name}"
   fi
 }
@@ -138,12 +148,12 @@ function getFromRawGithub() {
   name="${2:-$(basename "${project}")}"
   tag="${3:-master}"
   if [[ ${tag} == "latest" ]]; then
-    tag=$(curl -sfL https://api.github.com/repos/"${project}"/releases/latest "${AUTH_HEADER[@]}" | jq -r '.tag_name' | tr -d 'v')
+    tag=$(curl ${CURL_FLAGS} "https://api.github.com/repos/${project}/releases/latest" "${AUTH_HEADER[@]}" | jq -r '.tag_name' | tr -d 'v')
   fi
 
   url="https://raw.githubusercontent.com/${project}/${tag}/${name// /%20}"
 
-  curl -sfLo "$(basename "${name}")" "${url}" "${AUTH_HEADER[@]}"
+  curl ${CURL_FLAGS} -o "$(basename "${name}")" "${url}" "${AUTH_HEADER[@]}"
 }
 
 function installFromRawGithub() {
@@ -198,6 +208,10 @@ done
 
 # if [[ ${DEBUG} == "true" ]]; then
 #   set -x
+# fi
+
+# if [[ ${DEBUG} == "true" ]]; then
+#   CURL_FLAGS="${CURL_FLAGS} -v"
 # fi
 
 mkdir -p "${install_to}"
