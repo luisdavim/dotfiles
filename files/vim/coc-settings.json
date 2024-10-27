@@ -14,6 +14,13 @@
       "args": ["serve"],
       "filetypes": ["helm", "helmfile", "mustache", "text"],
       "rootPatterns": ["Chart.yaml"]
+    },
+    "golangci-lint-languageserver": {
+      "command": "golangci-lint-langserver",
+      "filetypes": ["go"],
+      "initializationOptions": {
+        "command": ["golangci-lint", "run", "--enable-all", "--disable", "lll", "--out-format", "json", "--issues-exit-code=1"]
+      }
     }
   },
   "go.enable": true,
