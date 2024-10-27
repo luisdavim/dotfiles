@@ -364,6 +364,10 @@ installVimPlugins() {
   vim +PlugInstall +qall
   nvim +PlugInstall +qall
   # nvim +'TSInstall all' +qall
+
+  # Install lazyman
+  git_clone_or_update https://github.com/doctorfree/nvim-lazyman "${HOME}/.config/nvim-Lazyman"
+  # ${HOME}/.config/nvim-Lazyman/lazyman.sh
 }
 
 installKakPlugins() {
@@ -538,7 +542,7 @@ installDotFiles() {
 
   # Set alacritty themes with:
   # alacritty-colorscheme -C ~/.alacritty-theme/themes -a tomorrow_night_bright.yaml -V
-  # a matchin vim theme will also be created in ~/.vimrc_background
+  # a matching vim theme will also be created in ~/.vimrc_background
   git_clone_or_update https://github.com/eendroroy/alacritty-theme.git "${HOME}/.alacritty-theme"
 
   # kitty themes
