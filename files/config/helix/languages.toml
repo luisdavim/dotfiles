@@ -1,0 +1,47 @@
+[[language]]
+name = "markdown"
+auto-format = true
+formatter = {command = "prettier", args = ["--parser", "markdown"]}
+
+[[language]]
+name = "go"
+auto-format = true
+formatter = {command = "goimports"}
+language-servers = ["gopls", "golangci-lint-langserver"]
+
+[[language]]
+name = "bash"
+auto-format = true
+formatter = {command = "shfmt"}
+
+[[language]]
+name = "jsx"
+auto-format = true
+formatter = {command = "prettier", args = ["--parser", "typescript"]}
+
+[[language]]
+name = "html"
+formatter = { command = 'prettier', args = ["--parser", "html"] }
+
+[[language]]
+name = "json"
+formatter = { command = 'prettier', args = ["--parser", "json"] }
+
+[[language]]
+name = "css"
+formatter = { command = 'prettier', args = ["--parser", "css"] }
+
+[[language]]
+name = "javascript"
+formatter = { command = 'prettier', args = ["--parser", "typescript"] }
+auto-format = true
+
+[[language]]
+name = "typescript"
+formatter = { command = 'prettier', args = ["--parser", "typescript"] }
+auto-format = true
+
+[[language]]
+name = "tsx"
+formatter = { command = 'prettier', args = ["--parser", "typescript"] }
+auto-format = true

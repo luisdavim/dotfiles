@@ -32,3 +32,7 @@ display-messages = true
 left = ["version-control", "spacer", "separator", "file-name", "file-modification-indicator"]
 center = []
 right = ["diagnostics", "position", "file-line-ending"]
+
+[keys.normal]
+# Delete till end of line shortcut D to match vim
+D = ["ensure_selections_forward", "extend_to_line_end", "delete_selection"]
