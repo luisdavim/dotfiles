@@ -1,1 +1,34 @@
 theme = "github_dark"
+
+[editor]
+# Show currently open buffers, only when more than one exists.
+bufferline = "multiple"
+# Highlight all lines with a cursor
+cursorline = true
+# Use relative line numbers
+# line-number = "relative"
+# Show a ruler at column 120
+rulers = [120]
+# Force the theme to show colors
+true-color = true
+gutters = ["diagnostics", "line-numbers", "spacer", "diff"]
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[editor.indent-guides]
+character = "╎"
+render = true
+
+[editor.lsp]
+# Disable automatically popups of signature parameter help
+auto-signature-help = false
+# Show LSP messages in the status line
+display-messages = true
+
+[editor.statusline]
+left = ["version-control", "spacer", "separator", "file-name", "file-modification-indicator"]
+center = []
+right = ["diagnostics", "position", "file-line-ending"]
