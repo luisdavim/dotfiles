@@ -11,6 +11,7 @@ cursorline = true
 rulers = [120]
 # Force the theme to show colors
 true-color = true
+undercurl = true
 gutters = ["diagnostics", "line-numbers", "spacer", "diff"]
 
 [editor.cursor-shape]
@@ -21,12 +22,26 @@ select = "underline"
 [editor.indent-guides]
 character = "╎"
 render = true
+# skip-levels = 1
+
+[editor.whitespace.render]
+space = "all"
+tab = "all"
+newline = "none"
+
+[editor.whitespace.characters]
+space = " "
+nbsp = "⍽"    # Non Breaking SPace
+tab = "→"
+newline = "⏎"
+tabpad = "·"  # Tabs will look like "→···" (depending on tab width)
 
 [editor.lsp]
 # Disable automatically popups of signature parameter help
 auto-signature-help = false
 # Show LSP messages in the status line
 display-messages = true
+display-inlay-hints = true
 
 [editor.statusline]
 left = ["version-control", "spacer", "separator", "file-name", "file-modification-indicator"]
@@ -34,5 +49,18 @@ center = []
 right = ["diagnostics", "position", "file-line-ending"]
 
 [keys.normal]
+ins = "insert_mode"
+esc = ["collapse_selection", "keep_primary_selection"]
+g = { a = "code_action" } # ga to open code actions
+X = "extend_line_above" # Shift+x to select the whole line above
+# Delete current line
+# d = { d = ["extend_line_below", "delete_selection"] }
 # Delete till end of line shortcut D to match vim
 D = ["ensure_selections_forward", "extend_to_line_end", "delete_selection"]
+
+# Use system clipboard
+p = "paste_clipboard_before"
+y = "yank_main_selection_to_clipboard"
+
+[keys.insert]
+ins = "normal_mode"

@@ -1,9 +1,4 @@
 [[language]]
-name = "markdown"
-auto-format = true
-formatter = {command = "prettier", args = ["--parser", "markdown"]}
-
-[[language]]
 name = "go"
 auto-format = true
 formatter = {command = "goimports"}
@@ -15,9 +10,9 @@ auto-format = true
 formatter = {command = "shfmt"}
 
 [[language]]
-name = "jsx"
+name = "markdown"
 auto-format = true
-formatter = {command = "prettier", args = ["--parser", "typescript"]}
+formatter = {command = "prettier", args = ["--parser", "markdown"]}
 
 [[language]]
 name = "html"
@@ -35,6 +30,11 @@ formatter = { command = 'prettier', args = ["--parser", "css"] }
 name = "javascript"
 formatter = { command = 'prettier', args = ["--parser", "typescript"] }
 auto-format = true
+
+[[language]]
+name = "jsx"
+auto-format = true
+formatter = {command = "prettier", args = ["--parser", "typescript"]}
 
 [[language]]
 name = "typescript"
