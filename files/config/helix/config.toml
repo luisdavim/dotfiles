@@ -115,6 +115,9 @@ u = ["undo", "collapse_selection"]
 esc = ["collapse_selection", "keep_primary_selection"]
 ins = "insert_mode"
 
+S-tab = "unindent"
+tab = "indent"
+
 # Search for word under cursor
 "*" = ["move_char_right", "move_prev_word_start", "move_next_word_end", "search_selection", "make_search_word_bounded", "search_next"]
 "#" = ["move_char_right", "move_prev_word_start", "move_next_word_end", "search_selection", "make_search_word_bounded", "search_prev"]
@@ -162,6 +165,9 @@ g = { g = ["select_mode", "extend_to_line_bounds", "goto_file_start", "extend_to
 esc = ["collapse_selection", "normal_mode"]
 ins = "normal_mode"
 
+S-tab = "unindent"
+tab = "indent"
+
 [keys.select]
 # Muscle memory
 "{" = ["extend_to_line_bounds", "goto_prev_paragraph"]
@@ -182,9 +188,12 @@ i = "select_textobject_inner"
 a = "select_textobject_around"
 
 # Some extra binds to allow us to insert/append in select mode because it's nice with multiple cursors
-tab = ["insert_mode", "collapse_selection"] # tab is read by most terminal editors as "C-i"
+# tab = ["insert_mode", "collapse_selection"] # tab is read by most terminal editors as "C-i"
 C-a = ["append_mode", "collapse_selection"]
 C-v = ["select_mode","copy_selection_on_next_line"]
+
+S-tab = "unindent"
+tab = "indent"
 
 # Make selecting lines in visual mode behave sensibly
 k = ["extend_line_up", "extend_to_line_bounds"]
