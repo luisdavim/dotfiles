@@ -269,6 +269,7 @@ pv
 pyenv
 pyenv-virtualenv
 python
+python-lsp-server
 rake-completion
 rancher-cli
 ranger
