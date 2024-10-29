@@ -6,7 +6,7 @@ formatter = {command = "goimports"}
 [[language]]
 name = "bash"
 auto-format = true
-formatter = {command = "shfmt"}
+formatter = {command = "shfmt", args = ["-i", "2", "-ci"]}
 
 [[language]]
 name = "markdown"

@@ -1,4 +1,5 @@
 # vim:set filetype=bash:
+# helix:set-language bash:
 
 # enable color support of ls and also add handy aliases
 if [ -x "$(command -v dircolors)" ]; then

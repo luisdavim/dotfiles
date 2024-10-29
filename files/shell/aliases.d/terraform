@@ -1,6 +1,7 @@
 # vim:set filetype=bash:
-# terraform-aliases
+# helix:set-language bash:
 
+# terraform-aliases
 [ -f ${HOME}/.terraform_aliases/.terraform_aliases ] && source ${HOME}/.terraform_aliases/.terraform_aliases
 [ -f ${HOME}/.terraform_aliases/.terragrunt_aliases ] && source ${HOME}/.terraform_aliases/.terragrunt_aliases
 

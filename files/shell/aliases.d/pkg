@@ -1,4 +1,5 @@
 # vim:set filetype=bash:
+# helix:set-language bash:
 
 # Gem aliases
 # alias gem-upgrade='gem update $(gem list | cut -d\  -f 1)'
@@ -13,7 +14,7 @@ fi
 
 # Go aliases
 function goclean() {
-  go clean -modcache
+  go clean -testcache -modcache
   rm -rf ~/.glide/
   rm -rf ~/go/.cache/
   rm -rf ~/.cache/go-build/
@@ -54,7 +55,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     alias brew='apt'
   fi
 
-# if user is not root, pass all commands via sudo #
+  # if user is not root, pass all commands via sudo #
   if [ $(id -u) -ne 0 ]; then
     alias apt='sudo apt'
     alias apt-get='sudo apt-get'
@@ -92,7 +93,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     fi
     for c in $(brew list --cask); do
       installed=$(ls $(brew --prefix)/Caskroom/${c})
-      installed_version=$(echo $installed | sort --version-sort| tail -n 1)
+      installed_version=$(echo $installed | sort --version-sort | tail -n 1)
       info_version=$(brew info --cask "${c}" | grep "${c}: " | grep -Eo '(\s|^)v?(([0-9]+).?)+((-|\+|\.)[a-zA-Z0-9.+_-]+)?(\s|$)' | tr -d '[[:blank:]]')
       if [ -z ${info_version} ]; then
         info_version="$(brew info --cask 1password | grep "${c}: " | awk '{print $3}')"
@@ -104,16 +105,27 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
         if [ "$1" != '-y' ]; then
           select ynx in "Yes" "No" "Exit"; do
             case $ynx in
-              "Yes") echo "Re-installing $c"; brew reinstall --cask "$c"; break;;
-              "No") echo "Skipping $c"; break;;
-              "Exit") echo "Exiting brew-cask-upgrade"; return;;
+            "Yes")
+              echo "Re-installing $c"
+              brew reinstall --cask "$c"
+              break
+              ;;
+            "No")
+              echo "Skipping $c"
+              break
+              ;;
+            "Exit")
+              echo "Exiting brew-cask-upgrade"
+              return
+              ;;
             esac
           done
         else
-          echo -e "${COL_YELLOW}>>>${COL_RESET} Re-installing $c"; brew reinstall --cask "$c"
+          echo -e "${COL_YELLOW}>>>${COL_RESET} Re-installing $c"
+          brew reinstall --cask "$c"
         fi
       else
-          echo -e "${COL_BLUE}>>>${COL_RESET} $c is up to date"
+        echo -e "${COL_BLUE}>>>${COL_RESET} $c is up to date"
       fi
     done
     brew cleanup
@@ -125,7 +137,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
       if ! [[ ":$PATH:" == *":${keg}:"* ]] && [ -d "$keg" ]; then
         echo -e "\n# WARNING: ${keg} is not in your PATH"
         echo '# add the following to your profile to fix it'
-        cat << EOF
+        cat <<EOF
 if [ -d '${keg}' ]; then
   PATH="${keg}:\$PATH"
 fi
@@ -164,7 +176,8 @@ function asdf-update() {
     asdf install ${plugin} latest
     asdf global ${plugin} latest
   done
-  rm -rf ${HOME}/.asdf/shims; asdf reshim
+  rm -rf ${HOME}/.asdf/shims
+  asdf reshim
 }
 
 function update-all-things() {
@@ -227,4 +240,3 @@ function clear-cache() {
   pip-clean
   rm -rf ~/.cache
 }
-

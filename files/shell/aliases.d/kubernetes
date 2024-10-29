@@ -1,6 +1,7 @@
 # vim:set filetype=bash:
-# Kubectl aliases
+# helix:set-language bash:
 
+# Kubectl aliases
 [ -f ${HOME}/.ktx ] && source ${HOME}/.ktx/ktx
 [ -f $HOME/.kbenv/kbenv.sh ] && source $HOME/.kbenv/kbenv.sh
 [ -f $HOME/.helmenv/helmenv.sh ] && source $HOME/.helmenv/helmenv.sh

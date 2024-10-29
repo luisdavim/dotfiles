@@ -1,4 +1,5 @@
 # vim:set filetype=bash:
+# helix:set-language bash:
 
 function git-main_branch() {
   if [ ! -f ".git/refs/remotes/origin/HEAD" ]; then
