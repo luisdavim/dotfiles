@@ -241,11 +241,11 @@ PATH="${PATH}:${GOBIN}"
 # Cargo bins
 # [ -f ${HOME}/.cargo/env ] && source ${HOME}/.cargo/env
 if [ -d "${HOME}/.cargo/bin" ]; then
-  PATH="${HOME}/.cargo/bin:$PATH"
+  PATH="${PATH}:${HOME}/.cargo/bin"
 fi
 
 if [ -d "${HOME}/.kitty-tmux" ]; then
-  PATH="${HOME}/.kitty-tmux:$PATH"
+  PATH="${HOME}/.kitty-tmux:${PATH}"
 fi
 
 # set PATH so it includes user's private bin if it exists
