@@ -141,6 +141,7 @@ go-boring
 go-jira
 golang
 golangci-lint
+golangci-lint-langserver
 goreleaser
 gotags
 govc
