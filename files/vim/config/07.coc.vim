@@ -90,6 +90,11 @@ autocmd FileType go nmap gtx :CocCommand go.tags.clear<cr>
 " Symbol renaming
 nmap <leader>rn <Plug>(coc-rename)
 
+" Remap keys for applying refactor code actions
+nmap <silent> <leader>re <Plug>(coc-codeaction-refactor)
+xmap <silent> <leader>r  <Plug>(coc-codeaction-refactor-selected)
+nmap <silent> <leader>r  <Plug>(coc-codeaction-refactor-selected)
+
 " List errors
 noremap <silent> <leader>er :<C-u>CocList locationlist<CR>
 
