@@ -2,7 +2,6 @@
 name = "go"
 auto-format = true
 formatter = {command = "goimports"}
-language-servers = ["gopls", "golangci-lint-langserver"]
 
 [[language]]
 name = "bash"
@@ -43,5 +42,5 @@ auto-format = true
 
 [[language]]
 name = "tsx"
-formatter = { command = 'prettier', args = ["--parser", "typescript"] }
 auto-format = true
+formatter = { command = 'prettier', args = ["--parser", "typescript"] }

@@ -23,6 +23,7 @@
       }
     }
   },
+  "inlayHint.enable": true,
   "go.enable": true,
   "go.checkForUpdates": "install",
   "go.goplsUseDaemon": true,
@@ -32,7 +33,15 @@
     "completeUnimported": true,
     "completionDocumentation": true,
     "deepCompletion": true,
-    "matcher": "Fuzzy"
+    "matcher": "Fuzzy",
+    "hints": {
+      "assignVariableTypes": true,
+      "compositeLiteralTypes": true,
+      "functionTypeParameters": true,
+      "parameterNames": true,
+      "rangeVariableTypes": true,
+      "constantValues": true
+    }
   },
   "yaml.format.bracketSpacing": false,
   "yaml.schemaStore.enable": true,
