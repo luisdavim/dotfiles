@@ -4,6 +4,7 @@ NAME='Luis Davim'
 EMAIL='luis.davim@gmail.com'
 
 WORKINGCOPIES='${HOME}/workingCopies'
+SCRAPYARD='${HOME}/scrapyard'
 CODE='${HOME}/workingCopies/src'
 GITHUB='${HOME}/workingCopies/src/github.com'
 GITLAB='${HOME}/workingCopies/src/gitlab.com'
