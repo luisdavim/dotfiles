@@ -47,6 +47,5 @@
     "go.formatTool": "goimports",
     "editor.inlineSuggest.enabled": true,
     "redhat.telemetry.enabled": true,
-    "editor.codeLensFontFamily": "'JetBrainsMono NFM'",
-    "codestream.serverUrl": "https://api.codestream.com"
+    "editor.codeLensFontFamily": "'JetBrainsMono NFM'"
 }

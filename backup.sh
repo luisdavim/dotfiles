@@ -66,7 +66,7 @@ function exportItermColors() {
   /usr/libexec/PlistBuddy -c "print :'Custom Color Presets'" \
     ~/Library/Preferences/com.googlecode.iterm2.plist | grep '^    \w' |
     ruby -e 'puts STDIN.read.gsub(/\s=\sDict\s{/,"").gsub(/^\s+/,"")' >list.txt
-  while read THEME; do
+  while read -r THEME; do
     echo "exporting ${THEME}"
     /usr/libexec/PlistBuddy -c "print :'Custom Color Presets':'$THEME'" \
       ~/Library/Preferences/com.googlecode.iterm2.plist |
@@ -124,7 +124,7 @@ function backupPPAs() {
 }
 
 function backupPacman() {
-  pacman -Qqe > files/pkgs/pacman.lst
+  pacman -Qqe >files/pkgs/pacman.lst
 }
 
 function backupPackages() {
@@ -159,7 +159,7 @@ function backupHomeDir() {
 
 function restoreRepos() {
   LISTS=('files/pkgs/ppa.lst' 'files/pkgs/apt-repo.lst')
-  for LST in ${LISTS[@]}; do
+  for LST in "${LISTS[@]}"; do
     while read -r REPO; do
       [[ ${REPO} =~ ^#.*$ ]] && continue
       [[ ${REPO} =~ ^\\s*$ ]] && continue
