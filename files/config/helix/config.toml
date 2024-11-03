@@ -67,10 +67,6 @@ C-k = "expand_selection"
 C-l = "select_next_sibling"
 C-v = ["select_mode","copy_selection_on_next_line"]
 
-# Personal preference
-o = ["open_below", "normal_mode"]
-O = ["open_above", "normal_mode"]
-
 # Muscle memory
 "{" = ["goto_prev_paragraph", "collapse_selection"]
 "}" = ["goto_next_paragraph", "collapse_selection"]
@@ -83,6 +79,9 @@ V = ["select_mode", "extend_to_line_bounds"]
 C = ["extend_to_line_end", "yank_main_selection_to_clipboard", "delete_selection", "insert_mode"]
 D = ["extend_to_line_end", "yank_main_selection_to_clipboard", "delete_selection"]
 S = "surround_add" # Would be nice to be able to do something after this but it isn't chainable
+
+o = ["open_below", "insert_mode"]
+O = ["open_above", "insert_mode"]
 
 # Clipboards over registers ye ye
 x = "delete_selection"
