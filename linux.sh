@@ -86,12 +86,12 @@ installLinuxbrew() {
 
 installPackages() {
   case "$(detectRelease)" in
-    "Arch"*)
-      ./arch.sh packages
-      ;;
-    *)
-      ./ubuntu.sh packages
-      ;;
+  "Arch"*)
+    ./arch.sh packages
+    ;;
+  *)
+    ./ubuntu.sh packages
+    ;;
   esac
 
   if ! [ -x "$(command -v terraform)" ]; then
@@ -159,22 +159,22 @@ installAll() {
 }
 
 case "$1" in
-  "packages" | "pkgs")
-    installPackages
-    ;;
-  "hashicorp")
-    installHashicorp "$2"
-    ;;
-  "dotfiles")
-    installDotFiles
-    ;;
-  "fonts")
-    installFonts
-    ;;
-  "release" | "getRelease")
-    detectRelease
-    ;;
-  *)
-    installAll
-    ;;
+"packages" | "pkgs")
+  installPackages
+  ;;
+"hashicorp")
+  installHashicorp "$2"
+  ;;
+"dotfiles")
+  installDotFiles
+  ;;
+"fonts")
+  installFonts
+  ;;
+"release" | "getRelease")
+  detectRelease
+  ;;
+*)
+  installAll
+  ;;
 esac

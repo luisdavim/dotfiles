@@ -9,7 +9,7 @@ installDocker() {
   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
   sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
   sudo apt update
-  sudo apt install -y linux-image-extra-$(uname -r)
+  sudo apt install -y "linux-image-extra-$(uname -r)"
   sudo apt purge lxc-docker docker-engine docker.io
   sudo rm -rf /etc/default/docker
   sudo apt install -y docker-ce
