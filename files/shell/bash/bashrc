@@ -7,6 +7,11 @@ if [[ $CONFIGURED == "true" ]]; then
   return
 fi
 
+# Ghostty shell integration for Bash.
+if [ -n "${GHOSTTY_RESOURCES_DIR}" ]; then
+    builtin source "${GHOSTTY_RESOURCES_DIR}/shell-integration/bash/ghostty.bash"
+fi
+
 # If not running interactively, don't do anything
 case $- in
 *i*)
