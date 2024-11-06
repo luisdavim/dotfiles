@@ -7,6 +7,9 @@ font-family-bold-italic = "JetBrainsMono Nerd Font Mono"
 font-size = 10
 adjust-underline-position = 4
 
+# Sell
+shell-integration = zsh
+
 # Mouse
 mouse-hide-while-typing = true
 mouse-scroll-multiplier = 2
