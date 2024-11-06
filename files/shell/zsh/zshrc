@@ -5,8 +5,10 @@ if [[ "$CONFIGURED" == "true" ]]; then
 fi
 
 # Ghostty shell integration for Zsh.
-if [ -n "${GHOSTTY_RESOURCES_DIR}" ]; then
-    builtin source "${GHOSTTY_RESOURCES_DIR}/shell-integration/zsh/ghostty-integration"
+if [[ -n $GHOSTTY_RESOURCES_DIR ]]; then
+  autoload -Uz -- "$GHOSTTY_RESOURCES_DIR"/shell-integration/zsh/ghostty-integration
+  ghostty-integration
+  unfunction ghostty-integration
 fi
 
 if [[ -f ~/.profile ]]; then
