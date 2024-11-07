@@ -1,14 +1,22 @@
 #!/usr/bin/env zsh
 
-if [[ "$CONFIGURED" == "true" ]]; then
+if [[ "${CONFIGURED}" == "true" ]]; then
   return
 fi
 
 # Ghostty shell integration for Zsh.
-if [[ -n $GHOSTTY_RESOURCES_DIR ]]; then
-  autoload -Uz -- "$GHOSTTY_RESOURCES_DIR"/shell-integration/zsh/ghostty-integration
+if [[ -n "${GHOSTTY_RESOURCES_DIR}" ]]; then
+  autoload -Uz -- "${GHOSTTY_RESOURCES_DIR}"/shell-integration/zsh/ghostty-integration
   ghostty-integration
   unfunction ghostty-integration
+fi
+
+# Kitty shell integration
+if [[ -n "${KITTY_INSTALLATION_DIR}" ]]; then
+  export KITTY_SHELL_INTEGRATION="enabled"
+  autoload -Uz -- "${KITTY_INSTALLATION_DIR}"/shell-integration/zsh/kitty-integration
+  kitty-integration
+  unfunction kitty-integration
 fi
 
 if [[ -f ~/.profile ]]; then
