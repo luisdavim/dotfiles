@@ -202,7 +202,7 @@ fi
 # ~/.aliases, instead of adding them here directly.
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
 
-[ -f "$HOME/.aliases" ] && source "${HOME}/.aliases"
+[ -f "${HOME}/.aliases" ] && source "${HOME}/.aliases"
 
 # Auto completion
 # enable programmable completion features (you don't need to enable
@@ -219,9 +219,9 @@ if ! shopt -oq posix; then
   [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
   [ -f /usr/local/share/bash-completion/bash_completion ] && . /usr/local/share/bash-completion/bash_completion
   [ -f /usr/local/etc/profile.d/bash_completion.sh ] && . /usr/local/etc/profile.d/bash_completion.sh
-  [ -f ${HOMEBREW_PREFIX}/etc/bash_completion ] && . ${HOMEBREW_PREFIX}/etc/bash_completion
-  [ -f ${HOMEBREW_PREFIX}/share/bash-completion/bash_completion ] && . ${HOMEBREW_PREFIX}/share/bash-completion/bash_completion
-  [ -f ${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh ] && . ${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh
+  [ -f "${HOMEBREW_PREFIX}/etc/bash_completion" ] && . ${HOMEBREW_PREFIX}/etc/bash_completion
+  [ -f "${HOMEBREW_PREFIX}/share/bash-completion/bash_completion" ] && . ${HOMEBREW_PREFIX}/share/bash-completion/bash_completion
+  [ -f "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ] && . ${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh
 fi
 
 # [ -x "$(command -v aws_completer)" ] && complete -C 'aws_completer' aws
