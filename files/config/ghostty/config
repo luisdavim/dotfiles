@@ -1,10 +1,12 @@
 # Fonts
-font-family = "Symbols Nerd Font Mono"
-font-family = "JetBrainsMono Nerd Font Mono"
-font-family-bold = "JetBrainsMono Nerd Font Mono"
-font-family-italic = "JetBrainsMono Nerd Font Mono"
-font-family-bold-italic = "JetBrainsMono Nerd Font Mono"
-font-size = 10
+font-family = JetBrainsMono Nerd Font Mono
+font-family-bold = JetBrainsMono Nerd Font Mono Bold
+font-family-italic = JetBrainsMono Nerd Font Mono Italic
+font-family-bold-italic = JetBrainsMono Nerd Font Mono Bold Italic
+
+font-size = 14
+font-thicken = true
+
 adjust-underline-position = 4
 
 # Sell
@@ -21,12 +23,15 @@ mouse-scroll-multiplier = 2
 # window-theme = ghostty
 
 # Window
+window-padding-y = 2,0
+window-padding-balance = true
+# window-decoration = false
+
 # gtk-single-instance = true
 # gtk-tabs-location = bottom
 # gtk-wide-tabs = false
-window-padding-y = 2,0
-window-padding-balance = true
-window-decoration = false
+
+macos-titlebar-style = hidden
 
 # keybindings
 # keybind = clear
@@ -47,4 +52,5 @@ window-decoration = false
 # keybind = super+shift+v=paste_from_clipboard
 
 # Other
-copy-on-select = clipboard
+copy-on-select = true
+quit-after-last-window-closed = true

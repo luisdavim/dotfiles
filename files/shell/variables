@@ -1,10 +1,16 @@
 #!/usr/bin/env bash
 export COLORTERM='truecolor'
+
 export TERM="xterm-256color"
 # export TERM="xterm-kitty"
 # export TERM="tmux-256color"
 # export TERM="screen-256color"
 # export TERMINFO="$HOME/.terminfo"
+
+if [ -n "${GHOSTTY_RESOURCES_DIR}" ]; then
+  TERM='xterm-ghostty'
+fi
+
 export NVIM_TUI_ENABLE_TRUE_COLOR=1
 
 # export EDITOR=vim

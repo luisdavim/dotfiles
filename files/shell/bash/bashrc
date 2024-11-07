@@ -22,6 +22,10 @@ esac
 
 export TERM='xterm-256color'
 
+if [ -n "${GHOSTTY_RESOURCES_DIR}" ]; then
+  TERM='xterm-ghostty'
+fi
+
 if [[ $(tty) == "/dev/tty"* ]] && [[ $OSTYPE == "linux-gnu" ]]; then
   setfont ter-powerline-v16b.psf.gz
 fi
