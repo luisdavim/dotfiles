@@ -39,7 +39,7 @@ alias vim-install='vi +PlugInstall +qall'
 alias vim-update='vi +PlugUpdate +PlugUpgrade +CocUpdate +TSUpdate" +qall'
 alias vim-clean='vi +PlugClean! +qall'
 
-alias gitv='vi +Flog -c tabonly'
+alias gitv='vi +Flog "+set nolist" -c tabonly'
 # alias gitv='vi +GV -c tabonly'
 # alias Gitv='vi "$(git rev-parse --show-toplevel)"/.git/index -c "Gitv --all" -c "tabonly"'
 
