@@ -2,6 +2,7 @@
 ansible-language-server
 asar
 asciicast2gif
+bash-language-server
 check-dependencies
 cli-github
 dependency-check
