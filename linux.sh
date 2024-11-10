@@ -6,6 +6,12 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   exit 1
 fi
 
+if [[ $OSTYPE == *"android"* ]]; then
+  echo 'Looks like you are on Android'
+  echo '  please try the install.sh script'
+  exit 1
+fi
+
 dotfiles_dir="${dotfiles_dir:-$(dirname "$0")}"
 INSTALLDIR=$(pwd)
 
