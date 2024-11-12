@@ -53,11 +53,17 @@ if [[ "${releases}" == "" ]]; then
   exit 0
 fi
 
+if [[ "${DEBUG}" == "true" ]]; then
+  echo -e "RELEASES:\n${releases}"
+fi
+
 echo "${releases}" | xargs -r -L1 kubectl patch hr --type='json' -p='[{"op": "replace", "path": "/spec/suspend", "value": true}]'
 if [[ "${ROLLBACK}" == "true" ]]; then
+  [[ ${DEBUG} == "true" ]] && echo "Rolling back releases!"
   echo "${releases}" | awk '{print "helm-rollback -p " $0}' | xargs -r -I {} sh -c "{}"
 fi
 if [[ "${FORCE}" == "true" ]]; then
+  [[ ${DEBUG} == "true" ]] && echo "Deleting Helm secrets"
   echo "${releases}" | awk '{print "kubectl delete secret -n " $3 " -l name="$1}' | xargs -r -I {} sh -c "{}"
 fi
 sleep 1
