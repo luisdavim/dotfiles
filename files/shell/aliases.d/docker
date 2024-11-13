@@ -30,12 +30,12 @@ function docker-enter() {
 
 # Colima aliases
 if [ -x "$(command -v colima)" ]; then
-  alias dockerd-bootstrap='colima start --mount $HOME/workingCopies:w -c 10 -m 16 --disk 200'
+  alias dockerd-bootstrap='colima start --mount $HOME/workingCopies:w --mount-inotify -c 10 -m 16 --disk 200'
   alias dockerd-stop='colima stop'
   alias dockerd-teardown='colima delete'
   alias dockerd-cleanup='rm -rf ~/Library/Caches/lima ~/.colima ~/.lima'
 
-  alias containerd-start='colima start --runtime containerd --mount $HOME/workingCopies:w'
+  alias containerd-start='colima start --runtime containerd --mount $HOME/workingCopies:w --mount-inotify'
   alias nerdctl='colima nerdctl'
 fi
 
