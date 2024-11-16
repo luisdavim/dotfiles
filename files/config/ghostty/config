@@ -8,6 +8,7 @@ font-size = 14
 font-thicken = true
 
 adjust-underline-position = 4
+adjust-cursor-thickness = 1
 
 # Sell
 shell-integration = zsh
