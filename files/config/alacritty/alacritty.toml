@@ -1,0 +1,36 @@
+[cursor]
+thickness = 0.25
+
+[cursor.style]
+shape = "Beam"
+
+[env]
+TERM = "xterm-256color"
+
+[font]
+size = 16.0
+
+[font.bold]
+family = "JetBrainsMono NFM"
+style = "Bold"
+
+[font.bold_italic]
+family = "JetBrainsMono NFM"
+style = "Bold Italic"
+
+[font.italic]
+family = "JetBrainsMono NFM"
+style = "Italic"
+
+[font.normal]
+family = "JetBrainsMono NFM"
+
+[scrolling]
+history = 0
+
+[selection]
+save_to_clipboard = true
+
+[window]
+decorations = "none"
+startup_mode = "Maximized"
