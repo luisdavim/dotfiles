@@ -210,7 +210,8 @@ function trim() {
     echo "$trimmed"
 }
 
-alias autoshfmt='shfmt -i 2 -s -w .'
+alias shfmt='shfmt -i 2 -ci -bn'
+alias autoshfmt='shfmt -l -s -w .'
 alias autoshellcheck='shellcheck $(shfmt -f .) -f diff | git apply'
 
 # https://github.com/idank/explainshell/issues/4#issuecomment-354709120
