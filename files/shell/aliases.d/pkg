@@ -31,7 +31,7 @@ function npmclean() {
   rm -rf ~/.npm/_logs
   rm -rf ~/.npm/_cacache
 }
-alias npm-clean='npmcliean'
+alias npm-clean='npmclean'
 
 function cargoclean() {
   rm -rf ~/.cargo/git
