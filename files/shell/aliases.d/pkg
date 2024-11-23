@@ -30,6 +30,7 @@ alias go-upgrade='awk '\''/require \(/,/\)/ {x = ($0 !~ /(require|\)|.*indirect)
 function npmclean() {
   rm -rf ~/.npm/_logs
   rm -rf ~/.npm/_cacache
+  npm cache clean --force
 }
 alias npm-clean='npmclean'
 
