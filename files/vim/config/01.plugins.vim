@@ -92,6 +92,7 @@
     Plug 'nvim-treesitter/nvim-treesitter-textobjects'
     Plug 'nvim-lua/plenary.nvim'
     Plug 'sindrets/diffview.nvim'
+    Plug 'MeanderingProgrammer/render-markdown.nvim'
   else
     Plug 'Yggdroot/indentLine', {'on': 'IndentLinesEnable'}
     Plug 'wojciechkepka/vim-github-dark'
