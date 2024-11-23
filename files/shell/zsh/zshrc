@@ -147,7 +147,7 @@ plugins=(
   # kube-ps1
 )
 
-if [[ -x "$(command -v zellij)" ]] && [[ "${ZELLIJ_AUTOSTART}" == "true" ]] ; then
+if [[ -x "$(command -v zellij)" ]] && [[ "${ZELLIJ_AUTOSTART}" == "true" ]]; then
   if [ -f "${HOME}/.config/zellij/config.kdl" ]; then
     export ZELLIJ_CONFIG_DIR="${HOME}/.config/zellij/config.kdl"
   fi
@@ -254,8 +254,8 @@ alias -s {yml,yaml,json}=$EDITOR
 [[ ! -f /usr/local/etc/grc.zsh ]] || source /usr/local/etc/grc.zsh
 [[ ! -f /usr/local/opt/fzf/shell/key-bindings.zsh ]] || source /usr/local/opt/fzf/shell/key-bindings.zsh
 
-if [ -n "${HOMEBREW_PREFIX}" ]; then
-  [ ! -f "${HOMEBREW_PREFIX}/etc/grc.zsh" ] || source "${HOMEBREW_PREFIX}/etc/grc.zsh"
+if [[ -n "${HOMEBREW_PREFIX}" ]]; then
+  [[ ! -f "${HOMEBREW_PREFIX}/etc/grc.zsh" ]] || source "${HOMEBREW_PREFIX}/etc/grc.zsh"
   [[ ! -f "${HOMEBREW_PREFIX}/opt/fzf/shell/key-bindings.zsh" ]] || source "${HOMEBREW_PREFIX}/opt/fzf/shell/key-bindings.zsh"
   [[ ! -f "${HOMEBREW_PREFIX}/opt/asdf/asdf.sh" ]] || source "${HOMEBREW_PREFIX}/opt/asdf/asdf.sh"
 fi
