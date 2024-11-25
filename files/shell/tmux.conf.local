@@ -417,6 +417,8 @@ bind-key C-b set-window-option synchronize-panes
 
 set -g @yank_selection 'primary'
 
+# Open URLs
+bind-key C-u run-shell -b "tmux capture-pane -J -p | grep -oE '(https?):\/\/.*[^>]' | fzf-tmux -d20 --multi --bind alt-a:select-all,alt-d:deselect-all | xargs open"
 
 # -- tpm -----------------------------------------------------------------------
 
