@@ -342,7 +342,7 @@ function kubectl-ingress-nslookup() {
 }
 
 function kubectl-purge_crd() {
-  if [ -z "${1}" ]; then
+  if [ -z "${1:-}" ]; then
     echo 'please provide a CRD name'
     return
   fi
@@ -351,6 +351,16 @@ function kubectl-purge_crd() {
   \kubectl api-resources -o name | grep "${1}" | awk '{print $1}' | xargs -r \kubectl delete crd
 }
 alias kctl-clean_crd='kubectl-purge_crd'
+
+function kubectl-delete-ns() {
+  if [ -z "${1:-}" ]; then
+    echo 'please provide a Namespace name'
+    return
+  fi
+  # \kubectl get hr -n "${1}" -o name | xargs -r -L1 kubectl patch --type='json' -p='[{"op": "replace", "path": "/spec/suspend", "value": true}]'
+  \kubectl get crds -oname | grep -v 'flux' | xargs -r -I {} kubectl delete {} -n "${1}" --all --ignore-not-found
+  \kubectl delete ns "${1}"
+}
 
 alias kctl-list_images='kubectl get pods --all-namespaces -o jsonpath="{..image}" | tr -s "[[:space:]]" "\n" | sort | uniq -c'
 alias kctl-drain='kubectl drain --delete-local-data --ignore-daemonsets'
