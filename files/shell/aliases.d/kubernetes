@@ -404,13 +404,21 @@ function helm-getSecrets() {
   \kubectl get secret -n kube-system tiller-secret -o go-template='{{index .data "tls.key"| base64decode}}' > $HELM_HOME/key.pem
 }
 
-function helmsman-adopt() {
-  \kubectl label secret -n ${2} -l name=${1} --overwrite HELMSMAN_CONTEXT=${3:-default} MANAGED-BY=HELMSMAN NAMESPACE=${2}
+function helm-raw() {
+  local name="${1}"
+  local ns="${2:-default}"
+  local rev="${3:-1}"
+  local filter="${4:-.}"
+  \kubectl get secret -n "${ns}" -l "owner=helm,name=${name},version=${rev}" -o go-template='{{(index .items 0).data.release | base64decode | base64decode}}' | gunzip | jq "${filter}"
 }
 
 function helm-adopt() {
   \kubectl annotate ${3} ${4} -n ${2} meta.helm.sh/release-name=${1} meta.helm.sh/release-namespace=${2} --overwrite
   \kubectl label ${3} ${4} -n ${2} app.kubernetes.io/managed-by=Helm --overwrite
+}
+
+function helmsman-adopt() {
+  \kubectl label secret -n ${2} -l name=${1} --overwrite HELMSMAN_CONTEXT=${3:-default} MANAGED-BY=HELMSMAN NAMESPACE=${2}
 }
 
 # Minikube
