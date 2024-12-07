@@ -26,6 +26,7 @@ function goclean() {
 alias go-clean='goclean'
 
 alias go-upgrade='awk '\''/require \(/,/\)/ {x = ($0 !~ /(require|\)|.*indirect)/) ? $0 : ""; split(x,a," "); print a[1]}'\'' go.mod | sed '\''/^$$/d'\'' | xargs -L1 go get -u'
+alias go-check-upgrade="go list -u -f '{{if (and (not (or .Main .Indirect)) .Update)}}{{.Path}}: {{.Version}} -> {{.Update.Version}}{{end}}' -m all 2> /dev/null"
 
 function npmclean() {
   rm -rf ~/.npm/_logs

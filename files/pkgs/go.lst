@@ -29,6 +29,7 @@ github.com/liggitt/audit2rbac
 github.com/m-zajac/json2go/cmd/json2go
 github.com/mrjosh/helm-ls
 github.com/nametake/golangci-lint-langserver
+github.com/oligot/go-mod-upgrade
 github.com/pbnj/ephor
 github.com/pkg/errors
 github.com/posener/goreadme/cmd/goreadme
