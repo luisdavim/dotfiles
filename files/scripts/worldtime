@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-#
+
 # Print the specified (or current) time from base time in other time zones
 # and the converse
-#
+
 # Examples:
 # worldtime -r -t US/Pacific 7:30 # convert from US/Pacific 7:30 to local time
 # worldtime -t US/Pacific 7:30 # convert 7:30 localtime to US/Pacific

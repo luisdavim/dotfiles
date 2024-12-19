@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 # A script to allow exploring the kubernetes APIs using curl
 # Examples:
 #    # Update a resource

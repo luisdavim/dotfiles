@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # git sub-command to perform git actions recusively accross multiple repos
+# This script can be used as a git plugin
 
 function _help() {
   echo -e "Runs git commands recusively by looking for git repos under the current directory."
@@ -11,20 +12,20 @@ function _help() {
 }
 
 function recursive-cmd() {
-  cmd=${1}
-  cdir=$(pwd)
-  bdir='.'
-  if [ -n "$2" ]; then
+  local cmd="${1}"
+  local cdir="$(pwd)"
+  local bdir='.'
+  if [ -n "${2:-}" ]; then
     bdir=${2}
   fi
   repos=$(find "${bdir}" -type d -name .git -exec sh -c "dirname '{}/'" \; | grep -Ev '.*/\..*')
   for d in $repos; do
     echo -e "\n${COL_BLUE}>>>${COL_RESET} $d" >&2
-    cd "$d" || exit
+    cd "${d}" || exit
     echo -ne "${COL_GREY}"
     eval "${cmd}"
     echo -ne "${COL_RESET}"
-    cd "$cdir" || exit
+    cd "${cdir}" || exit
   done
 }
 
@@ -52,5 +53,6 @@ purge)
 list | ls)
   recursive-cmd 'git remote get-url origin'
   ;;
-*) recursive-cmd "git ${*}" ;;
+*) recursive-cmd "git ${*}"
+  ;;
 esac

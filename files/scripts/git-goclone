@@ -4,6 +4,7 @@
 # Note that this scrip depends on the gnu version of getopt
 # in macOS you can get it with brew install gnu-getopt
 # and setting your path to PATH="/usr/local/opt/gnu-getopt/bin:$PATH"
+# This script can be used as a git plugin
 
 # Possible url formats:
 # url="git://github.com/some-user/my-repo.git"
