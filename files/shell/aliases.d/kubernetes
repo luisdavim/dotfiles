@@ -357,6 +357,7 @@ function kubectl-delete-ns() {
     echo 'please provide a Namespace name'
     return
   fi
+  # \kubectl api-resources --verbs=list --namespaced -o name | xargs -r -I {} kubectl delete {} -n "${1}" --all --ignore-not-found
   \kubectl get crds -oname | xargs -r -I {} kubectl delete {} -n "${1}" --all --ignore-not-found
   \kubectl delete ns "${1}"
 }
