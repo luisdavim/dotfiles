@@ -30,6 +30,7 @@ function docker-enter() {
 
 # Colima aliases
 if [ -x "$(command -v colima)" ]; then
+  # export SSH_AUTH_SOCK="$(colima ssh eval 'echo $SSH_AUTH_SOCK')"
   alias dockerd-bootstrap='colima start --mount $HOME/workingCopies:w --mount-inotify -c 10 -m 16 --disk 200'
   alias dockerd-bootstrap-mac='colima start --mount $HOME/workingCopies:w --mount-inotify -c 10 -m 16 --disk 200 --ssh-agent --vm-type vz --vz-rosetta --mount-type virtiofs'
   alias dockerd-stop='colima stop'
