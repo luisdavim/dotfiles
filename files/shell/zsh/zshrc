@@ -195,8 +195,8 @@ if [ -x "$(command -v brew)" ]; then
   FPATH=${HOMEBREW_PREFIX}/share/zsh/site-functions:$FPATH
 fi
 
-  autoload -Uz compinit
-  compinit
+autoload -Uz compinit
+compinit
 
 source $ZSH/oh-my-zsh.sh
 [[ ! -f "${HOME}/.zshrcHighlightStyle" ]] || source ${HOME}/.zshrcHighlightStyle
@@ -259,5 +259,7 @@ if [[ -n "${HOMEBREW_PREFIX}" ]]; then
   [[ ! -f "${HOMEBREW_PREFIX}/opt/fzf/shell/key-bindings.zsh" ]] || source "${HOMEBREW_PREFIX}/opt/fzf/shell/key-bindings.zsh"
   [[ ! -f "${HOMEBREW_PREFIX}/opt/asdf/asdf.sh" ]] || source "${HOMEBREW_PREFIX}/opt/asdf/asdf.sh"
 fi
+
+[[ ! -f ~/.zshrc.local ]] || source ~/.zshrc.local
 
 export CONFIGURED="true"
