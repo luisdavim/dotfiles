@@ -42,12 +42,12 @@ if [ -x "$(command -v brew)" ]; then
   if [ -d "${BREW_PREFIX}/opt/ncurses/bin" ]; then
     PATH="${BREW_PREFIX}/opt/ncurses/bin:$PATH"
   fi
-  if [ -d "${BREW_PREFIX}/opt/openssl/bin" ]; then
-    PATH="${BREW_PREFIX}/opt/openssl/bin:$PATH"
-  fi
 
   if [ -d "${BREW_PREFIX}/opt/libressl/bin" ]; then
     PATH="${BREW_PREFIX}/opt/libressl/bin:$PATH"
+  fi
+  if [ -d "${BREW_PREFIX}/opt/openssl/bin" ]; then
+    PATH="${BREW_PREFIX}/opt/openssl/bin:$PATH"
   fi
 
   if [ -d "${BREW_PREFIX}/opt/sqlite/bin" ]; then
