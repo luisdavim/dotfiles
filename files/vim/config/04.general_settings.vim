@@ -64,7 +64,6 @@
   set laststatus=2
   set ruler
   set showcmd
-  set wildmenu
 
   set encoding=utf-8
   set tabstop=2 shiftwidth=2 expandtab
@@ -135,6 +134,9 @@
 
   set completeopt=menuone,longest
 
+  set wildmenu
+  set wildmode=longest:full,full
+
   set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,.yardoc/*
   set wildignore+=*/tmp/*,*.so,*.swp,*.zip
   set wildignore+=*.bmp,*.gif,*.ico,*.jpg,*.png,*.ico
@@ -144,9 +146,6 @@
   if exists('&inccommand')
     set inccommand=nosplit
   endif
-
-  set wildmenu
-  set wildmode=longest:full,full
 
   " autocmd BufRead,BufNewFile *.vue setfiletype html
   command! -nargs=0 Q :q!
