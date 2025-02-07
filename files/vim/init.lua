@@ -1,4 +1,3 @@
-
 --- safe_require()
 --- Try calling `require` for the given module.
 --- If unsuccessful, print the error message using `vim.notify()`

@@ -9,6 +9,8 @@ CMD="${1:-all}"
 shift
 ARGS=("${@}")
 
+NVIM_FLAVOUR="${NVIM_FLAVOUR:-coc}"
+
 # shellcheck source=./files/scripts/hubinstall
 source "${dotfiles_dir}/files/scripts/hubinstall"
 # shellcheck source=./files/scripts/hashinstall
@@ -344,11 +346,10 @@ installVimPlugins() {
   cp files/vim/coc-settings.json "${HOME}/.vim/"
   cp -r files/vim/config/* "${HOME}/.vim/config/"
   cp -r files/vim/ft* "${HOME}/.vim/"
-  cp files/vim/init.lua "${HOME}/.config/nvim/"
-  if [ ! -e ~/.config/nvim/init.lua ]; then
-    ln -s "${HOME}"/.vimrc "${HOME}/.config/nvim/init.vim"
+  if [[ "${NVIM_FLAVOUR}" == "coc" ]]; then
+    cp files/vim/init.lua "${HOME}/.config/nvim/"
   else
-    rm -f "${HOME}/.config/nvim/init.vim"
+    cp files/config/nvim/init.lua "${HOME}/.config/nvim/"
   fi
   if [ ! -s ~/.config/nvim/coc-settings.json ]; then
     ln -s "${HOME}"/.vim/autoload/ "${HOME}/.config/nvim/autoload"
@@ -358,12 +359,14 @@ installVimPlugins() {
   fi
 
   # Using vim-plug
-  if [ ! -f ~/.vim/autoload/plug.vim ]; then
-    curl -sLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  if [[ "${NVIM_FLAVOUR}" == "coc" ]]; then
+    if [ ! -f ~/.vim/autoload/plug.vim ]; then
+      curl -sLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    fi
+    vim +PlugInstall +qall
+    nvim +PlugInstall +qall
+    # nvim +'TSInstall all' +qall
   fi
-  vim +PlugInstall +qall
-  nvim +PlugInstall +qall
-  # nvim +'TSInstall all' +qall
 
   # Install lazyman
   git_clone_or_update https://github.com/doctorfree/nvim-lazyman "${HOME}/.config/nvim-Lazyman"
