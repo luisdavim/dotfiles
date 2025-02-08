@@ -281,24 +281,26 @@ now(function()
         dorename = dorename
       }
 
-      vim.keymap.set('n', '<leader>rn', '<cmd>lua Rename.rename()<CR>', { silent = true })
-      vim.keymap.set('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<cr>', opts)
+      vim.keymap.set('n', '<leader>rn', function() Rename.rename() end, { silent = true })
+      vim.keymap.set('n', '<leader>ca', function() vim.lsp.buf.code_action() end, opts)
 
-      vim.keymap.set('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
-      vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
-      vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', opts)
-      vim.keymap.set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', opts)
-      vim.keymap.set('n', 'go', '<cmd>lua vim.lsp.buf.type_definition()<cr>', opts)
-      vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>', opts)
-      vim.keymap.set('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>', opts)
-      vim.keymap.set({ 'n', 'x' }, '<F3>', '<cmd>lua vim.lsp.buf.format({async = true})<cr>', opts)
-      vim.keymap.set('n', '<F4>', '<cmd>lua vim.lsp.buf.code_action()<cr>', opts)
-      vim.keymap.set('n', '<F2>', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
+      vim.keymap.set('n', 'K', function() vim.lsp.buf.hover() end, opts)
+      vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition() end, opts)
+      vim.keymap.set('n', 'gD', function() vim.lsp.buf.declaration() end, opts)
+      vim.keymap.set('n', 'gi', function() vim.lsp.buf.implementation() end, opts)
+      vim.keymap.set('n', 'go', function() vim.lsp.buf.type_definition() end, opts)
+      vim.keymap.set('n', 'gr', function() vim.lsp.buf.references() end, opts)
+      vim.keymap.set('n', 'gs', function() vim.lsp.buf.signature_help() end, opts)
+      vim.keymap.set('n', ']g', function() vim.diagnostic.goto_next() end, opts)
+      vim.keymap.set('n', '[g', function() vim.diagnostic.goto_prev() end, opts)
+      vim.keymap.set({ 'n', 'x' }, '<F3>', function() vim.lsp.buf.format({ async = true }) end, opts)
+      vim.keymap.set('n', '<F4>', function() vim.lsp.buf.code_action() end, opts)
+      vim.keymap.set('n', '<F2>', function() vim.lsp.buf.rename() end, opts)
 
       -- format on save
       vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
         -- buffer = 0, -- if 0 doesn't work do vim.api.nvim_get_current_buf()
-        callback = function(o)
+        callback = function(_)
           vim.lsp.buf.format({ async = false })
         end
       })
@@ -373,7 +375,7 @@ later(function()
 
   local show_dotfiles = true
 
-  local filter_show = function(fs_entry) return true end
+  local filter_show = function(_) return true end
   local filter_hide = function(fs_entry)
     return not vim.startswith(fs_entry.name, '.')
   end
@@ -422,7 +424,7 @@ later(function()
     end,
   })
 
-  vim.keymap.set('n', '<C-o>', '<cmd>lua MiniFiles.open()<cr>', {})
+  vim.keymap.set('n', '<C-o>', function() MiniFiles.open() end, {})
 end)
 later(function() require('mini.pairs').setup() end)
 later(function() require('mini.splitjoin').setup() end)
@@ -475,7 +477,7 @@ later(function()
   -- trim spaces on save
   vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
     -- buffer = 0, -- if 0 doesn't work do vim.api.nvim_get_current_buf()
-    callback = function(opts)
+    callback = function(_)
       MiniTrailspace.trim()
       MiniTrailspace.trim_last_lines()
     end
@@ -497,4 +499,47 @@ later(function()
   require("ibl").setup {
     scope = { enabled = false },
   }
+end)
+
+-- Yank/paste buffers
+later(function()
+  local function PasteWindow(direction)
+    if vim.g.yanked_buffer then
+      local temp_buffer = nil
+      if direction == 'edit' then
+        temp_buffer = vim.fn.bufnr('%')
+      end
+
+      vim.cmd(direction .. " +buffer" .. vim.g.yanked_buffer)
+
+      if direction == 'edit' then
+        vim.g.yanked_buffer = temp_buffer
+      end
+    end
+  end
+
+  vim.keymap.set("n", "<leader>wy", function()
+    vim.g.yanked_buffer = vim.fn.bufnr('%')
+  end, { silent = true })
+
+  vim.keymap.set("n", "<leader>wd", function()
+    vim.g.yanked_buffer = vim.fn.bufnr('%')
+    vim.cmd("q")
+  end, { silent = true })
+
+  vim.keymap.set("n", "<leader>wp", function()
+    PasteWindow('edit')
+  end, { silent = true })
+
+  vim.keymap.set("n", "<leader>ws", function()
+    PasteWindow('split')
+  end, { silent = true })
+
+  vim.keymap.set("n", "<leader>wv", function()
+    PasteWindow('vsplit')
+  end, { silent = true })
+
+  vim.keymap.set("n", "<leader>wt", function()
+    PasteWindow('tabnew')
+  end, { silent = true })
 end)
