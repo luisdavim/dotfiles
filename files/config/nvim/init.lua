@@ -178,6 +178,8 @@ now(function()
     source = 'nvim-treesitter/nvim-treesitter-refactor',
   })
 
+  vim.opt.foldtext = "v:lua.vim.treesitter.foldtext()"
+
   -- DAP
   -- add({
   --   source = 'mfussenegger/nvim-dap',
