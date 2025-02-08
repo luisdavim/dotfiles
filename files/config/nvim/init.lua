@@ -285,14 +285,22 @@ now(function()
 
       vim.keymap.set('n', '<leader>rn', function() Rename.rename() end, { silent = true })
       vim.keymap.set('n', '<leader>ca', function() vim.lsp.buf.code_action() end, opts)
+      vim.keymap.set('n', '<leader>ld', function() MiniExtra.pickers.diagnostic() end, opts)
 
       vim.keymap.set('n', 'K', function() vim.lsp.buf.hover() end, opts)
-      vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition() end, opts)
-      vim.keymap.set('n', 'gD', function() vim.lsp.buf.declaration() end, opts)
-      vim.keymap.set('n', 'gi', function() vim.lsp.buf.implementation() end, opts)
-      vim.keymap.set('n', 'go', function() vim.lsp.buf.type_definition() end, opts)
-      vim.keymap.set('n', 'gr', function() vim.lsp.buf.references() end, opts)
+      -- vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition() end, opts)
+      vim.keymap.set('n', 'gd', function() MiniExtra.pickers.lsp({scope = 'definition'}) end, opts)
+      -- vim.keymap.set('n', 'gD', function() vim.lsp.buf.declaration() end, opts)
+      vim.keymap.set('n', 'gD', function() MiniExtra.pickers.lsp({scope = 'declaration'}) end, opts)
+      -- vim.keymap.set('n', 'gi', function() vim.lsp.buf.implementation() end, opts)
+      vim.keymap.set('n', 'gi', function() MiniExtra.pickers.lsp({scope = 'implementation'}) end, opts)
+      -- vim.keymap.set('n', 'go', function() vim.lsp.buf.type_definition() end, opts)
+      vim.keymap.set('n', 'go', function() MiniExtra.pickers.lsp({scope = 'type_definition'}) end, opts)
+      -- vim.keymap.set('n', 'gr', function() vim.lsp.buf.references() end, opts)
+      vim.keymap.set('n', 'gr', function() MiniExtra.pickers.lsp({scope = 'references'}) end, opts)
       vim.keymap.set('n', 'gs', function() vim.lsp.buf.signature_help() end, opts)
+      vim.keymap.set('n', 'gS', function() MiniExtra.pickers.lsp({scope = 'document_symbol'}) end, opts)
+      vim.keymap.set('n', 'gf', function() MiniExtra.pickers.lsp({scope = 'workspace_symbol'}) end, opts)
       vim.keymap.set('n', ']g', function() vim.diagnostic.goto_next() end, opts)
       vim.keymap.set('n', '[g', function() vim.diagnostic.goto_prev() end, opts)
       vim.keymap.set({ 'n', 'x' }, '<F3>', function() vim.lsp.buf.format({ async = true }) end, opts)
@@ -446,7 +454,28 @@ later(function() require('mini.bufremove').setup() end)
 later(function() require('mini.clue').setup() end)
 later(function() require('mini.diff').setup() end)
 later(function() require('mini.extra').setup() end)
-later(function() require('mini.git').setup() end)
+later(function()
+  require('mini.git').setup()
+
+  local align_blame = function(au_data)
+    if au_data.data.git_subcommand ~= 'blame' then return end
+
+    -- Align blame output with source
+    local win_src = au_data.data.win_source
+    vim.wo.wrap = false
+    vim.fn.winrestview({ topline = vim.fn.line('w0', win_src) })
+    vim.api.nvim_win_set_cursor(0, { vim.fn.line('.', win_src), 0 })
+
+    -- Bind both windows so that they scroll together
+    vim.wo[win_src].scrollbind, vim.wo.scrollbind = true, true
+  end
+
+  local au_opts = { pattern = 'MiniGitCommandSplit', callback = align_blame }
+  vim.api.nvim_create_autocmd('User', au_opts)
+  vim.api.nvim_create_user_command('Gblame',function()
+    pcall(vim.cmd('vertical Git blame -- %'))
+  end,{})
+end)
 later(function() require('mini.jump').setup() end)
 later(function() require('mini.jump2d').setup() end)
 later(function() require('mini.misc').setup() end)
