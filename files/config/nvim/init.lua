@@ -239,6 +239,34 @@ now(function()
     -- ['rust_analyzer'] = function ()
     --   require('rust-tools').setup {}
     -- end
+    ['gopls'] = function()
+      require('lspconfig').gopls.setup {
+        cmd = { "gopls" },
+        filetypes = { "go", "gomod", "gowork", "gotmpl" },
+        settings = {
+          gopls = {
+            gofumpt = true,
+            staticcheck = true,
+            usePlaceholders = true,
+            completeUnimported = true,
+            completionDocumentation = true,
+            deepCompletion = true,
+            matcher = "Fuzzy",
+            hints = {
+              assignVariableTypes = true,
+              compositeLiteralTypes = true,
+              functionTypeParameters = true,
+              parameterNames = true,
+              rangeVariableTypes = true,
+              constantValues = true
+            },
+            analyses = {
+              unusedparams = true,
+            },
+          },
+        },
+      }
+    end
   })
 
   vim.api.nvim_create_autocmd('LspAttach', {
@@ -289,18 +317,18 @@ now(function()
 
       vim.keymap.set('n', 'K', function() vim.lsp.buf.hover() end, opts)
       -- vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition() end, opts)
-      vim.keymap.set('n', 'gd', function() MiniExtra.pickers.lsp({scope = 'definition'}) end, opts)
+      vim.keymap.set('n', 'gd', function() MiniExtra.pickers.lsp({ scope = 'definition' }) end, opts)
       -- vim.keymap.set('n', 'gD', function() vim.lsp.buf.declaration() end, opts)
-      vim.keymap.set('n', 'gD', function() MiniExtra.pickers.lsp({scope = 'declaration'}) end, opts)
+      vim.keymap.set('n', 'gD', function() MiniExtra.pickers.lsp({ scope = 'declaration' }) end, opts)
       -- vim.keymap.set('n', 'gi', function() vim.lsp.buf.implementation() end, opts)
-      vim.keymap.set('n', 'gi', function() MiniExtra.pickers.lsp({scope = 'implementation'}) end, opts)
+      vim.keymap.set('n', 'gi', function() MiniExtra.pickers.lsp({ scope = 'implementation' }) end, opts)
       -- vim.keymap.set('n', 'go', function() vim.lsp.buf.type_definition() end, opts)
-      vim.keymap.set('n', 'go', function() MiniExtra.pickers.lsp({scope = 'type_definition'}) end, opts)
+      vim.keymap.set('n', 'go', function() MiniExtra.pickers.lsp({ scope = 'type_definition' }) end, opts)
       -- vim.keymap.set('n', 'gr', function() vim.lsp.buf.references() end, opts)
-      vim.keymap.set('n', 'gr', function() MiniExtra.pickers.lsp({scope = 'references'}) end, opts)
+      vim.keymap.set('n', 'gr', function() MiniExtra.pickers.lsp({ scope = 'references' }) end, opts)
       vim.keymap.set('n', 'gs', function() vim.lsp.buf.signature_help() end, opts)
-      vim.keymap.set('n', 'gS', function() MiniExtra.pickers.lsp({scope = 'document_symbol'}) end, opts)
-      vim.keymap.set('n', 'gf', function() MiniExtra.pickers.lsp({scope = 'workspace_symbol'}) end, opts)
+      vim.keymap.set('n', 'gS', function() MiniExtra.pickers.lsp({ scope = 'document_symbol' }) end, opts)
+      vim.keymap.set('n', 'gf', function() MiniExtra.pickers.lsp({ scope = 'workspace_symbol' }) end, opts)
       vim.keymap.set('n', ']g', function() vim.diagnostic.goto_next() end, opts)
       vim.keymap.set('n', '[g', function() vim.diagnostic.goto_prev() end, opts)
       vim.keymap.set({ 'n', 'x' }, '<F3>', function() vim.lsp.buf.format({ async = true }) end, opts)
@@ -472,9 +500,9 @@ later(function()
 
   local au_opts = { pattern = 'MiniGitCommandSplit', callback = align_blame }
   vim.api.nvim_create_autocmd('User', au_opts)
-  vim.api.nvim_create_user_command('Gblame',function()
+  vim.api.nvim_create_user_command('Gblame', function()
     pcall(vim.cmd('vertical Git blame -- %'))
-  end,{})
+  end, {})
 end)
 later(function() require('mini.jump').setup() end)
 later(function() require('mini.jump2d').setup() end)
