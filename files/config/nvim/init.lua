@@ -532,6 +532,17 @@ later(function()
   }
 end)
 
+later(function()
+  add({
+    source = 'f-person/git-blame.nvim'
+  })
+  require('gitblame').setup {
+    enabled = true,
+    schedule_event = 'CursorHold',
+    clear_event = 'CursorHoldI',
+  }
+end)
+
 -- Yank/paste buffers
 later(function()
   local function PasteWindow(direction)
