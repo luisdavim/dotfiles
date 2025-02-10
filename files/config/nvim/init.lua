@@ -241,32 +241,58 @@ now(function()
     -- end
     ['gopls'] = function()
       require('lspconfig').gopls.setup {
-        cmd = { "gopls" },
-        filetypes = { "go", "gomod", "gowork", "gotmpl" },
+        cmd = { "gopls", "-remote=auto" },
+        filetypes = { "go", "gomod", "gowork", "gotmpl", "gohtmltmpl", "gotexttmpl" },
+        root_dir = vim.fs.dirname(
+          vim.fs.find({ 'go.mod', 'go.work', '.git' }, { upward = true })[1]
+        ),
         settings = {
           gopls = {
             gofumpt = true,
             staticcheck = true,
+            semanticTokens = true,
             usePlaceholders = true,
             completeUnimported = true,
             completionDocumentation = true,
             deepCompletion = true,
             matcher = "Fuzzy",
+            directoryFilters = { "-.git", "-.vscode", "-.idea", "-.vscode-test", "-node_modules", "-.nvim" },
+            codelenses = {
+              gc_details = false,
+              generate = true,
+              regenerate_cgo = true,
+              run_govulncheck = true,
+              test = true,
+              tidy = true,
+              upgrade_dependency = true,
+              vendor = true,
+            },
             hints = {
               assignVariableTypes = true,
               compositeLiteralTypes = true,
+              compositeLiteralFields = true,
               functionTypeParameters = true,
               parameterNames = true,
               rangeVariableTypes = true,
               constantValues = true
             },
             analyses = {
+              nilness = true,
               unusedparams = true,
+              unusedwrite = true,
+              useany = true,
+              unreachable = false,
+              shadow = true,
             },
           },
         },
       }
     end
+  })
+
+
+  add({
+    source = 'fnune/codeactions-on-save.nvim',
   })
 
   vim.api.nvim_create_autocmd('LspAttach', {
@@ -340,8 +366,15 @@ now(function()
         -- buffer = 0, -- if 0 doesn't work do vim.api.nvim_get_current_buf()
         callback = function(_)
           vim.lsp.buf.format({ async = false })
+          -- vim.lsp.buf.code_action is async and may not resolve before the buffer is closed
+          -- vim.lsp.buf.code_action { context = { only = { 'source.organizeImports' } }, apply = true }
+          -- vim.lsp.buf.code_action { context = { only = { 'source.fixAll' } }, apply = true }
         end
       })
+
+      local cos = require("codeactions-on-save")
+      cos.register({ "*.py", "*.go" }, { "source.organizeImports" })
+      cos.register({ "*.ts", "*.tsx" }, { "source.organizeImports.biome", "source.fixAll" })
 
       MiniIcons.tweak_lsp_kind()
     end,
