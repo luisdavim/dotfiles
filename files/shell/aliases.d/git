@@ -3,7 +3,7 @@
 
 function git-main_branch() {
   if [ ! -f ".git/refs/remotes/origin/HEAD" ]; then
-    git remote set-head origin --auto &> /dev/null
+    git remote set-head origin --auto &>/dev/null
   fi
   git branch -rl "*/HEAD" | rev | cut -d/ -f1 | rev
 }
@@ -14,13 +14,13 @@ function git-status() {
   REMOTE=$(git rev-parse @{u})
   BASE=$(git merge-base @ @{u})
 
-  if [ "$UNCOMMITED" != "" ]; then
+  if [ "${UNCOMMITED}" != "" ]; then
     echo "Need to commit"
-  elif [ $LOCAL = $REMOTE ]; then
+  elif [ "${LOCAL}" = "${REMOTE}" ]; then
     echo "Up-to-date"
-  elif [ $LOCAL = $BASE ]; then
+  elif [ "${LOCAL}" = "${BASE}" ]; then
     echo "Need to pull"
-  elif [ $REMOTE = $BASE ]; then
+  elif [ "${REMOTE}" = "${BASE}" ]; then
     echo "Need to push"
   else
     echo "Diverged"
@@ -28,7 +28,7 @@ function git-status() {
 }
 
 function gch() {
- git checkout "$(git branch — all | fzf| tr -d '[:space:]')"
+  git checkout "$(git branch — all | fzf | tr -d '[:space:]')"
 }
 
 function git-compare() {
@@ -36,22 +36,21 @@ function git-compare() {
 }
 
 function git-branch-status() {
-  git for-each-ref --format="%(refname:short) %(upstream:short)" refs/heads | \
-  while read local remote
-  do
-    [ -z "$remote" ] && continue
-    git rev-list --left-right ${local}...${remote} -- 2>/dev/null >/tmp/git_upstream_status_delta || continue
-    LEFT_AHEAD=$(grep -c '^<' /tmp/git_upstream_status_delta)
-    RIGHT_AHEAD=$(grep -c '^>' /tmp/git_upstream_status_delta)
-    echo "$local (ahead $LEFT_AHEAD) | (behind $RIGHT_AHEAD) $remote"
-  done
+  git for-each-ref --format="%(refname:short) %(upstream:short)" refs/heads |
+    while read -r local remote; do
+      [ -z "$remote" ] && continue
+      git rev-list --left-right "${local}...${remote}" -- 2>/dev/null >/tmp/git_upstream_status_delta || continue
+      LEFT_AHEAD=$(grep -c '^<' /tmp/git_upstream_status_delta)
+      RIGHT_AHEAD=$(grep -c '^>' /tmp/git_upstream_status_delta)
+      echo "$local (ahead $LEFT_AHEAD) | (behind $RIGHT_AHEAD) $remote"
+    done
 }
 
 # Merges current branch with the specified branch
 function git-merge() {
-  CUR_BRANCH=$(basename $(git symbolic-ref -q HEAD))
+  CUR_BRANCH=$(basename "$(git symbolic-ref -q HEAD)")
   SRC_BRANCH=${1:-"master"}
-  git pull && git checkout ${SRC_BRANCH} && git pull && git checkout ${CUR_BRANCH} && git pull && git merge ${SRC_BRANCH}
+  git pull && git checkout "${SRC_BRANCH}" && git pull && git checkout "${CUR_BRANCH}" && git pull && git merge "${SRC_BRANCH}"
 }
 
 # Git aliases
@@ -73,6 +72,7 @@ alias gcl='git goclone -u'
 alias gdf='git diff'
 alias gdst='git diff --stat'
 alias gpl='git pull'
+alias gplr='git pull --rebase'
 alias gph='git push'
 alias gcm='git checkout $(git-main_branch)'
 alias gco='git checkout'

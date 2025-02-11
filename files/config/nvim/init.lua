@@ -62,27 +62,6 @@ now(function()
     command = "wincmd H"
   })
 
-  -- Automatically restore cursor position
-  vim.api.nvim_create_autocmd('BufRead', {
-    callback = function(opts)
-      vim.api.nvim_create_autocmd('BufWinEnter', {
-        once = true,
-        buffer = opts.buf,
-        callback = function()
-          local ft = vim.bo[opts.buf].filetype
-          local last_known_line = vim.api.nvim_buf_get_mark(opts.buf, '"')[1]
-          if
-              not (ft:match('commit') and ft:match('rebase'))
-              and last_known_line > 1
-              and last_known_line <= vim.api.nvim_buf_line_count(opts.buf)
-          then
-            vim.api.nvim_feedkeys([[g`"]], 'nx', false)
-          end
-        end,
-      })
-    end,
-  })
-
   -- file type detection
   vim.filetype.add({
     extension = {
@@ -144,8 +123,17 @@ now(function()
       signature = { height = 25, width = 60, border = 'single' },
     },
   })
+  -- Use fuzzy matching for built-in completion
+  if vim.fn.has "nvim-0.11" == 1 then
+    vim.opt.completeopt:append "fuzzy"
+  end
 end)
 now(function() require('mini.starter').setup() end)
+now(function()
+  local misc = require('mini.misc')
+  misc.setup({ make_global = { "put", "put_text" } })
+  misc.setup_restore_cursor()
+end)
 
 -- LSP and DAP related config
 now(function()
@@ -587,8 +575,8 @@ later(function()
 end)
 later(function()
   require('mini.basics').setup({
-    basic = true,
-    extra_ui = true,
+    options = { extra_ui = true, win_borders = "single" },
+    mappings = { basic = true, windows = true, move_with_alt = true },
   })
 end)
 later(function() require('mini.bracketed').setup() end)
@@ -620,7 +608,6 @@ later(function()
 end)
 later(function() require('mini.jump').setup() end)
 later(function() require('mini.jump2d').setup() end)
-later(function() require('mini.misc').setup() end)
 later(function() require('mini.sessions').setup() end)
 later(function() require('mini.visits').setup() end)
 later(function() require('mini.fuzzy').setup() end)
