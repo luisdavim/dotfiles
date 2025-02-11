@@ -300,6 +300,85 @@ now(function()
     callback = function(event)
       local opts = { buffer = event.buf }
 
+      MiniIcons.tweak_lsp_kind()
+
+      -- LSP UI settings
+      vim.diagnostic.config({
+        virtual_text = false,
+        -- float = {
+        --   border = 'single',
+        -- },
+        signs = {
+          text = {
+            [vim.diagnostic.severity.ERROR] = '✘',
+            [vim.diagnostic.severity.WARN] = '▲',
+            [vim.diagnostic.severity.HINT] = '⚑',
+            [vim.diagnostic.severity.INFO] = '»',
+          },
+        },
+      })
+      vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
+        vim.lsp.handlers.hover,
+        { border = 'single' }
+      )
+      vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
+        vim.lsp.handlers.signature_help,
+        { border = 'single' }
+      )
+
+      -- Function to check if a floating dialog exists and if not
+      -- then check for diagnostics under the cursor
+      function OpenDiagnosticIfNoFloat()
+        for _, winid in pairs(vim.api.nvim_tabpage_list_wins(0)) do
+          if vim.api.nvim_win_get_config(winid).zindex then
+            return
+          end
+        end
+        vim.diagnostic.open_float(nil, {
+          scope = 'cursor',
+          border = 'single',
+          focusable = false,
+          close_events = {
+            'CursorMoved',
+            'CursorMovedI',
+            'BufHidden',
+            'InsertCharPre',
+            'WinLeave',
+          },
+        })
+      end
+
+      -- Show diagnostics under the cursor when holding position
+      vim.api.nvim_create_augroup('lsp_diagnostics_hold', { clear = true })
+      vim.api.nvim_create_autocmd({ 'CursorHold' }, {
+        pattern = "*",
+        command = "lua OpenDiagnosticIfNoFloat()",
+        group = 'lsp_diagnostics_hold',
+      })
+
+      -- Inlay hints
+      local id = vim.tbl_get(event, 'data', 'client_id')
+      local client = id and vim.lsp.get_client_by_id(id)
+      if client ~= nil and client.supports_method('textDocument/inlayHint') then
+        local bufnr = event.buf
+        vim.lsp.inlay_hint.enable(true, { bufnr })
+        vim.keymap.set('n', "<leader>H",
+          function()
+            if vim.lsp.inlay_hint.is_enabled() then
+              vim.lsp.inlay_hint.enable(false, { bufnr })
+            else
+              vim.lsp
+                  .inlay_hint.enable(true, { bufnr })
+            end
+          end, opts)
+      end
+
+      -- Signature help
+      vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers['signature_help'], {
+        border = 'single',
+        close_events = { "CursorMoved", "BufHidden" },
+      })
+
       -- Rename UI
       local function dorename(win)
         local new_name = vim.trim(vim.fn.getline('.'))
@@ -337,6 +416,25 @@ now(function()
         dorename = dorename
       }
 
+      -- Format on save
+      vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
+        -- buffer = 0, -- if 0 doesn't work do vim.api.nvim_get_current_buf()
+        callback = function(_)
+          vim.lsp.buf.format({ async = false })
+          -- vim.lsp.buf.code_action is async and may not resolve before the buffer is closed
+          -- vim.lsp.buf.code_action { context = { only = { 'source.organizeImports' } }, apply = true }
+          -- vim.lsp.buf.code_action { context = { only = { 'source.fixAll' } }, apply = true }
+        end
+      })
+      vim.api.nvim_create_user_command('Format', function()
+        vim.lsp.buf.format({ async = false })
+      end, {})
+
+      local cos = require("codeactions-on-save")
+      cos.register({ "*.py", "*.go" }, { "source.organizeImports" })
+      cos.register({ "*.ts", "*.tsx" }, { "source.organizeImports.biome", "source.fixAll" })
+
+      -- LSP keymaps
       vim.keymap.set('n', '<leader>rn', function() Rename.rename() end, { silent = true })
       vim.keymap.set('n', '<leader>ca', function() vim.lsp.buf.code_action() end, opts)
       vim.keymap.set('n', '<leader>ld', function() MiniExtra.pickers.diagnostic() end, opts)
@@ -360,23 +458,6 @@ now(function()
       vim.keymap.set({ 'n', 'x' }, '<F3>', function() vim.lsp.buf.format({ async = true }) end, opts)
       vim.keymap.set('n', '<F4>', function() vim.lsp.buf.code_action() end, opts)
       vim.keymap.set('n', '<F2>', function() vim.lsp.buf.rename() end, opts)
-
-      -- format on save
-      vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
-        -- buffer = 0, -- if 0 doesn't work do vim.api.nvim_get_current_buf()
-        callback = function(_)
-          vim.lsp.buf.format({ async = false })
-          -- vim.lsp.buf.code_action is async and may not resolve before the buffer is closed
-          -- vim.lsp.buf.code_action { context = { only = { 'source.organizeImports' } }, apply = true }
-          -- vim.lsp.buf.code_action { context = { only = { 'source.fixAll' } }, apply = true }
-        end
-      })
-
-      local cos = require("codeactions-on-save")
-      cos.register({ "*.py", "*.go" }, { "source.organizeImports" })
-      cos.register({ "*.ts", "*.tsx" }, { "source.organizeImports.biome", "source.fixAll" })
-
-      MiniIcons.tweak_lsp_kind()
     end,
   })
 end)
@@ -598,7 +679,7 @@ later(function()
     source = 'f-person/git-blame.nvim'
   })
   require('gitblame').setup {
-    enabled = true,
+    enabled = false,
     schedule_event = 'CursorHold',
     clear_event = 'CursorHoldI',
   }
