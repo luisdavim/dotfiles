@@ -305,9 +305,10 @@ now(function()
       -- LSP UI settings
       vim.diagnostic.config({
         virtual_text = false,
-        -- float = {
-        --   border = 'single',
-        -- },
+        float = {
+          border = 'single',
+          width = math.floor(0.25 * vim.o.columns)
+        },
         signs = {
           text = {
             [vim.diagnostic.severity.ERROR] = '✘',
@@ -318,13 +319,17 @@ now(function()
         },
       })
       vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
-        vim.lsp.handlers.hover,
-        { border = 'single' }
-      )
+        vim.lsp.handlers.hover, {
+          border = 'single',
+          width = math.floor(0.25 * vim.o.columns)
+        })
+      -- Signature help
       vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
-        vim.lsp.handlers.signature_help,
-        { border = 'single' }
-      )
+        vim.lsp.handlers['signature_help'], {
+          border = 'single',
+          width = math.floor(0.25 * vim.o.columns),
+          close_events = { "CursorMoved", "BufHidden", 'WinLeave' },
+        })
 
       -- Function to check if a floating dialog exists and if not
       -- then check for diagnostics under the cursor
@@ -337,6 +342,7 @@ now(function()
         vim.diagnostic.open_float(nil, {
           scope = 'cursor',
           border = 'single',
+          width = math.floor(0.25 * vim.o.columns),
           focusable = false,
           close_events = {
             'CursorMoved',
@@ -372,12 +378,6 @@ now(function()
             end
           end, opts)
       end
-
-      -- Signature help
-      vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers['signature_help'], {
-        border = 'single',
-        close_events = { "CursorMoved", "BufHidden" },
-      })
 
       -- Rename UI
       local function dorename(win)
@@ -430,9 +430,9 @@ now(function()
         vim.lsp.buf.format({ async = false })
       end, {})
 
-      local cos = require("codeactions-on-save")
-      cos.register({ "*.py", "*.go" }, { "source.organizeImports" })
-      cos.register({ "*.ts", "*.tsx" }, { "source.organizeImports.biome", "source.fixAll" })
+      local cos = require('codeactions-on-save')
+      cos.register({ '*.py', '*.go', '*.rb' }, { 'source.organizeImports' })
+      cos.register({ '*.ts', '*.tsx' }, { 'source.organizeImports.biome', 'source.fixAll' })
 
       -- LSP keymaps
       vim.keymap.set('n', '<leader>rn', function() Rename.rename() end, { silent = true })
