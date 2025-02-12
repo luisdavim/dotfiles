@@ -131,7 +131,14 @@ now(function()
   misc.setup_restore_cursor()
 end)
 
--- LSP and DAP related config
+now(function()
+  add({
+    source = 'ahmedkhalf/project.nvim'
+  })
+  require('project_nvim').setup()
+end)
+
+-- LSP config
 now(function()
   add({
     source = 'nvim-lua/plenary.nvim'
@@ -164,21 +171,6 @@ now(function()
 
   vim.opt.foldtext = "v:lua.vim.treesitter.foldtext()"
 
-  -- DAP
-  -- add({
-  --   source = 'mfussenegger/nvim-dap',
-  --   depends = {
-  --     'rcarriga/nvim-dap-ui',
-  --     'nvim-neotest/nvim-nio',
-  --     'jay-babu/mason-nvim-dap.nvim',
-  --   }
-  -- })
-  -- require('dap')
-  -- require('dapui').setup()
-  -- require('mason-nvim-dap').setup()
-  -- require('dap.ext.vscode').load_launchjs(nil, {})
-
-  -- LSP
   add({
     source = 'neovim/nvim-lspconfig',
     -- Supply dependencies near target plugin
@@ -191,6 +183,7 @@ now(function()
       -- 'nvimtools/none-ls.nvim',
     },
   })
+
   require('lazydev').setup()
   -- require('mason-null-ls').setup({
   --   handlers = {},
@@ -274,7 +267,6 @@ now(function()
     end
   })
 
-
   add({
     source = 'fnune/codeactions-on-save.nvim',
   })
@@ -312,9 +304,10 @@ now(function()
         vim.lsp.handlers['signature_help'], {
           border = 'single',
           width = math.floor(0.25 * vim.o.columns),
-          close_events = { "CursorMoved", "BufHidden", 'WinLeave' },
+          close_events = { 'CursorMoved', 'BufHidden', 'WinLeave' },
         })
 
+      -- Diagnostics
       -- Function to check if a floating dialog exists and if not
       -- then check for diagnostics under the cursor
       function OpenDiagnosticIfNoFloat()
@@ -352,7 +345,7 @@ now(function()
       if client ~= nil and client.supports_method('textDocument/inlayHint') then
         local bufnr = event.buf
         vim.lsp.inlay_hint.enable(true, { bufnr })
-        vim.keymap.set('n', "<leader>H",
+        vim.keymap.set('n', '<leader>H',
           function()
             if vim.lsp.inlay_hint.is_enabled() then
               vim.lsp.inlay_hint.enable(false, { bufnr })
@@ -446,14 +439,78 @@ now(function()
   })
 end)
 
-now(function()
+-- Safely execute later
+
+-- DAP
+later(function()
   add({
-    source = 'ahmedkhalf/project.nvim'
+    source = 'rcarriga/nvim-dap-ui',
+    depends = {
+      'mfussenegger/nvim-dap',
+      'williamboman/mason.nvim',
+      'jay-babu/mason-nvim-dap.nvim',
+      'nvim-neotest/nvim-nio',
+    }
   })
-  require('project_nvim').setup()
+  add({
+    source = 'leoluz/nvim-dap-go',
+  })
+  add({
+    source = 'mfussenegger/nvim-dap-python'
+  })
+  require('mason-nvim-dap').setup()
+  require('dap.ext.vscode').load_launchjs(nil, {})
+
+  require('dap-go').setup()
+  require("dap-python").setup("python3")
+
+  local dap, dapui =require("dap"),require("dapui")
+  dapui.setup()
+
+  -- dap.listeners.after.event_initialized["dapui_config"]=function()
+  --   dapui.open()
+  -- end
+  -- dap.listeners.before.event_terminated["dapui_config"]=function()
+  --   dapui.close()
+  -- end
+  -- dap.listeners.before.event_exited["dapui_config"]=function()
+  --   dapui.close()
+  -- end
+
+  -- open Dap UI automatically when debug starts (e.g. after <F5>)
+  dap.listeners.before.attach.dapui_config = function()
+      dapui.open()
+  end
+  dap.listeners.before.launch.dapui_config = function()
+      dapui.open()
+  end
+
+  -- close Dap UI with :DapCloseUI
+  vim.api.nvim_create_user_command("DapCloseUI", function()
+      require("dapui").close()
+  end, {})
+
+-- use <Alt-e> to eval expressions
+vim.keymap.set({ 'n', 'v' }, '<M-e>', function() require('dapui').eval() end)
+
+  vim.fn.sign_define('DapBreakpoint',{ text ='🟥', texthl ='', linehl ='', numhl =''})
+  vim.fn.sign_define('DapStopped',{ text ='▶️', texthl ='', linehl ='', numhl =''})
+
+  vim.keymap.set('n', '<F5>', dap.continue)
+  vim.keymap.set('n', '<F10>', dap.step_over)
+  vim.keymap.set('n', '<F11>', dap.step_into)
+  vim.keymap.set('n', '<F12>', dap.step_out)
+
+  vim.keymap.set('n', '<leader>b', dap.toggle_breakpoint)
+  vim.keymap.set('n', '<Leader>B', dap.set_breakpoint)
+  vim.keymap.set('n', '<Leader>lp', function() dap.set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end)
+  vim.keymap.set('n', '<Leader>dr', dap.repl.open)
+  vim.keymap.set('n', '<Leader>dl', dap.run_last)
+
+  vim.keymap.set('n', '<Leader>w', dapui.open)
+  vim.keymap.set('n', '<Leader>W', dapui.close)
 end)
 
--- Safely execute later
 later(function() require('mini.ai').setup() end)
 later(function() require('mini.align').setup() end)
 later(function() require('mini.comment').setup() end)
