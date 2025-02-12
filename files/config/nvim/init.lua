@@ -31,9 +31,6 @@ now(function()
   vim.keymap.set('n', '<C-L>', '<cmd>noh<CR>', { noremap = true, silent = true })
 
   vim.g.mapleader = "\\"
-  vim.g.nobackup = true
-  vim.g.nowritebackup = true
-  vim.g.noswapfile = true
   vim.g.fileformats = "unix,dos,mac"
 
   local set = vim.opt -- set options
@@ -53,12 +50,7 @@ now(function()
   set.ttimeoutlen = 50
   set.updatetime = 300
 
-  set.number = true
-  set.incsearch = true
   set.hlsearch = true
-  set.infercase = true
-  set.ignorecase = true
-  set.smartcase = true
 
   -- Automatically Split help Buffers to the left
   vim.api.nvim_create_autocmd("FileType", {
