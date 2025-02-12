@@ -20,11 +20,15 @@ local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
 
 -- Vim setup
 now(function()
+  -- indent using tab
   vim.keymap.set('v', '<Tab>', '>gv', {})
   vim.keymap.set('v', '<S-Tab>', '<gv', {})
   vim.keymap.set('n', '<Tab>', '>>_', {})
   vim.keymap.set('n', '<S-Tab>', '<<_', {})
   vim.keymap.set('i', '<S-Tab>', '<C-D>', {})
+
+  -- clear search highlight
+  vim.keymap.set('n', '<C-L>', '<cmd>noh<CR>', { noremap = true, silent = true })
 
   vim.g.mapleader = "\\"
   vim.g.nobackup = true
@@ -658,6 +662,10 @@ later(function()
 
   require("ibl").setup {
     scope = { enabled = false },
+    indent = {
+      char = "▎",
+      tab_char = "▎",
+    },
   }
 end)
 
