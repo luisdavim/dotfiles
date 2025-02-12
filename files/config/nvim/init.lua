@@ -328,7 +328,7 @@ now(function()
           end
         end
         vim.diagnostic.open_float(nil, {
-          scope = 'cursor',
+          scope = 'line',
           border = 'single',
           width = math.floor(0.25 * vim.o.columns),
           focusable = false,
