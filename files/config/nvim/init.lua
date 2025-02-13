@@ -282,6 +282,31 @@ now(function()
 
       MiniIcons.tweak_lsp_kind()
 
+      local id = vim.tbl_get(event, 'data', 'client_id')
+      local client = id and vim.lsp.get_client_by_id(id)
+
+      -- highlight symbol under cursor
+      if client ~= nil and client.supports_method('textDocument/documentHighlight') then
+        vim.b[event.buf].minicursorword_disable = true
+
+        vim.api.nvim_set_hl(0, 'LspReferenceRead', {link = 'Search'})
+        vim.api.nvim_set_hl(0, 'LspReferenceText', {link = 'Search'})
+        vim.api.nvim_set_hl(0, 'LspReferenceWrite', {link = 'Search'})
+
+        local group = vim.api.nvim_create_augroup('highlight_symbol', {clear = false})
+        vim.api.nvim_clear_autocmds({buffer = event.buf, group = group})
+        vim.api.nvim_create_autocmd({'CursorHold', 'CursorHoldI'}, {
+          group = group,
+          buffer = event.buf,
+          callback = vim.lsp.buf.document_highlight,
+        })
+        vim.api.nvim_create_autocmd({'CursorMoved', 'CursorMovedI'}, {
+          group = group,
+          buffer = event.buf,
+          callback = vim.lsp.buf.clear_references,
+        })
+      end
+
       -- LSP UI settings
       vim.diagnostic.config({
         virtual_text = false,
@@ -344,8 +369,6 @@ now(function()
       })
 
       -- Inlay hints
-      local id = vim.tbl_get(event, 'data', 'client_id')
-      local client = id and vim.lsp.get_client_by_id(id)
       if client ~= nil and client.supports_method('textDocument/inlayHint') then
         local bufnr = event.buf
         vim.lsp.inlay_hint.enable(true, { bufnr })
@@ -385,6 +408,7 @@ now(function()
         local win = vim.api.nvim_open_win(buf, true, ropts)
         local fmt = '<cmd>lua Rename.dorename(%d)<CR>'
         local fmtc = '<cmd>lua vim.api.nvim_win_close(%d, true)<CR>'
+        vim.b[buf].minicompletion_disable = true
 
         vim.api.nvim_buf_set_lines(buf, 0, -1, false, { cword })
         vim.api.nvim_buf_set_keymap(buf, 'i', '<CR>', string.format(fmt, win), { silent = true })
@@ -548,6 +572,11 @@ later(function()
   vim.keymap.set('n', '<Leader>W', dapui.close)
 end)
 
+-- later(function() require('mini.animate').setup() end)
+-- later(function() require('mini.base16').setup() end)
+-- later(function() require('mini.colors').setup() end)
+-- later(function() require('mini.hues').setup() end)
+
 later(function() require('mini.ai').setup() end)
 later(function() require('mini.align').setup() end)
 later(function() require('mini.comment').setup() end)
@@ -701,10 +730,6 @@ later(function() require('mini.jump2d').setup() end)
 later(function() require('mini.sessions').setup() end)
 later(function() require('mini.visits').setup() end)
 later(function() require('mini.fuzzy').setup() end)
--- later(function() require('mini.animate').setup() end)
--- later(function() require('mini.base16').setup() end)
--- later(function() require('mini.colors').setup() end)
--- later(function() require('mini.hues').setup() end)
 later(function() require('mini.cursorword').setup() end)
 later(function() require('mini.hipatterns').setup() end)
 later(function() require('mini.indentscope').setup() end)
