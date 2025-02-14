@@ -422,7 +422,7 @@ now(function()
           height = 1,
           style = 'minimal',
           border = 'single',
-          title = 'rename'
+          title = 'Rename'
         }
         local buf = vim.api.nvim_create_buf(false, true)
         local win = vim.api.nvim_open_win(buf, true, ropts)
