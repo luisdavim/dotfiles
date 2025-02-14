@@ -346,20 +346,18 @@ installVimPlugins() {
   cp files/vim/coc-settings.json "${HOME}/.vim/"
   cp -r files/vim/config/* "${HOME}/.vim/config/"
   cp -r files/vim/ft* "${HOME}/.vim/"
-  if [[ "${NVIM_FLAVOUR}" == "coc" ]]; then
-    cp files/vim/init.lua "${HOME}/.config/nvim/"
-  else
-    cp files/config/nvim/init.lua "${HOME}/.config/nvim/"
-  fi
-  if [ ! -s ~/.config/nvim/coc-settings.json ]; then
-    ln -s "${HOME}"/.vim/autoload/ "${HOME}/.config/nvim/autoload"
-    ln -s "${HOME}"/.vim/ftdetect/ "${HOME}/.config/nvim/ftdetect"
-    ln -s "${HOME}"/.vim/ftplugin/ "${HOME}/.config/nvim/ftplugin"
-    ln -s "${HOME}"/.vim/coc-settings.json "${HOME}/.config/nvim/coc-settings.json"
-  fi
+
+  cp files/config/nvim/init.lua "${HOME}/.config/nvim/"
 
   # Using vim-plug
   if [[ "${NVIM_FLAVOUR}" == "coc" ]]; then
+    cp files/vim/init.lua "${HOME}/.config/nvim/"
+    if [ ! -s ~/.config/nvim/coc-settings.json ]; then
+      ln -s "${HOME}"/.vim/autoload/ "${HOME}/.config/nvim/autoload"
+      ln -s "${HOME}"/.vim/ftdetect/ "${HOME}/.config/nvim/ftdetect"
+      ln -s "${HOME}"/.vim/ftplugin/ "${HOME}/.config/nvim/ftplugin"
+      ln -s "${HOME}"/.vim/coc-settings.json "${HOME}/.config/nvim/coc-settings.json"
+    fi
     if [ ! -f ~/.vim/autoload/plug.vim ]; then
       curl -sLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     fi

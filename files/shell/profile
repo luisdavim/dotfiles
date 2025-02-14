@@ -248,6 +248,7 @@ if [ -d "${HOME}/.kitty-tmux" ]; then
 fi
 
 # set PATH so it includes user's private bin if it exists
+# for p in $(find ${HOME}/.local/ -type d -name bin); do PATH="${PATH}:${p}"; done
 if [ -d "${HOME}/.local/bin" ]; then
   PATH="${HOME}/.local/bin:${PATH}"
 fi
