@@ -52,13 +52,29 @@ now(function()
 
   set.hlsearch = true
 
+  -- Automatically create parent directories
+  local automkdirGroup = vim.api.nvim_create_augroup("automkdirGroup", { clear = true })
+  vim.api.nvim_create_autocmd('BufWritePre', {
+    -- Function gets a table that contains match key, which maps to `<amatch>` (a full filepath).
+    callback = function(t)
+      local fname = vim.loop.fs_realpath(t.match) or t.match
+      local dirname = vim.fs.dirname(fname)
+      if not vim.loop.fs_stat(dirname) then
+        -- Use 755 permissions, which means rwxr.xr.x
+        -- vim.loop.fs_mkdir(dirname, tonumber("0755", 8))
+        vim.fn.mkdir(dirname, 'p')
+      end
+    end,
+    group = automkdirGroup
+  })
+
   -- Automatically Split help Buffers to the left
   vim.api.nvim_create_autocmd("FileType", {
     pattern = "help",
     command = "wincmd H"
   })
 
-  -- file type detection
+  -- File type detection
   vim.filetype.add({
     extension = {
       dockerfile = 'dockerfile',
