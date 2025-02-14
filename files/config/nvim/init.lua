@@ -274,6 +274,9 @@ now(function()
   add({
     source = 'fnune/codeactions-on-save.nvim',
   })
+  add({
+    source = 'dnlhc/glance.nvim',
+  })
 
   vim.api.nvim_create_autocmd('LspAttach', {
     desc = 'LSP actions',
@@ -289,18 +292,18 @@ now(function()
       if client ~= nil and client.supports_method('textDocument/documentHighlight') then
         vim.b[event.buf].minicursorword_disable = true
 
-        vim.api.nvim_set_hl(0, 'LspReferenceRead', {link = 'Search'})
-        vim.api.nvim_set_hl(0, 'LspReferenceText', {link = 'Search'})
-        vim.api.nvim_set_hl(0, 'LspReferenceWrite', {link = 'Search'})
+        vim.api.nvim_set_hl(0, 'LspReferenceRead', { link = 'MiniCursorword' })
+        vim.api.nvim_set_hl(0, 'LspReferenceText', { link = 'MiniCursorword' })
+        vim.api.nvim_set_hl(0, 'LspReferenceWrite', { link = 'MiniCursorword' })
 
-        local group = vim.api.nvim_create_augroup('highlight_symbol', {clear = false})
-        vim.api.nvim_clear_autocmds({buffer = event.buf, group = group})
-        vim.api.nvim_create_autocmd({'CursorHold', 'CursorHoldI'}, {
+        local group = vim.api.nvim_create_augroup('highlight_symbol', { clear = false })
+        vim.api.nvim_clear_autocmds({ buffer = event.buf, group = group })
+        vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
           group = group,
           buffer = event.buf,
           callback = vim.lsp.buf.document_highlight,
         })
-        vim.api.nvim_create_autocmd({'CursorMoved', 'CursorMovedI'}, {
+        vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
           group = group,
           buffer = event.buf,
           callback = vim.lsp.buf.clear_references,
@@ -377,11 +380,12 @@ now(function()
             if vim.lsp.inlay_hint.is_enabled() then
               vim.lsp.inlay_hint.enable(false, { bufnr })
             else
-              vim.lsp
-                  .inlay_hint.enable(true, { bufnr })
+              vim.lsp.inlay_hint.enable(true, { bufnr })
             end
           end, opts)
       end
+
+      require('glance').setup()
 
       -- Rename UI
       local function dorename(win)
@@ -465,6 +469,13 @@ now(function()
       vim.keymap.set('n', '<F2>', function() vim.lsp.buf.rename() end, opts)
     end,
   })
+end)
+
+now(function()
+  add({
+    source = 'sindrets/diffview.nvim'
+  })
+  require("diffview").setup()
 end)
 
 -- Safely execute later
