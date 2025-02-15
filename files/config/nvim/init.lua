@@ -166,9 +166,6 @@ end)
 
 -- LSP config
 now(function()
-  add({
-    source = 'nvim-lua/plenary.nvim'
-  })
   -- Treesitter
   add({
     source = 'nvim-treesitter/nvim-treesitter',
@@ -496,6 +493,16 @@ now(function()
     end,
   })
 end)
+
+-- now(function()
+--   add({
+--     source = 'tanvirtin/vgit.nvim',
+--     depends = {
+--       'nvim-lua/plenary.nvim'
+--     }
+--   })
+--   require("vgit").setup()
+-- end)
 
 now(function()
   add({
@@ -857,6 +864,13 @@ later(function()
   })
   -- require('render-markdown').setup({})
 end)
+
+-- later(function()
+--   add({
+--     source = 'nvimdev/indentmini.nvim'
+--   })
+--   require("indentmini").setup()
+-- end)
 
 later(function()
   add({
