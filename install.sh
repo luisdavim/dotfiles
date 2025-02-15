@@ -332,6 +332,12 @@ installVimPlugins() {
     pip install -U neovim # --break-system-packages
   fi
 
+  if [[ $OSTYPE == *"android"* ]]; then
+    curl -o "${HOME}/.local/bin/install-in-mason" "https://raw.githubusercontent.com/Amirulmuuminin/setup-mason-for-termux/main/install-in-mason"
+    chmod +x "${HOME}/.local/bin/install-in-mason"
+    termux-fix-shebang "${HOME}"/.local/share/nvim/mason/bin/*
+  fi
+
   mkdir -p "${HOME}/.vim/config/"
   mkdir -p "${HOME}/.vim/ftdetect/"
   mkdir -p "${HOME}/.vim/ftplugin/"

@@ -565,30 +565,31 @@ later(function()
     source = 'mfussenegger/nvim-dap-python'
   })
   require('mason-nvim-dap').setup({
-    automatic_installation = true
+    automatic_installation = true,
+    ensure_installed = {},
   })
 
-  require("nvim-dap-virtual-text").setup()
+  require("nvim-dap-virtual-text").setup({})
   require('dap-go').setup()
   require("dap-python").setup("python3")
 
   local dap, dapui = require("dap"), require("dapui")
   dapui.setup({
-  icons = { expanded = "▾", collapsed = "▸", current_frame = "*" },
-  controls = {
-    icons = {
-      pause = "⏸",
-      play = "▶",
-      step_into = "⏎",
-      step_over = "⏭",
-      step_out = "⏮",
-      step_back = "b",
-      run_last = "▶▶",
-      terminate = "⏹",
-      disconnect = "⏏",
+    icons = { expanded = "▾", collapsed = "▸", current_frame = "*" },
+    controls = {
+      icons = {
+        pause = "⏸",
+        play = "▶",
+        step_into = "⏎",
+        step_over = "⏭",
+        step_out = "⏮",
+        step_back = "b",
+        run_last = "▶▶",
+        terminate = "⏹",
+        disconnect = "⏏",
+      },
     },
-  },
-})
+  })
 
   -- dap.listeners.after.event_initialized["dapui_config"]=function()
   --   dapui.open()
@@ -630,14 +631,18 @@ later(function()
       vim.api.nvim_set_hl(0, 'DapStopped', { fg = '#00ff00', bg = sign_column_bg, ctermbg = sign_column_ctermbg })
       vim.api.nvim_set_hl(0, 'DapStoppedLine', { bg = '#2e4d3d', ctermbg = 'Green' })
       vim.api.nvim_set_hl(0, 'DapBreakpoint', { fg = '#c23127', bg = sign_column_bg, ctermbg = sign_column_ctermbg })
-      vim.api.nvim_set_hl(0, 'DapBreakpointRejected', { fg = '#888ca6', bg = sign_column_bg, ctermbg = sign_column_ctermbg })
+      vim.api.nvim_set_hl(0, 'DapBreakpointRejected',
+        { fg = '#888ca6', bg = sign_column_bg, ctermbg = sign_column_ctermbg })
       vim.api.nvim_set_hl(0, 'DapLogPoint', { fg = '#61afef', bg = sign_column_bg, ctermbg = sign_column_ctermbg })
     end
   })
 
-  vim.fn.sign_define('DapBreakpoint', { text = '⏹', texthl = 'DapBreakpoint', linehl = 'DapBreakpoint', numhl = 'DapBreakpoint' })
-  vim.fn.sign_define('DapBreakpointCondition', { text = 'ﳁ', texthl = 'DapBreakpoint', linehl = 'DapBreakpoint', numhl = 'DapBreakpoint' })
-  vim.fn.sign_define('DapBreakpointRejected', { text = '', texthl = 'DapBreakpoint', linehl = 'DapBreakpoint', numhl = 'DapBreakpoint' })
+  vim.fn.sign_define('DapBreakpoint',
+    { text = '⏹', texthl = 'DapBreakpoint', linehl = 'DapBreakpoint', numhl = 'DapBreakpoint' })
+  vim.fn.sign_define('DapBreakpointCondition',
+    { text = 'ﳁ', texthl = 'DapBreakpoint', linehl = 'DapBreakpoint', numhl = 'DapBreakpoint' })
+  vim.fn.sign_define('DapBreakpointRejected',
+    { text = '', texthl = 'DapBreakpoint', linehl = 'DapBreakpoint', numhl = 'DapBreakpoint' })
   vim.fn.sign_define('DapLogPoint', { text = '🗎', texthl = 'DapLogPoint', linehl = 'DapLogPoint', numhl = 'DapLogPoint' })
   vim.fn.sign_define('DapStopped', { text = '⏵', texthl = 'DapStopped', linehl = 'DapStopped', numhl = 'DapStopped' })
 

@@ -310,6 +310,7 @@ ripgrep
 ripsecrets
 root-repo
 ruby
+ruby-ri
 runit
 rush
 rust
@@ -351,6 +352,7 @@ vulkan-loader
 vulkan-loader-generic
 w3m
 wget
+which
 xh
 xxhash
 xz-utils
