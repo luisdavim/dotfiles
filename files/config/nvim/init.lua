@@ -15,20 +15,21 @@ require('mini.deps').setup({ path = { package = path_package } })
 -- Use 'mini.deps'. `now()` and `later()` are helpers for a safe two-stage
 -- startup and are optional.
 local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
+local keymap = vim.keymap.set
 
 -- Safely execute immediately
 
 -- Vim setup
 now(function()
   -- indent using tab
-  vim.keymap.set('v', '<Tab>', '>gv', {})
-  vim.keymap.set('v', '<S-Tab>', '<gv', {})
-  vim.keymap.set('n', '<Tab>', '>>_', {})
-  vim.keymap.set('n', '<S-Tab>', '<<_', {})
-  vim.keymap.set('i', '<S-Tab>', '<C-D>', {})
+  keymap('v', '<Tab>', '>gv', {})
+  keymap('v', '<S-Tab>', '<gv', {})
+  keymap('n', '<Tab>', '>>_', {})
+  keymap('n', '<S-Tab>', '<<_', {})
+  keymap('i', '<S-Tab>', '<C-D>', {})
 
   -- clear search highlight
-  vim.keymap.set('n', '<C-L>', '<cmd>noh<CR>', { noremap = true, silent = true })
+  keymap('n', '<C-L>', '<cmd>noh<CR>', { noremap = true, silent = true })
 
   vim.g.mapleader = "\\"
   vim.g.fileformats = "unix,dos,mac"
@@ -125,9 +126,11 @@ now(function()
   require('mini.notify').setup()
   vim.notify = require('mini.notify').make_notify()
 end)
+
 now(function() require('mini.icons').setup() end)
 now(function() require('mini.tabline').setup() end)
 now(function() require('mini.statusline').setup() end)
+
 now(function()
   require('mini.completion').setup({
     window = {
@@ -139,7 +142,14 @@ now(function()
   if vim.fn.has "nvim-0.11" == 1 then
     vim.opt.completeopt:append "fuzzy"
   end
+
+  -- Disable auto-completion in snacks inputs
+  vim.api.nvim_create_autocmd("FileType", {
+    pattern = "snacks_*",
+    command = "lua vim.b.minicompletion_disable = true"
+  })
 end)
+
 now(function() require('mini.starter').setup() end)
 now(function()
   local misc = require('mini.misc')
@@ -391,7 +401,7 @@ now(function()
       if client ~= nil and client.supports_method('textDocument/inlayHint') then
         local bufnr = event.buf
         vim.lsp.inlay_hint.enable(true, { bufnr })
-        vim.keymap.set('n', '<leader>H',
+        keymap('n', '<leader>H',
           function()
             if vim.lsp.inlay_hint.is_enabled() then
               vim.lsp.inlay_hint.enable(false, { bufnr })
@@ -460,29 +470,29 @@ now(function()
       cos.register({ '*.ts', '*.tsx' }, { 'source.organizeImports.biome', 'source.fixAll' })
 
       -- LSP keymaps
-      vim.keymap.set('n', '<leader>rn', function() Rename.rename() end, { silent = true })
-      vim.keymap.set('n', '<leader>ca', function() vim.lsp.buf.code_action() end, opts)
-      vim.keymap.set('n', '<leader>ld', function() MiniExtra.pickers.diagnostic() end, opts)
+      keymap('n', '<leader>rn', function() Rename.rename() end, { silent = true })
+      keymap('n', '<leader>ca', function() vim.lsp.buf.code_action() end, opts)
+      keymap('n', '<leader>ld', function() MiniExtra.pickers.diagnostic() end, opts)
 
-      vim.keymap.set('n', 'K', function() vim.lsp.buf.hover() end, opts)
-      -- vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition() end, opts)
-      vim.keymap.set('n', 'gd', function() MiniExtra.pickers.lsp({ scope = 'definition' }) end, opts)
-      -- vim.keymap.set('n', 'gD', function() vim.lsp.buf.declaration() end, opts)
-      vim.keymap.set('n', 'gD', function() MiniExtra.pickers.lsp({ scope = 'declaration' }) end, opts)
-      -- vim.keymap.set('n', 'gi', function() vim.lsp.buf.implementation() end, opts)
-      vim.keymap.set('n', 'gi', function() MiniExtra.pickers.lsp({ scope = 'implementation' }) end, opts)
-      -- vim.keymap.set('n', 'go', function() vim.lsp.buf.type_definition() end, opts)
-      vim.keymap.set('n', 'go', function() MiniExtra.pickers.lsp({ scope = 'type_definition' }) end, opts)
-      -- vim.keymap.set('n', 'gr', function() vim.lsp.buf.references() end, opts)
-      vim.keymap.set('n', 'gr', function() MiniExtra.pickers.lsp({ scope = 'references' }) end, opts)
-      vim.keymap.set('n', 'gs', function() vim.lsp.buf.signature_help() end, opts)
-      vim.keymap.set('n', 'gS', function() MiniExtra.pickers.lsp({ scope = 'document_symbol' }) end, opts)
-      vim.keymap.set('n', 'gf', function() MiniExtra.pickers.lsp({ scope = 'workspace_symbol' }) end, opts)
-      vim.keymap.set('n', ']g', function() vim.diagnostic.goto_next() end, opts)
-      vim.keymap.set('n', '[g', function() vim.diagnostic.goto_prev() end, opts)
-      vim.keymap.set({ 'n', 'x' }, '<F3>', function() vim.lsp.buf.format({ async = true }) end, opts)
-      vim.keymap.set('n', '<F4>', function() vim.lsp.buf.code_action() end, opts)
-      vim.keymap.set('n', '<F2>', function() vim.lsp.buf.rename() end, opts)
+      keymap('n', 'K', function() vim.lsp.buf.hover() end, opts)
+      -- keymap('n', 'gd', function() vim.lsp.buf.definition() end, opts)
+      keymap('n', 'gd', function() MiniExtra.pickers.lsp({ scope = 'definition' }) end, opts)
+      -- keymap('n', 'gD', function() vim.lsp.buf.declaration() end, opts)
+      keymap('n', 'gD', function() MiniExtra.pickers.lsp({ scope = 'declaration' }) end, opts)
+      -- keymap('n', 'gi', function() vim.lsp.buf.implementation() end, opts)
+      keymap('n', 'gi', function() MiniExtra.pickers.lsp({ scope = 'implementation' }) end, opts)
+      -- keymap('n', 'go', function() vim.lsp.buf.type_definition() end, opts)
+      keymap('n', 'go', function() MiniExtra.pickers.lsp({ scope = 'type_definition' }) end, opts)
+      -- keymap('n', 'gr', function() vim.lsp.buf.references() end, opts)
+      keymap('n', 'gr', function() MiniExtra.pickers.lsp({ scope = 'references' }) end, opts)
+      keymap('n', 'gs', function() vim.lsp.buf.signature_help() end, opts)
+      keymap('n', 'gS', function() MiniExtra.pickers.lsp({ scope = 'document_symbol' }) end, opts)
+      keymap('n', 'gf', function() MiniExtra.pickers.lsp({ scope = 'workspace_symbol' }) end, opts)
+      keymap('n', ']g', function() vim.diagnostic.goto_next() end, opts)
+      keymap('n', '[g', function() vim.diagnostic.goto_prev() end, opts)
+      keymap({ 'n', 'x' }, '<F3>', function() vim.lsp.buf.format({ async = true }) end, opts)
+      keymap('n', '<F4>', function() vim.lsp.buf.code_action() end, opts)
+      keymap('n', '<F2>', function() vim.lsp.buf.rename() end, opts)
     end,
   })
 end)
@@ -493,6 +503,46 @@ now(function()
   })
   require("diffview").setup()
 end)
+
+-- TODO: pick some snacks
+-- now(function()
+--   add({
+--     source ="folke/snacks.nvim",
+--   })
+--
+--   local snacks =require('snacks')
+--   snacks.setup({
+--     animate = { enabled = false },
+--     bigfile = { enabled = true },
+--     bufdelete = { enabled = false },
+--     dashboard = { enabled = false },
+--     debug = { enabled = false },
+--     dim = { enabled = false },
+--     explorer = { enabled = true },
+--     git = { enabled = false },
+--     gitbrowse = { enabled = false },
+--     image = { enabled = false },
+--     indent = { enabled = false },
+--     input = { enabled = true },
+--     layout = { enabled = false },
+--     lazygit = { enabled = false },
+--     notifier = {
+--       enabled = false,
+--       timeout = 3000,
+--     },
+--     picker = { enabled = true },
+--     quickfile = { enabled = true },
+--     scope = { enabled = false },
+--     scroll = { enabled = false },
+--     statuscolumn = { enabled = true },
+--     words = { enabled = true },
+--     styles = {
+--       notification = {
+--         -- wo = { wrap = true } -- Wrap notifications
+--       }
+--     }
+--   })
+-- end)
 
 -- Safely execute later
 
@@ -523,7 +573,22 @@ later(function()
   require("dap-python").setup("python3")
 
   local dap, dapui = require("dap"), require("dapui")
-  dapui.setup()
+  dapui.setup({
+  icons = { expanded = "▾", collapsed = "▸", current_frame = "*" },
+  controls = {
+    icons = {
+      pause = "⏸",
+      play = "▶",
+      step_into = "⏎",
+      step_over = "⏭",
+      step_out = "⏮",
+      step_back = "b",
+      run_last = "▶▶",
+      terminate = "⏹",
+      disconnect = "⏏",
+    },
+  },
+})
 
   -- dap.listeners.after.event_initialized["dapui_config"]=function()
   --   dapui.open()
@@ -549,7 +614,7 @@ later(function()
   end, {})
 
   -- use <Alt-e> to eval expressions
-  vim.keymap.set({ 'n', 'v' }, '<M-e>', function() require('dapui').eval() end)
+  keymap({ 'n', 'v' }, '<M-e>', function() require('dapui').eval() end)
 
   vim.api.nvim_create_autocmd("ColorScheme", {
     pattern = "*",
@@ -579,19 +644,19 @@ later(function()
   -- reload current color scheme to pick up colors override if it was set up in a lazy plugin definition fashion
   vim.cmd.colorscheme(vim.g.colors_name)
 
-  vim.keymap.set('n', '<F5>', dap.continue)
-  vim.keymap.set('n', '<F10>', dap.step_over)
-  vim.keymap.set('n', '<F11>', dap.step_into)
-  vim.keymap.set('n', '<F12>', dap.step_out)
+  keymap('n', '<F5>', dap.continue)
+  keymap('n', '<F10>', dap.step_over)
+  keymap('n', '<F11>', dap.step_into)
+  keymap('n', '<F12>', dap.step_out)
 
-  vim.keymap.set('n', '<leader>b', dap.toggle_breakpoint)
-  vim.keymap.set('n', '<Leader>B', dap.set_breakpoint)
-  vim.keymap.set('n', '<Leader>lp', function() dap.set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end)
-  vim.keymap.set('n', '<Leader>dr', dap.repl.open)
-  vim.keymap.set('n', '<Leader>dl', dap.run_last)
+  keymap('n', '<leader>b', dap.toggle_breakpoint)
+  keymap('n', '<Leader>B', dap.set_breakpoint)
+  keymap('n', '<Leader>lp', function() dap.set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end)
+  keymap('n', '<Leader>dr', dap.repl.open)
+  keymap('n', '<Leader>dl', dap.run_last)
 
-  vim.keymap.set('n', '<Leader>w', dapui.open)
-  vim.keymap.set('n', '<Leader>W', dapui.close)
+  keymap('n', '<Leader>w', dapui.open)
+  keymap('n', '<Leader>W', dapui.close)
 end)
 
 -- later(function() require('mini.animate').setup() end)
@@ -629,9 +694,9 @@ later(function()
     return MiniPick.ui_select(items, opts, on_choice, start_opts)
   end
 
-  vim.keymap.set('n', '<C-p>', '<cmd>Pick files<cr>', {})
-  vim.keymap.set('n', '<C-f>', '<cmd>Pick grep_live<cr>', {})
-  vim.keymap.set('n', '<C-_>', '<cmd>Pick explorer<cr>', {})
+  keymap('n', '<C-p>', '<cmd>Pick files<cr>', {})
+  keymap('n', '<C-f>', '<cmd>Pick grep_live<cr>', {})
+  keymap('n', '<C-_>', '<cmd>Pick explorer<cr>', {})
 end)
 later(function()
   require('mini.files').setup({
@@ -672,7 +737,7 @@ later(function()
     callback = function(args)
       local buf_id = args.data.buf_id
       -- Tweak left-hand side of mapping to your liking
-      vim.keymap.set('n', 'g.', toggle_dotfiles, { buffer = buf_id })
+      keymap('n', 'g.', toggle_dotfiles, { buffer = buf_id })
     end,
   })
 
@@ -692,7 +757,7 @@ later(function()
 
     -- Adding `desc` will result into `show_help` entries
     local desc = 'Split ' .. direction
-    vim.keymap.set('n', lhs, rhs, { buffer = buf_id, desc = desc })
+    keymap('n', lhs, rhs, { buffer = buf_id, desc = desc })
   end
 
   vim.api.nvim_create_autocmd('User', {
@@ -705,14 +770,14 @@ later(function()
     end,
   })
 
-  vim.keymap.set('n', '<C-o>', function() MiniFiles.open() end, {})
+  keymap('n', '<C-o>', function() MiniFiles.open() end, {})
 end)
 later(function() require('mini.pairs').setup() end)
 later(function() require('mini.splitjoin').setup() end)
 later(function() require('mini.snippets').setup() end)
 later(function()
   require('mini.surround').setup()
-  vim.keymap.set('x', 'S', [[:<C-u>lua MiniSurround.add('visual')<CR>]], { silent = true })
+  keymap('x', 'S', [[:<C-u>lua MiniSurround.add('visual')<CR>]], { silent = true })
 end)
 later(function()
   require('mini.basics').setup({
@@ -830,28 +895,28 @@ later(function()
     end
   end
 
-  vim.keymap.set("n", "<leader>wy", function()
+  keymap("n", "<leader>wy", function()
     vim.g.yanked_buffer = vim.fn.bufnr('%')
   end, { silent = true })
 
-  vim.keymap.set("n", "<leader>wd", function()
+  keymap("n", "<leader>wd", function()
     vim.g.yanked_buffer = vim.fn.bufnr('%')
     vim.cmd("q")
   end, { silent = true })
 
-  vim.keymap.set("n", "<leader>wp", function()
+  keymap("n", "<leader>wp", function()
     PasteWindow('edit')
   end, { silent = true })
 
-  vim.keymap.set("n", "<leader>ws", function()
+  keymap("n", "<leader>ws", function()
     PasteWindow('split')
   end, { silent = true })
 
-  vim.keymap.set("n", "<leader>wv", function()
+  keymap("n", "<leader>wv", function()
     PasteWindow('vsplit')
   end, { silent = true })
 
-  vim.keymap.set("n", "<leader>wt", function()
+  keymap("n", "<leader>wt", function()
     PasteWindow('tabnew')
   end, { silent = true })
 end)

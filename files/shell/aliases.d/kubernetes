@@ -128,14 +128,14 @@ function kubectl-get-all() {
 }
 alias kgaa='kubectl-get-all'
 
-function kubectl-events() {
-  local filter=""
-  if [ -n "$1" ]; then
-    filter="--field-selector involvedObject.name=${@}"
-  fi
-  kubectl get event ${filter}
-}
-alias kctl-events='kubectl-events'
+# function kubectl-events() {
+#   local filter=""
+#   if [ -n "$1" ]; then
+#     filter="--field-selector involvedObject.name=${@}"
+#   fi
+#   kubectl get event ${filter}
+# }
+# alias kctl-events='kubectl-events'
 
 function kubectl-parallel() {
   KFG_DIR=${KFG_DIR:-~/.kube/config.d}
