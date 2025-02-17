@@ -44,7 +44,8 @@ now(function()
   set.expandtab = true
   set.smarttab = true
   set.scrolloff = 1
-  set.regexpengine = 1
+  -- TODO: this seems to break nvim-cmp
+  -- set.regexpengine = 1
   set.ttyfast = true
   set.lazyredraw = true
   set.ttimeout = true
@@ -131,22 +132,133 @@ now(function() require('mini.icons').setup() end)
 now(function() require('mini.tabline').setup() end)
 now(function() require('mini.statusline').setup() end)
 
-now(function()
-  require('mini.completion').setup({
-    window = {
-      info = { height = 25, width = 80, border = 'single' },
-      signature = { height = 25, width = 60, border = 'single' },
-    },
-  })
-  -- Use fuzzy matching for built-in completion
-  if vim.fn.has "nvim-0.11" == 1 then
-    vim.opt.completeopt:append "fuzzy"
-  end
+-- Auto-completion
 
-  -- Disable auto-completion in snacks inputs
-  vim.api.nvim_create_autocmd("FileType", {
-    pattern = "snacks_*",
-    command = "lua vim.b.minicompletion_disable = true"
+-- Using mini.completion
+-- now(function()
+--   require('mini.completion').setup({
+--     window = {
+--       info = { height = 25, width = 80, border = 'single' },
+--       signature = { height = 25, width = 60, border = 'single' },
+--     },
+--   })
+--   -- Use fuzzy matching for built-in completion
+--   if vim.fn.has "nvim-0.11" == 1 then
+--     vim.opt.completeopt:append "fuzzy"
+--   end
+--
+--   -- Disable auto-completion in snacks inputs
+--   vim.api.nvim_create_autocmd("FileType", {
+--     pattern = "snacks_*",
+--     command = "lua vim.b.minicompletion_disable = true"
+--   })
+-- end)
+
+-- Using nvim-cmp
+now(function()
+  add({
+    source = 'hrsh7th/nvim-cmp',
+    depends = {
+      'neovim/nvim-lspconfig',
+      'onsails/lspkind.nvim',
+      'hrsh7th/cmp-nvim-lsp',
+      'hrsh7th/cmp-buffer',
+      'hrsh7th/cmp-path',
+      'hrsh7th/cmp-emoji',
+      'hrsh7th/cmp-cmdline',
+      'hrsh7th/cmp-vsnip',
+      'hrsh7th/vim-vsnip',
+      'hrsh7th/cmp-nvim-lsp-signature-help',
+      'hrsh7th/cmp-nvim-lsp-document-symbol',
+    }
+  })
+  -- Set up nvim-cmp.
+  local cmp = require('cmp')
+  local lspkind = require('lspkind')
+
+  cmp.setup({
+    snippet = {
+      -- REQUIRED - you must specify a snippet engine
+      expand = function(args)
+        vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+        -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+        -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
+        -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+        -- vim.snippet.expand(args.body) -- For native neovim snippets (Neovim v0.10+)
+
+        -- For `mini.snippets` users:
+        -- local insert = MiniSnippets.config.expand.insert or MiniSnippets.default_insert
+        -- insert({ body = args.body }) -- Insert at cursor
+        -- cmp.resubscribe({ "TextChangedI", "TextChangedP" })
+        -- require("cmp.config").set_onetime({ sources = {} })
+      end,
+    },
+    window = {
+      completion = cmp.config.window.bordered(),
+      documentation = cmp.config.window.bordered(),
+    },
+    mapping = cmp.mapping.preset.insert({
+      ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+      ['<C-f>'] = cmp.mapping.scroll_docs(4),
+      ['<C-Space>'] = cmp.mapping.complete(),
+      ['<C-e>'] = cmp.mapping.abort(),
+      ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+    }),
+    formatting = {
+      expandable_indicator = true,
+      format = lspkind.cmp_format({
+        mode = "symbol_text",
+        menu = ({
+          buffer = "[Buffer]",
+          nvim_lsp = "[LSP]",
+          luasnip = "[LuaSnip]",
+          nvim_lua = "[Lua]",
+          latex_symbols = "[Latex]",
+        })
+      }),
+    },
+    sources = cmp.config.sources({
+      { name = 'nvim_lsp' },
+      { name = 'nvim_lsp_signature_help' },
+      { name = 'emoji' },
+      { name = 'vsnip' }, -- For vsnip users.
+      -- { name = 'luasnip' }, -- For luasnip users.
+      -- { name = 'ultisnips' }, -- For ultisnips users.
+      -- { name = 'snippy' }, -- For snippy users.
+    }, {
+      { name = 'buffer' },
+    })
+  })
+
+  -- To use git you need to install the plugin petertriho/cmp-git and uncomment lines below
+  -- Set configuration for specific filetype.
+  --[[ cmp.setup.filetype('gitcommit', {
+    sources = cmp.config.sources({
+      { name = 'git' },
+    }, {
+      { name = 'buffer' },
+    })
+ })
+ require("cmp_git").setup() ]] --
+
+  -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
+  cmp.setup.cmdline({ '/', '?' }, {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = {
+      { name = 'nvim_lsp_document_symbol' },
+      { name = 'buffer' }
+    }
+  })
+
+  -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+  cmp.setup.cmdline(':', {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = cmp.config.sources({
+      { name = 'path' }
+    }, {
+      { name = 'cmdline' }
+    }),
+    matching = { disallow_symbol_nonprefix_matching = false }
   })
 end)
 
@@ -231,12 +343,15 @@ now(function()
     },
   })
 
+  local capabilities = require('cmp_nvim_lsp').default_capabilities()
   require('mason-lspconfig').setup_handlers({
     -- The first entry (without a key) will be the default handler
     -- and will be called for each installed server that doesn't have
     -- a dedicated handler.
     function(server_name) -- default handler (optional)
-      require('lspconfig')[server_name].setup {}
+      require('lspconfig')[server_name].setup {
+        capabilities = capabilities,
+      }
     end,
     -- Next, you can provide a dedicated handler for specific servers.
     -- For example, a handler override for the `rust_analyzer`:
@@ -245,6 +360,7 @@ now(function()
     -- end
     ['gopls'] = function()
       require('lspconfig').gopls.setup {
+        capabilities = capabilities,
         cmd = { "gopls", "-remote=auto" },
         filetypes = { "go", "gomod", "gowork", "gotmpl", "gohtmltmpl", "gotexttmpl" },
         root_dir = vim.fs.dirname(
@@ -831,7 +947,6 @@ later(function() require('mini.visits').setup() end)
 later(function() require('mini.fuzzy').setup() end)
 later(function() require('mini.cursorword').setup() end)
 later(function() require('mini.hipatterns').setup() end)
-later(function() require('mini.indentscope').setup() end)
 later(function()
   local map = require('mini.map')
   map.setup({
@@ -865,11 +980,19 @@ later(function()
   -- require('render-markdown').setup({})
 end)
 
+-- Indentation marks and scope
+later(function() require('mini.indentscope').setup() end)
+
 -- later(function()
 --   add({
 --     source = 'nvimdev/indentmini.nvim'
 --   })
 --   require("indentmini").setup()
+--   -- Colors are applied automatically based on user-defined highlight groups.
+--   -- There is no default value.
+--   vim.cmd.highlight('IndentLine guifg=#123456')
+--   -- Current indent line highlight
+--   vim.cmd.highlight('IndentLineCurrent guifg=#123456')
 -- end)
 
 later(function()
