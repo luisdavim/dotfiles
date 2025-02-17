@@ -342,6 +342,7 @@ now(function()
   })
 
   local capabilities = require('cmp_nvim_lsp').default_capabilities()
+  capabilities = vim.tbl_deep_extend('force', vim.lsp.protocol.make_client_capabilities(), capabilities)
   require('mason-lspconfig').setup_handlers({
     -- The first entry (without a key) will be the default handler
     -- and will be called for each installed server that doesn't have
@@ -900,7 +901,7 @@ later(function()
 end)
 later(function() require('mini.pairs').setup() end)
 later(function() require('mini.splitjoin').setup() end)
-later(function() require('mini.snippets').setup() end)
+-- later(function() require('mini.snippets').setup() end)
 later(function()
   require('mini.surround').setup()
   keymap('x', 'S', [[:<C-u>lua MiniSurround.add('visual')<CR>]], { silent = true })
