@@ -44,8 +44,6 @@ now(function()
   set.expandtab = true
   set.smarttab = true
   set.scrolloff = 1
-  -- TODO: this seems to break nvim-cmp
-  -- set.regexpengine = 1
   set.ttyfast = true
   set.lazyredraw = true
   set.ttimeout = true
