@@ -130,6 +130,20 @@ now(function() require('mini.icons').setup() end)
 now(function() require('mini.tabline').setup() end)
 now(function() require('mini.statusline').setup() end)
 
+now(function() require('mini.starter').setup() end)
+now(function()
+  local misc = require('mini.misc')
+  misc.setup({ make_global = { "put", "put_text" } })
+  misc.setup_restore_cursor()
+end)
+
+now(function()
+  add({
+    source = 'ahmedkhalf/project.nvim'
+  })
+  require('project_nvim').setup()
+end)
+
 -- Auto-completion
 
 -- Using mini.completion
@@ -258,20 +272,6 @@ now(function()
     }),
     matching = { disallow_symbol_nonprefix_matching = false }
   })
-end)
-
-now(function() require('mini.starter').setup() end)
-now(function()
-  local misc = require('mini.misc')
-  misc.setup({ make_global = { "put", "put_text" } })
-  misc.setup_restore_cursor()
-end)
-
-now(function()
-  add({
-    source = 'ahmedkhalf/project.nvim'
-  })
-  require('project_nvim').setup()
 end)
 
 -- LSP config
@@ -825,6 +825,7 @@ later(function()
   keymap('n', '<C-f>', '<cmd>Pick grep_live<cr>', {})
   keymap('n', '<C-_>', '<cmd>Pick explorer<cr>', {})
 end)
+
 later(function()
   require('mini.files').setup({
     -- Module mappings created only inside explorer.
@@ -899,7 +900,8 @@ later(function()
 
   keymap('n', '<C-o>', function() MiniFiles.open() end, {})
 end)
-later(function() require('mini.pairs').setup() end)
+
+later(function() require('mini.pairs').setup({ modes = { insert = true, command = true, terminal = true } }) end)
 later(function() require('mini.splitjoin').setup() end)
 -- later(function() require('mini.snippets').setup() end)
 later(function()
@@ -945,7 +947,22 @@ later(function() require('mini.sessions').setup() end)
 later(function() require('mini.visits').setup() end)
 later(function() require('mini.fuzzy').setup() end)
 later(function() require('mini.cursorword').setup() end)
-later(function() require('mini.hipatterns').setup() end)
+
+later(function()
+  local hipatterns = require('mini.hipatterns')
+  local hi_words = MiniExtra.gen_highlighter.words
+  hipatterns.setup({
+    highlighters = {
+      fixme = hi_words({ 'FIXME', 'Fixme', 'fixme' }, 'MiniHipatternsFixme'),
+      hack = hi_words({ 'HACK', 'Hack', 'hack' }, 'MiniHipatternsHack'),
+      todo = hi_words({ 'TODO', 'Todo', 'todo' }, 'MiniHipatternsTodo'),
+      note = hi_words({ 'NOTE', 'Note', 'note' }, 'MiniHipatternsNote'),
+
+      hex_color = hipatterns.gen_highlighter.hex_color(),
+    },
+  })
+end)
+
 later(function()
   local map = require('mini.map')
   map.setup({
