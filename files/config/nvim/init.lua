@@ -131,6 +131,7 @@ now(function() require('mini.tabline').setup() end)
 now(function() require('mini.statusline').setup() end)
 
 now(function() require('mini.starter').setup() end)
+
 now(function()
   local misc = require('mini.misc')
   misc.setup({ make_global = { "put", "put_text" } })
@@ -796,6 +797,7 @@ later(function() require('mini.align').setup() end)
 later(function() require('mini.comment').setup() end)
 later(function() require('mini.move').setup() end)
 later(function() require('mini.operators').setup() end)
+
 later(function()
   require('mini.pick').setup()
 
@@ -903,22 +905,31 @@ end)
 
 later(function() require('mini.pairs').setup({ modes = { insert = true, command = true, terminal = true } }) end)
 later(function() require('mini.splitjoin').setup() end)
--- later(function() require('mini.snippets').setup() end)
+
+-- later(function()
+--   local snippets = require('mini.snippets')
+--   local gen_loader = snippets.gen_loader
+--   snippets.setup({ snippets = { gen_loader.from_lang() } })
+-- end)
+
 later(function()
   require('mini.surround').setup()
   keymap('x', 'S', [[:<C-u>lua MiniSurround.add('visual')<CR>]], { silent = true })
 end)
+
 later(function()
   require('mini.basics').setup({
     options = { extra_ui = true, win_borders = "single" },
     mappings = { basic = true, windows = true, move_with_alt = true },
   })
 end)
+
 later(function() require('mini.bracketed').setup() end)
 later(function() require('mini.bufremove').setup() end)
 later(function() require('mini.clue').setup() end)
 later(function() require('mini.diff').setup() end)
 later(function() require('mini.extra').setup() end)
+
 later(function()
   require('mini.git').setup()
 
@@ -941,6 +952,7 @@ later(function()
     pcall(vim.cmd('vertical Git blame -- %'))
   end, {})
 end)
+
 later(function() require('mini.jump').setup() end)
 later(function() require('mini.jump2d').setup() end)
 later(function() require('mini.sessions').setup() end)
@@ -976,6 +988,7 @@ later(function()
     }
   })
 end)
+
 later(function()
   require('mini.trailspace').setup()
 
