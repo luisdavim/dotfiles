@@ -610,23 +610,6 @@ now(function()
   })
 end)
 
--- now(function()
---   add({
---     source = 'tanvirtin/vgit.nvim',
---     depends = {
---       'nvim-lua/plenary.nvim'
---     }
---   })
---   require("vgit").setup()
--- end)
-
-now(function()
-  add({
-    source = 'sindrets/diffview.nvim'
-  })
-  require("diffview").setup()
-end)
-
 -- TODO: pick some snacks
 -- now(function()
 --   add({
@@ -787,6 +770,15 @@ later(function()
   keymap('n', '<Leader>W', dapui.close)
 end)
 
+later(function()
+  require('mini.basics').setup({
+    options = { extra_ui = true, win_borders = "single" },
+    mappings = { basic = true, windows = true, move_with_alt = true },
+  })
+end)
+
+later(function() require('mini.extra').setup() end)
+
 -- later(function() require('mini.animate').setup() end)
 -- later(function() require('mini.base16').setup() end)
 -- later(function() require('mini.colors').setup() end)
@@ -906,53 +898,12 @@ end)
 later(function() require('mini.pairs').setup({ modes = { insert = true, command = true, terminal = true } }) end)
 later(function() require('mini.splitjoin').setup() end)
 
--- later(function()
---   local snippets = require('mini.snippets')
---   local gen_loader = snippets.gen_loader
---   snippets.setup({ snippets = { gen_loader.from_lang() } })
--- end)
-
 later(function()
   require('mini.surround').setup()
   keymap('x', 'S', [[:<C-u>lua MiniSurround.add('visual')<CR>]], { silent = true })
 end)
 
-later(function()
-  require('mini.basics').setup({
-    options = { extra_ui = true, win_borders = "single" },
-    mappings = { basic = true, windows = true, move_with_alt = true },
-  })
-end)
-
 later(function() require('mini.bracketed').setup() end)
-later(function() require('mini.bufremove').setup() end)
-later(function() require('mini.clue').setup() end)
-later(function() require('mini.diff').setup() end)
-later(function() require('mini.extra').setup() end)
-
-later(function()
-  require('mini.git').setup()
-
-  local align_blame = function(au_data)
-    if au_data.data.git_subcommand ~= 'blame' then return end
-
-    -- Align blame output with source
-    local win_src = au_data.data.win_source
-    vim.wo.wrap = false
-    vim.fn.winrestview({ topline = vim.fn.line('w0', win_src) })
-    vim.api.nvim_win_set_cursor(0, { vim.fn.line('.', win_src), 0 })
-
-    -- Bind both windows so that they scroll together
-    vim.wo[win_src].scrollbind, vim.wo.scrollbind = true, true
-  end
-
-  local au_opts = { pattern = 'MiniGitCommandSplit', callback = align_blame }
-  vim.api.nvim_create_autocmd('User', au_opts)
-  vim.api.nvim_create_user_command('Gblame', function()
-    pcall(vim.cmd('vertical Git blame -- %'))
-  end, {})
-end)
-
 later(function() require('mini.jump').setup() end)
 later(function() require('mini.jump2d').setup() end)
 later(function() require('mini.sessions').setup() end)
@@ -972,20 +923,6 @@ later(function()
 
       hex_color = hipatterns.gen_highlighter.hex_color(),
     },
-  })
-end)
-
-later(function()
-  local map = require('mini.map')
-  map.setup({
-    integrations = {
-      map.gen_integration.builtin_search(),
-      map.gen_integration.diff(),
-      map.gen_integration.diagnostic(),
-    },
-    symbols = {
-      encode = map.gen_encode_symbols.dot('3x2')
-    }
   })
 end)
 
@@ -1019,7 +956,7 @@ later(function() require('mini.indentscope').setup() end)
 --   require("indentmini").setup()
 --   -- Colors are applied automatically based on user-defined highlight groups.
 --   -- There is no default value.
---   vim.cmd.highlight('IndentLine guifg=#123456')
+--   vim.cmd.highlight('IndentLine guifg=#999999')
 --   -- Current indent line highlight
 --   vim.cmd.highlight('IndentLineCurrent guifg=#123456')
 -- end)
@@ -1038,6 +975,64 @@ later(function()
   }
 end)
 
+-- Git and diff
+
+-- later(function()
+--   add({
+--     source = 'tanvirtin/vgit.nvim',
+--     depends = {
+--       'nvim-lua/plenary.nvim'
+--     }
+--   })
+--   require("vgit").setup()
+-- end)
+
+later(function()
+  add({
+    source = 'sindrets/diffview.nvim'
+  })
+  require("diffview").setup()
+end)
+
+later(function() require('mini.diff').setup() end)
+
+later(function()
+  local map = require('mini.map')
+  map.setup({
+    integrations = {
+      map.gen_integration.builtin_search(),
+      map.gen_integration.diff(),
+      map.gen_integration.diagnostic(),
+    },
+    symbols = {
+      encode = map.gen_encode_symbols.dot('3x2')
+    }
+  })
+end)
+
+later(function()
+  require('mini.git').setup()
+
+  local align_blame = function(au_data)
+    if au_data.data.git_subcommand ~= 'blame' then return end
+
+    -- Align blame output with source
+    local win_src = au_data.data.win_source
+    vim.wo.wrap = false
+    vim.fn.winrestview({ topline = vim.fn.line('w0', win_src) })
+    vim.api.nvim_win_set_cursor(0, { vim.fn.line('.', win_src), 0 })
+
+    -- Bind both windows so that they scroll together
+    vim.wo[win_src].scrollbind, vim.wo.scrollbind = true, true
+  end
+
+  local au_opts = { pattern = 'MiniGitCommandSplit', callback = align_blame }
+  vim.api.nvim_create_autocmd('User', au_opts)
+  vim.api.nvim_create_user_command('Gblame', function()
+    pcall(vim.cmd('vertical Git blame -- %'))
+  end, {})
+end)
+
 later(function()
   add({
     source = 'f-person/git-blame.nvim'
@@ -1048,6 +1043,10 @@ later(function()
     clear_event = 'CursorHoldI',
   }
 end)
+
+-- Buffer and window management
+
+later(function() require('mini.bufremove').setup() end)
 
 -- Yank/paste buffers
 later(function()
@@ -1090,4 +1089,50 @@ later(function()
   keymap("n", "<leader>wt", function()
     PasteWindow('tabnew')
   end, { silent = true })
+end)
+
+-- later(function()
+--   local snippets = require('mini.snippets')
+--   local gen_loader = snippets.gen_loader
+--   snippets.setup({ snippets = { gen_loader.from_lang() } })
+-- end)
+
+later(function()
+  local miniclue = require('mini.clue')
+  --stylua: ignore
+  miniclue.setup({
+    clues = {
+      -- TODO: add custom mappings clues
+      miniclue.gen_clues.builtin_completion(),
+      miniclue.gen_clues.g(),
+      miniclue.gen_clues.marks(),
+      miniclue.gen_clues.registers(),
+      miniclue.gen_clues.windows({ submode_resize = true }),
+      miniclue.gen_clues.z(),
+    },
+    triggers = {
+      { mode = 'n', keys = '<Leader>' }, -- Leader triggers
+      { mode = 'x', keys = '<Leader>' },
+      { mode = 'n', keys = [[\]] },      -- mini.basics
+      { mode = 'n', keys = '[' },        -- mini.bracketed
+      { mode = 'n', keys = ']' },
+      { mode = 'x', keys = '[' },
+      { mode = 'x', keys = ']' },
+      { mode = 'i', keys = '<C-x>' }, -- Built-in completion
+      { mode = 'n', keys = 'g' },     -- `g` key
+      { mode = 'x', keys = 'g' },
+      { mode = 'n', keys = "'" },     -- Marks
+      { mode = 'n', keys = '`' },
+      { mode = 'x', keys = "'" },
+      { mode = 'x', keys = '`' },
+      { mode = 'n', keys = '"' }, -- Registers
+      { mode = 'x', keys = '"' },
+      { mode = 'i', keys = '<C-r>' },
+      { mode = 'c', keys = '<C-r>' },
+      { mode = 'n', keys = '<C-w>' }, -- Window commands
+      { mode = 'n', keys = 'z' },     -- `z` key
+      { mode = 'x', keys = 'z' },
+    },
+    window = { config = { border = 'double' } },
+  })
 end)
