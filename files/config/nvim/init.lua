@@ -49,7 +49,7 @@ now(function()
   set.ttimeout = true
   set.ttimeoutlen = 50
   set.updatetime = 300
-
+  set.completeopt = 'menu,menuone,noselect'
   set.hlsearch = true
 
   -- Automatically create parent directories
@@ -775,6 +775,7 @@ later(function()
     options = { extra_ui = true, win_borders = "single" },
     mappings = { basic = true, windows = true, move_with_alt = true },
   })
+  vim.opt.completeopt = 'menu,menuone,noselect'
 end)
 
 later(function() require('mini.extra').setup() end)
@@ -977,38 +978,25 @@ end)
 
 -- Git and diff
 
--- later(function()
---   add({
---     source = 'tanvirtin/vgit.nvim',
---     depends = {
---       'nvim-lua/plenary.nvim'
---     }
---   })
---   require("vgit").setup()
--- end)
-
-later(function()
+-- TODO: this doesn't seem to play nice with later
+now(function()
   add({
-    source = 'sindrets/diffview.nvim'
-  })
-  require("diffview").setup()
-end)
-
-later(function() require('mini.diff').setup() end)
-
-later(function()
-  local map = require('mini.map')
-  map.setup({
-    integrations = {
-      map.gen_integration.builtin_search(),
-      map.gen_integration.diff(),
-      map.gen_integration.diagnostic(),
-    },
-    symbols = {
-      encode = map.gen_encode_symbols.dot('3x2')
+    source = 'tanvirtin/vgit.nvim',
+    depends = {
+      'nvim-lua/plenary.nvim'
     }
   })
+  require("vgit").setup()
 end)
+
+-- later(function()
+--   add({
+--     source = 'sindrets/diffview.nvim'
+--   })
+--   require("diffview").setup()
+-- end)
+--
+later(function() require('mini.diff').setup() end)
 
 later(function()
   require('mini.git').setup()
@@ -1032,21 +1020,35 @@ later(function()
     pcall(vim.cmd('vertical Git blame -- %'))
   end, {})
 end)
-
-later(function()
-  add({
-    source = 'f-person/git-blame.nvim'
-  })
-  require('gitblame').setup {
-    enabled = false,
-    schedule_event = 'CursorHold',
-    clear_event = 'CursorHoldI',
-  }
-end)
+--
+-- later(function()
+--   add({
+--     source = 'f-person/git-blame.nvim'
+--   })
+--   require('gitblame').setup {
+--     enabled = false,
+--     schedule_event = 'CursorHold',
+--     clear_event = 'CursorHoldI',
+--   }
+-- end)
 
 -- Buffer and window management
 
 later(function() require('mini.bufremove').setup() end)
+
+later(function()
+  local map = require('mini.map')
+  map.setup({
+    integrations = {
+      map.gen_integration.builtin_search(),
+      map.gen_integration.diff(),
+      map.gen_integration.diagnostic(),
+    },
+    symbols = {
+      encode = map.gen_encode_symbols.dot('3x2')
+    }
+  })
+end)
 
 -- Yank/paste buffers
 later(function()
