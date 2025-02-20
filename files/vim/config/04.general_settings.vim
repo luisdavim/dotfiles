@@ -64,6 +64,8 @@
   set laststatus=2
   set ruler
   set showcmd
+  set splitbelow
+  set splitright
 
   set encoding=utf-8
   set tabstop=2 shiftwidth=2 expandtab
@@ -132,6 +134,7 @@
   " always show signcolumns
   set signcolumn=yes
 
+  " try menu,menuone,noselect
   set completeopt=menuone,longest
 
   set wildmenu

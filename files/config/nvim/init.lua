@@ -49,7 +49,7 @@ now(function()
   set.ttimeout = true
   set.ttimeoutlen = 50
   set.updatetime = 300
-  set.completeopt = 'menu,menuone,noselect'
+  set.completeopt = 'menuone'
   set.hlsearch = true
 
   -- Automatically create parent directories
@@ -155,6 +155,8 @@ end)
 --       signature = { height = 25, width = 60, border = 'single' },
 --     },
 --   })
+--   -- Override completeopt
+--   vim.opt.completeopt = 'longest,menuone'
 --   -- Use fuzzy matching for built-in completion
 --   if vim.fn.has "nvim-0.11" == 1 then
 --     vim.opt.completeopt:append "fuzzy"
@@ -775,8 +777,7 @@ later(function()
     options = { extra_ui = true, win_borders = "single" },
     mappings = { basic = true, windows = true, move_with_alt = true },
   })
-  vim.opt.completeopt = 'menu,menuone,noselect'
-  vim.opt_local.completeopt = 'menu,menuone,noselect'
+  vim.opt.completeopt = 'menuone'
 end)
 
 later(function() require('mini.extra').setup() end)
