@@ -776,6 +776,7 @@ later(function()
     mappings = { basic = true, windows = true, move_with_alt = true },
   })
   vim.opt.completeopt = 'menu,menuone,noselect'
+  vim.opt_local.completeopt = 'menu,menuone,noselect'
 end)
 
 later(function() require('mini.extra').setup() end)
