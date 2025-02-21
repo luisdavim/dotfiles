@@ -229,18 +229,22 @@ now(function()
           luasnip = "[LuaSnip]",
           nvim_lua = "[Lua]",
           latex_symbols = "[Latex]",
+          path = "[Path]"
         })
       }),
+    },
+    completion = {
+      completeopt = 'menuone',
     },
     sources = cmp.config.sources({
       { name = 'nvim_lsp' },
       { name = 'nvim_lsp_signature_help' },
+      { name = 'path' },
       { name = 'emoji' },
       { name = 'vsnip' }, -- For vsnip users.
       -- { name = 'luasnip' }, -- For luasnip users.
       -- { name = 'ultisnips' }, -- For ultisnips users.
       -- { name = 'snippy' }, -- For snippy users.
-    }, {
       { name = 'buffer' },
     })
   })
@@ -293,9 +297,6 @@ now(function()
     sync_install = false,
     auto_install = true,
     highlight = { enable = true },
-    ensure_installed = {},
-    ignore_install = {},
-    modules = {}
   })
   add({
     source = 'nvim-treesitter/nvim-treesitter-context',
@@ -330,7 +331,6 @@ now(function()
   require('mason').setup()
   require("mason-lspconfig").setup({
     automatic_installation = true,
-    ensure_installed = {}
   })
   require('mason-tool-installer').setup({
     auto_update = false,
@@ -674,7 +674,6 @@ later(function()
   })
   require('mason-nvim-dap').setup({
     automatic_installation = true,
-    ensure_installed = {},
   })
 
   require("nvim-dap-virtual-text").setup({})
