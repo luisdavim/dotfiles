@@ -172,6 +172,9 @@ installCargo() {
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
     [ -f "${HOME}/.cargo/env" ] && source "${HOME}/.cargo/env"
     rustup component add rls rust-analysis rust-src
+    # if [[ $OSTYPE == *"android"* ]]; then
+    #   rustup target add aarch64-linux-android
+    # fi
   fi
 
   installPkgList "cargo install --force" files/pkgs/cargo.lst
