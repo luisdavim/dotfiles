@@ -292,7 +292,6 @@ now(function()
     -- Perform action after every checkout
     hooks = { post_checkout = function() vim.cmd('TSUpdate') end },
   })
-  -- Possible to immediately execute code which depends on the added plugin
   require('nvim-treesitter.configs').setup({
     sync_install = false,
     auto_install = true,
@@ -313,7 +312,6 @@ now(function()
 
   add({
     source = 'neovim/nvim-lspconfig',
-    -- Supply dependencies near target plugin
     depends = {
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
@@ -987,8 +985,25 @@ now(function()
       'nvim-lua/plenary.nvim'
     }
   })
-  require("vgit").setup()
+  require("vgit").setup({
+    settings = {
+      live_blame = {
+        enabled = false,
+      },
+    },
+  })
 end)
+
+-- later(function()
+--   add({
+--     source = 'f-person/git-blame.nvim'
+--   })
+--   require('gitblame').setup {
+--     enabled = false,
+--     schedule_event = 'CursorHold',
+--     clear_event = 'CursorHoldI',
+--   }
+-- end)
 
 -- later(function()
 --   add({
@@ -996,7 +1011,7 @@ end)
 --   })
 --   require("diffview").setup()
 -- end)
---
+
 later(function() require('mini.diff').setup() end)
 
 later(function()
@@ -1021,17 +1036,6 @@ later(function()
     pcall(vim.cmd('vertical Git blame -- %'))
   end, {})
 end)
---
--- later(function()
---   add({
---     source = 'f-person/git-blame.nvim'
---   })
---   require('gitblame').setup {
---     enabled = false,
---     schedule_event = 'CursorHold',
---     clear_event = 'CursorHoldI',
---   }
--- end)
 
 -- Buffer and window management
 
