@@ -38,7 +38,7 @@ function getlocaltz {
     TZONE='Europe/Dublin'
   fi
 
-  echo $TZONE
+  echo "${TZONE}"
 }
 
 # Show the time from the specified input time zone in the specified output
@@ -63,7 +63,7 @@ TZBASE=$(getlocaltz)
 
 # Time zones to display
 # See /usr/share/zoneinfo/ (/var/db/timezone/zoneinfo/ on macOS) for more names
-TZONES='UTC US/Eastern US/Central US/Mountain US/Pacific Asia/Calcutta Asia/Karachi'
+TZONES='UTC Europe/Amsterdam Europe/Sofia US/Eastern US/Central US/Mountain US/Pacific Asia/Calcutta Asia/Karachi'
 
 # Display format
 FORMAT='%H:%M (%p) %Z %a %d %b %Y'
@@ -107,8 +107,8 @@ else
   time=$(date +%T)
 fi
 
-for tz in $TZONES; do
-  showtime "$TZBASE" "$tz" "$time"
+for tz in ${TZONES}; do
+  showtime "${TZBASE}" "$tz" "$time"
 done
 
 echo
