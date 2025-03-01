@@ -245,6 +245,7 @@ now(function()
       -- { name = 'luasnip' }, -- For luasnip users.
       -- { name = 'ultisnips' }, -- For ultisnips users.
       -- { name = 'snippy' }, -- For snippy users.
+    }, {
       { name = 'buffer' },
     })
   })
@@ -263,8 +264,13 @@ now(function()
   -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
   cmp.setup.cmdline({ '/', '?' }, {
     mapping = cmp.mapping.preset.cmdline(),
+    completion = {
+      completeopt = 'menuone,noselect',
+    },
     sources = {
       { name = 'nvim_lsp_document_symbol' },
+    },
+    {
       { name = 'buffer' }
     }
   })
@@ -272,10 +278,13 @@ now(function()
   -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
   cmp.setup.cmdline(':', {
     mapping = cmp.mapping.preset.cmdline(),
+    completion = {
+      completeopt = 'menuone,noselect',
+    },
     sources = cmp.config.sources({
-      { name = 'path' }
+      { name = 'path' },
     }, {
-      { name = 'cmdline' }
+      { name = 'cmdline' },
     }),
     matching = { disallow_symbol_nonprefix_matching = false }
   })
@@ -767,6 +776,15 @@ later(function()
 
   keymap('n', '<Leader>w', dapui.open)
   keymap('n', '<Leader>W', dapui.close)
+end)
+
+later(function()
+  add({
+    source = 'johmsalas/text-case.nvim'
+  })
+  require('textcase').setup({
+    substitude_command_name = 'S',
+  })
 end)
 
 later(function()
