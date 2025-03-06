@@ -352,13 +352,14 @@ now(function()
   })
 
   local capabilities = require('cmp_nvim_lsp').default_capabilities()
+  local lspconfig = require('lspconfig')
   capabilities = vim.tbl_deep_extend('force', vim.lsp.protocol.make_client_capabilities(), capabilities)
   require('mason-lspconfig').setup_handlers({
     -- The first entry (without a key) will be the default handler
     -- and will be called for each installed server that doesn't have
     -- a dedicated handler.
     function(server_name) -- default handler (optional)
-      require('lspconfig')[server_name].setup {
+      lspconfig[server_name].setup {
         capabilities = capabilities,
       }
     end,
@@ -368,7 +369,7 @@ now(function()
     --   require('rust-tools').setup {}
     -- end
     ['gopls'] = function()
-      require('lspconfig').gopls.setup {
+      lspconfig.gopls.setup {
         capabilities = capabilities,
         cmd = { "gopls", "-remote=auto" },
         filetypes = { "go", "gomod", "gowork", "gotmpl", "gohtmltmpl", "gotexttmpl" },
@@ -412,6 +413,22 @@ now(function()
               useany = true,
               unreachable = false,
               shadow = true,
+            },
+          },
+        },
+      }
+    end,
+    ['bashls'] = function()
+      lspconfig.bashls.setup {
+        settings = {
+          bashIde = {
+            shfmt = {
+              -- simplifyCode = true,
+              -- binaryNextLine = true,
+              languageDialect = "auto",
+              spaceRedirects = true,
+              caseIndent = true,
+              indentSize = 2,
             },
           },
         },
