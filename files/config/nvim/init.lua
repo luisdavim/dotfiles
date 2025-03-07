@@ -267,12 +267,11 @@ now(function()
     completion = {
       completeopt = 'menuone,noselect',
     },
-    sources = {
+    sources = cmp.config.sources({
       { name = 'nvim_lsp_document_symbol' },
-    },
-    {
-      { name = 'buffer' }
-    }
+    }, {
+      { name = 'buffer' },
+    }),
   })
 
   -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
