@@ -25,23 +25,23 @@ while [[ $# -gt 0 ]]; do
   key="$1"
 
   case $key in
-  -h | --help) usage "" ;;
-  -d | --debug)
-    DEBUG="true"
-    shift
-    ;;
-  -f | --force)
-    FORCE="true"
-    shift
-    ;;
-  -r | --rollback)
-    ROLLBACK="true"
-    shift
-    ;;
-  *)
-    POSITIONAL+=("$1") # save it in an array for later
-    shift              # past argument
-    ;;
+    -h | --help) usage "" ;;
+    -d | --debug)
+      DEBUG="true"
+      shift
+      ;;
+    -f | --force)
+      FORCE="true"
+      shift
+      ;;
+    -r | --rollback)
+      ROLLBACK="true"
+      shift
+      ;;
+    *)
+      POSITIONAL+=("$1") # save it in an array for later
+      shift              # past argument
+      ;;
   esac
 done
 
@@ -68,4 +68,3 @@ if [[ "${FORCE}" == "true" ]]; then
 fi
 sleep 1
 echo "${releases}" | xargs -r -L1 kubectl patch hr --type='json' -p='[{"op": "replace", "path": "/spec/suspend", "value": false}]'
-

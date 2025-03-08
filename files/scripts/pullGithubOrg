@@ -50,7 +50,7 @@ while [ -n "${repos}" ]; do
       echo -e "${COL_YELLOW}>>>${COL_RESET} Updating ${repo}"
       cd "${repo}" || exit
       if [[ -n $upstream ]]; then
-        if ! git remote | grep -qv 'upstream' &>/dev/null; then
+        if ! git remote | grep -qv 'upstream' &> /dev/null; then
           echo -e "${COL_YELLOW}>>>${COL_RESET} Adding remote upstream ${upstream}"
           git remote add upstream "${upstream}"
         fi

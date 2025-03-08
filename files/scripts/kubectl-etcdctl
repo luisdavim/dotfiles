@@ -35,45 +35,45 @@ while [[ $# -gt 0 ]]; do
   key="$1"
 
   case $key in
-  -h | --help) usage "" ;;
-  -d | --debug)
-    DEBUG=true
-    shift
-    ;;
-  -m | --etcd-manager)
-    ETCD_MANAGER=true
-    shift
-    ;;
-  -n | --namespace)
-    NAMESPACE="$2"
-    shift 2
-    ;;
-  -p | --pod)
-    ETCD_POD="$2"
-    shift 2
-    ;;
-  --)
-    shift
-    break
-    ;;
-  *)
-    POSITIONAL+=("$1")
-    shift
-    ;;
+    -h | --help) usage "" ;;
+    -d | --debug)
+      DEBUG=true
+      shift
+      ;;
+    -m | --etcd-manager)
+      ETCD_MANAGER=true
+      shift
+      ;;
+    -n | --namespace)
+      NAMESPACE="$2"
+      shift 2
+      ;;
+    -p | --pod)
+      ETCD_POD="$2"
+      shift 2
+      ;;
+    --)
+      shift
+      break
+      ;;
+    *)
+      POSITIONAL+=("$1")
+      shift
+      ;;
   esac
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters
 
 pod='$(kubectl get po -n ${NAMESPACE} -l component=etcd -o name | head -n1)'
 
-read -r -d '' cmd_prefix <<'EOF'
+read -r -d '' cmd_prefix << 'EOF'
 export ETCDCTL_API=3
 alias etcdctl='etcdctl --command-timeout=120s --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key --endpoints=https://127.0.0.1:2379'
 EOF
 
 if [[ ${ETCD_MANAGER} == "true" ]]; then
   pod='$(kubectl get po -n ${NAMESPACE} -l k8s-app=etcd-manager-main -o name | head -n1)'
-  read -r -d '' cmd_prefix <<'EOF'
+  read -r -d '' cmd_prefix << 'EOF'
 export ETCDCTL_API=3
 export DIRNAME="/opt/$(ls /opt -1 | tail -n 1)"
 export CERTDIR=/rootfs/srv/kubernetes/kube-apiserver/
@@ -88,14 +88,15 @@ else
 fi
 
 if [[ -z "${pod}" ]]; then
-  echo "could not find etcd pod"; exit 1
+  echo "could not find etcd pod"
+  exit 1
 fi
 
 k8s_cmd="kubectl exec -i --stdin ${pod} -n ${NAMESPACE} -- sh"
 
 case ${1} in
   'compact')
-    read -r -d '' cmd <<'EOF'
+    read -r -d '' cmd << 'EOF'
 rev=$(etcdctl endpoint status -w json | egrep -o '"revision":[0-9]*' | egrep -o '[0-9]*')
 etcdctl compact $rev
 etcdctl defrag
@@ -103,7 +104,7 @@ etcdctl alarm disarm
 EOF
     ;;
   'count')
-    read -r -d '' cmd <<'EOF'
+    read -r -d '' cmd << 'EOF'
 etcdctl get /registry --prefix=true --keys-only | grep -v ^$ | awk -F'/' '{ if ($3 ~ /\./) {h[$3"/"$4]++} else { h[$3]++ }} END { for(k in h) print h[k], k }' | sort -n
 EOF
     ;;

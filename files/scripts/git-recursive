@@ -44,43 +44,44 @@ while [[ $# -gt 0 ]]; do
   key="$1"
 
   case $key in
-  -h | --help) _help ;;
-  -H | --hidden)
-    HIDDEN=true
-    shift
-    ;;
-  *)
-    POSITIONAL+=("$1") # save it in an array for later
-    shift              # past argument
-    ;;
+    -h | --help) _help ;;
+    -H | --hidden)
+      HIDDEN=true
+      shift
+      ;;
+    *)
+      POSITIONAL+=("$1") # save it in an array for later
+      shift              # past argument
+      ;;
   esac
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters
 
 case "${1}" in
-help) _help ;;
-sb)
-  recursive-cmd 'git status -sb' "${2}"
-  ;;
-clean)
-  recursive-cmd 'git clean -fdX' "${2}"
-  ;;
-gc)
-  recursive-cmd 'git gc --prune=all' "${2}"
-  ;;
-reset)
-  recursive-cmd 'git fetch origin; git reset --hard $(git remote | head -1)/$(git name-rev --name-only HEAD); git clean -fdx' "${2}"
-  ;;
-prune)
-  recursive-cmd 'git fetch --all -p; git branch -vv | grep "\[.*: gone\]" | awk '"'"'{ print $1 }'"'"' | xargs -r -n 1 git branch -d' "${2}"
-  ;;
-purge)
-  recursive-cmd 'git branch -r --merged | grep -v master | sed "s/origin\///" | xargs -r -n 1 git push --delete origin' "${2}"
-  recursive-cmd 'git fetch --all -p; git branch -vv | grep "\[.*: gone\]" | awk '"'"'{ print $1 }'"'"' | xargs -r -n 1 git branch -d' "${2}"
-  ;;
-list | ls)
-  recursive-cmd 'git remote get-url origin'
-  ;;
-*) recursive-cmd "git ${*}"
-  ;;
+  help) _help ;;
+  sb)
+    recursive-cmd 'git status -sb' "${2}"
+    ;;
+  clean)
+    recursive-cmd 'git clean -fdX' "${2}"
+    ;;
+  gc)
+    recursive-cmd 'git gc --prune=all' "${2}"
+    ;;
+  reset)
+    recursive-cmd 'git fetch origin; git reset --hard $(git remote | head -1)/$(git name-rev --name-only HEAD); git clean -fdx' "${2}"
+    ;;
+  prune)
+    recursive-cmd 'git fetch --all -p; git branch -vv | grep "\[.*: gone\]" | awk '"'"'{ print $1 }'"'"' | xargs -r -n 1 git branch -d' "${2}"
+    ;;
+  purge)
+    recursive-cmd 'git branch -r --merged | grep -v master | sed "s/origin\///" | xargs -r -n 1 git push --delete origin' "${2}"
+    recursive-cmd 'git fetch --all -p; git branch -vv | grep "\[.*: gone\]" | awk '"'"'{ print $1 }'"'"' | xargs -r -n 1 git branch -d' "${2}"
+    ;;
+  list | ls)
+    recursive-cmd 'git remote get-url origin'
+    ;;
+  *)
+    recursive-cmd "git ${*}"
+    ;;
 esac

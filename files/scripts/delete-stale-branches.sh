@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 while getopts "d" opt; do
   case $opt in
-    d) dryRunOpt="--dry-run";;
+    d) dryRunOpt="--dry-run" ;;
   esac
 done
 

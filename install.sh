@@ -42,7 +42,7 @@ installUdocker() {
     # https://github.com/indigo-dc/udocker/issues/424
     # Force use Termux provided proot
     mkdir -p "${HOME}/.udocker/lib"
-    cat <<EOF >"${HOME}/.udocker/udocker.conf"
+    cat << EOF > "${HOME}/.udocker/udocker.conf"
 [DEFAULT]
 use_proot_executable = ${PREFIX}/bin/proot
 proot_link2symlink = True
@@ -50,7 +50,7 @@ verbose_level = 3
 EOF
     # Create dummy VERSION to suppress redundant download of Android-incompatible udockertools
     # https://github.com/indigo-dc/udocker/issues/376#issuecomment-1300626183
-    echo "9.9.9" >"${HOME}/.udocker/lib/VERSION"
+    echo "9.9.9" > "${HOME}/.udocker/lib/VERSION"
   fi
 }
 
@@ -63,7 +63,7 @@ installFastPath() {
     version='osx'
     arch=''
   fi
-  curl https://docker-fastpath.s3-eu-west-1.amazonaws.com/releases/${version}/docker-fastpath-${version}"${arch}"-latest.zip >fastpath.zip
+  curl https://docker-fastpath.s3-eu-west-1.amazonaws.com/releases/${version}/docker-fastpath-${version}"${arch}"-latest.zip > fastpath.zip
   unzip fastpath.zip
   chmod +x fastpath && mv fastpath ~/.local/bin/
 }
@@ -75,7 +75,7 @@ installFission() {
   if [[ $OSTYPE == "darwin"* ]]; then
     version='mac'
   fi
-  curl http://fission.io/$version/fission >fission && chmod +x fission && mv fission ~/.local/bin/
+  curl http://fission.io/$version/fission > fission && chmod +x fission && mv fission ~/.local/bin/
 }
 
 installMinikube() {
@@ -244,7 +244,7 @@ installHelmPlugins() {
     helmenv use "${latest}"
   fi
 
-  if [ "$(helm version --short 2>/dev/null | grep -Eo 'Client')" == "Client" ]; then
+  if [ "$(helm version --short 2> /dev/null | grep -Eo 'Client')" == "Client" ]; then
     helm init --client-only
   fi
 
@@ -412,7 +412,7 @@ installGitConf() {
     printf -v sc 's|${%s}|%s|;' ${var} "${!var//\//\\/}"
     sedcmd+="${sc}"
   done
-  cat files/git/gitconfig | sed -e "${sedcmd}" >"${HOME}/.gitconfig"
+  cat files/git/gitconfig | sed -e "${sedcmd}" > "${HOME}/.gitconfig"
   cp files/git/gitexcludes "${HOME}/.gitexcludes"
   if [ -x "$(command -v gh)" ]; then
     installGhExtensions
@@ -437,7 +437,7 @@ installShellConf() {
     printf -v sc 's|${%s}|%s|;' "${var}" "${!var//\//\\/}"
     sedcmd+="${sc}"
   done
-  cat files/shell/aliases | sed -e "${sedcmd}" >"${HOME}"/.aliases
+  cat files/shell/aliases | sed -e "${sedcmd}" > "${HOME}"/.aliases
 
   git_clone_or_update https://github.com/ahmetb/kubectl-aliases.git "${HOME}/.kubectl_aliases"
   git_clone_or_update https://github.com/zer0beat/terraform-aliases.git "${HOME}/.terraform_aliases"
@@ -520,7 +520,7 @@ installZshConf() {
 
 createSkeleton() {
   dirs=$(cat config.sh | awk -F\' '{print $2}' | grep 'HOME')
-  for d in $(envsubst <<<"${dirs}"); do
+  for d in $(envsubst <<< "${dirs}"); do
     mkdir -p "${d}"
   done
 
@@ -639,50 +639,50 @@ elif isFunction "install${CMD}"; then
 fi
 
 case "$CMD" in
-"gems" | "gem")
-  installGems
-  ;;
-"chef_gems" | "chefgems")
-  installChefGems
-  ;;
-"pip" | "pips")
-  installPips
-  ;;
-"npm" | "npms")
-  installNpms
-  ;;
-"go" | "gopkgs")
-  installGoPkgs
-  ;;
-"dotfiles")
-  installDotFiles
-  installOSSpecific "dotfiles"
-  ;;
-"scripts")
-  installScripts
-  ;;
-"vimplugins" | "vim")
-  installVimPlugins
-  ;;
-"KakPlugins" | "kak")
-  installKakPlugins
-  ;;
-"atompackages" | "apkgs" | "atom" | "apm")
-  installAtomPackages
-  ;;
-"vscodepackages" | "vscode" | "vspkgs")
-  installVscodePackages
-  ;;
-"vagrant" | "VagrantPlugins")
-  installVagrantPlugins
-  ;;
-"helm" | "helmplugins")
-  installHelmPlugins
-  ;;
-*)
-  installOSSpecific "${CMD}" "${ARGS[@]}"
-  if [[ -z "${CMD}" || ${CMD} == "all" ]]; then
-    installAll
-  fi
-  ;;
+  "gems" | "gem")
+    installGems
+    ;;
+  "chef_gems" | "chefgems")
+    installChefGems
+    ;;
+  "pip" | "pips")
+    installPips
+    ;;
+  "npm" | "npms")
+    installNpms
+    ;;
+  "go" | "gopkgs")
+    installGoPkgs
+    ;;
+  "dotfiles")
+    installDotFiles
+    installOSSpecific "dotfiles"
+    ;;
+  "scripts")
+    installScripts
+    ;;
+  "vimplugins" | "vim")
+    installVimPlugins
+    ;;
+  "KakPlugins" | "kak")
+    installKakPlugins
+    ;;
+  "atompackages" | "apkgs" | "atom" | "apm")
+    installAtomPackages
+    ;;
+  "vscodepackages" | "vscode" | "vspkgs")
+    installVscodePackages
+    ;;
+  "vagrant" | "VagrantPlugins")
+    installVagrantPlugins
+    ;;
+  "helm" | "helmplugins")
+    installHelmPlugins
+    ;;
+  *)
+    installOSSpecific "${CMD}" "${ARGS[@]}"
+    if [[ -z "${CMD}" || ${CMD} == "all" ]]; then
+      installAll
+    fi
+    ;;
 esac

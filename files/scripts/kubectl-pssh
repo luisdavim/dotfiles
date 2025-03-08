@@ -52,18 +52,18 @@ function inventory() {
   nodes=$(kubectl get no ${selector} -o json | jq -r "${query}")
 
   case "${NODES,,}" in
-  "healthy" | "ok" | "ready")
-    nodes=$(echo "$nodes" | jq -r '.[] | select(.status=="True") | "'${USER}'@"+.ip')
-    ;;
-  "unhealthy" | "ko" | "notready")
-    nodes=$(echo "$nodes" | jq -r '.[] | select(.status!="True") | "'${USER}'@"+.ip')
-    ;;
-  "all")
-    nodes=$(echo "$nodes" | jq -r '.[] | "'${USER}'@"+.ip')
-    ;;
-  *)
-    nodes=$(echo "$nodes" | jq -r '.[] | select(.name|contains("'${NODES}'")) | "'${USER}'@"+.ip')
-    ;;
+    "healthy" | "ok" | "ready")
+      nodes=$(echo "$nodes" | jq -r '.[] | select(.status=="True") | "'${USER}'@"+.ip')
+      ;;
+    "unhealthy" | "ko" | "notready")
+      nodes=$(echo "$nodes" | jq -r '.[] | select(.status!="True") | "'${USER}'@"+.ip')
+      ;;
+    "all")
+      nodes=$(echo "$nodes" | jq -r '.[] | "'${USER}'@"+.ip')
+      ;;
+    *)
+      nodes=$(echo "$nodes" | jq -r '.[] | select(.name|contains("'${NODES}'")) | "'${USER}'@"+.ip')
+      ;;
   esac
   echo -ne "${nodes}" | tr -s '[[:space:]]' '\n'
 }
@@ -76,40 +76,40 @@ eval set -- "$OPTS"
 
 while true; do
   case "$1" in
-  -h | --help) usage ;;
-  -d | --debug)
-    DEBUG=true
-    shift
-    ;;
-  -e | --external-ip)
-    IP=ExternalIP
-    shift
-    ;;
-  -f | --filter)
-    NODES="$2"
-    shift 2
-    ;;
-  -l | --selector)
-    LABELS="$2"
-    shift 2
-    ;;
-  -u | --user)
-    USER="$2"
-    shift 2
-    ;;
-  -t | --timeout)
-    TIMEOUT="$2"
-    shift 2
-    ;;
-  -i | --identity)
-    IDENTITY="-x '-i $2'"
-    shift 2
-    ;;
-  --)
-    shift
-    break
-    ;;
-  *) break ;;
+    -h | --help) usage ;;
+    -d | --debug)
+      DEBUG=true
+      shift
+      ;;
+    -e | --external-ip)
+      IP=ExternalIP
+      shift
+      ;;
+    -f | --filter)
+      NODES="$2"
+      shift 2
+      ;;
+    -l | --selector)
+      LABELS="$2"
+      shift 2
+      ;;
+    -u | --user)
+      USER="$2"
+      shift 2
+      ;;
+    -t | --timeout)
+      TIMEOUT="$2"
+      shift 2
+      ;;
+    -i | --identity)
+      IDENTITY="-x '-i $2'"
+      shift 2
+      ;;
+    --)
+      shift
+      break
+      ;;
+    *) break ;;
   esac
 done
 
@@ -130,7 +130,7 @@ if [ "$0" = "${BASH_SOURCE[0]}" ]; then
   fi
 
   tmpfile=$(mktemp /tmp/pssh_hosts.XXXXXX)
-  inventory >"${tmpfile}"
+  inventory > "${tmpfile}"
   sed -i '/^[[:blank:]]*$/ d' "${tmpfile}"
   if [[ ${DEBUG} == "true" ]]; then
     echo "Hosts list:"

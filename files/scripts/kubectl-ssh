@@ -49,32 +49,32 @@ eval set -- "$OPTS"
 
 while true; do
   case "$1" in
-  -h | --help) usage ;;
-  -d | --debug)
-    DEBUG=true
-    shift
-    ;;
-  --ec2)
-    EC2=true
-    shift
-    ;;
-  -e | --external-ip)
-    IP=ExternalIP
-    shift
-    ;;
-  -u | --user)
-    USER="$2"
-    shift 2
-    ;;
-  -i | --identity)
-    IDENTITY="-i $2"
-    shift 2
-    ;;
-  --)
-    shift
-    break
-    ;;
-  *) break ;;
+    -h | --help) usage ;;
+    -d | --debug)
+      DEBUG=true
+      shift
+      ;;
+    --ec2)
+      EC2=true
+      shift
+      ;;
+    -e | --external-ip)
+      IP=ExternalIP
+      shift
+      ;;
+    -u | --user)
+      USER="$2"
+      shift 2
+      ;;
+    -i | --identity)
+      IDENTITY="-i $2"
+      shift 2
+      ;;
+    --)
+      shift
+      break
+      ;;
+    *) break ;;
   esac
 done
 
@@ -88,7 +88,7 @@ if [ "$0" = "${BASH_SOURCE[0]}" ]; then
 
   NODE="${1}"
   if [[ -z $NODE ]] && [[ -t 1 && -z ${IGNORE_FZF:-} && "$(
-    type fzf &>/dev/null
+    type fzf &> /dev/null
     echo $?
   )" -eq 0 ]]; then
     echo 'Please select a node:'

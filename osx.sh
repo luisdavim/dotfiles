@@ -61,20 +61,20 @@ brew_is_upgradable() {
   local name
   name="$(brew_expand_alias "$1")"
 
-  ! brew outdated --quiet "$name" >/dev/null
+  ! brew outdated --quiet "$name" > /dev/null
 }
 
 brew_tap() {
   fancy_echo "Adding Tap: $1 ..."
-  brew tap "$1" || brew tap "$1" --repair 2>/dev/null
+  brew tap "$1" || brew tap "$1" --repair 2> /dev/null
 }
 
 brew_expand_alias() {
-  brew info "$1" 2>/dev/null | head -1 | awk '{gsub(/.*\//, ""); gsub(/==>/, ""); gsub(/:/, ""); print $1}'
+  brew info "$1" 2> /dev/null | head -1 | awk '{gsub(/.*\//, ""); gsub(/==>/, ""); gsub(/:/, ""); print $1}'
 }
 
 cask_expand_alias() {
-  brew info --cask "$1" 2>/dev/null | head -1 | awk '{gsub(/.*\//, ""); gsub(/==>/, ""); gsub(/:/, ""); print $1}'
+  brew info --cask "$1" 2> /dev/null | head -1 | awk '{gsub(/.*\//, ""); gsub(/==>/, ""); gsub(/:/, ""); print $1}'
 }
 
 brew_launchctl_restart() {
@@ -87,9 +87,9 @@ brew_launchctl_restart() {
   ln -sfv "$(brew --prefix)/opt/$name/$plist" "${HOME}/Library/LaunchAgents"
 
   if launchctl list | grep -Fq "$domain"; then
-    launchctl unload "${HOME}/Library/LaunchAgents/$plist" >/dev/null
+    launchctl unload "${HOME}/Library/LaunchAgents/$plist" > /dev/null
   fi
-  launchctl load "${HOME}/Library/LaunchAgents/$plist" >/dev/null
+  launchctl load "${HOME}/Library/LaunchAgents/$plist" > /dev/null
 }
 
 installPamReattach() {
@@ -176,8 +176,8 @@ installPackages() {
   brew_install_or_upgrade cask
   installPkgList "cask_install" files/pkgs/cask.lst
 
-  echo "$(brew --prefix)/bin/zsh" | sudo tee -a /etc/shells >/dev/null
-  echo "$(brew --prefix)/bin/bash" | sudo tee -a /etc/shells >/dev/null
+  echo "$(brew --prefix)/bin/zsh" | sudo tee -a /etc/shells > /dev/null
+  echo "$(brew --prefix)/bin/bash" | sudo tee -a /etc/shells > /dev/null
   # Set bash as the login shell
   # chsh -s $(brew --prefix)/bin/bash
 
@@ -270,22 +270,22 @@ installAll() {
 }
 
 case "$1" in
-"packages" | "pkgs")
-  installPackages
-  ;;
-"dotfiles")
-  installDotFiles
-  ;;
-"fonts")
-  installFonts
-  ;;
-"itermcolors" | "termColors" | "termProfiles")
-  installItermColors "${@:2}"
-  ;;
-"pam" | "touchID" | "sudo")
-  installPamReattach
-  ;;
-*)
-  installAll
-  ;;
+  "packages" | "pkgs")
+    installPackages
+    ;;
+  "dotfiles")
+    installDotFiles
+    ;;
+  "fonts")
+    installFonts
+    ;;
+  "itermcolors" | "termColors" | "termProfiles")
+    installItermColors "${@:2}"
+    ;;
+  "pam" | "touchID" | "sudo")
+    installPamReattach
+    ;;
+  *)
+    installAll
+    ;;
 esac

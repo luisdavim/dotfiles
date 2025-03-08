@@ -49,31 +49,31 @@ while [[ $# -gt 0 ]]; do
   key="$1"
 
   case $key in
-  -h | --help) usage ;;
-  -d | --debug)
-    DEBUG=true
-    shift
-    ;;
-  -S | --sa)
-    SERVICE_ACCOUNT="$2"
-    shift 2
-    ;;
-  -n | --namespace)
-    NS="$2"
-    shift 2
-    ;;
-  -o | --output)
-    OUTPUT="$2"
-    shift 2
-    ;;
-  -f | --force)
-    rm -rf /tmp/kurlEnv
-    shift
-    ;;
-  *)
-    POSITIONAL+=("$1") # save it in an array for later
-    shift              # past argument
-    ;;
+    -h | --help) usage ;;
+    -d | --debug)
+      DEBUG=true
+      shift
+      ;;
+    -S | --sa)
+      SERVICE_ACCOUNT="$2"
+      shift 2
+      ;;
+    -n | --namespace)
+      NS="$2"
+      shift 2
+      ;;
+    -o | --output)
+      OUTPUT="$2"
+      shift 2
+      ;;
+    -f | --force)
+      rm -rf /tmp/kurlEnv
+      shift
+      ;;
+    *)
+      POSITIONAL+=("$1") # save it in an array for later
+      shift              # past argument
+      ;;
   esac
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters
@@ -85,27 +85,27 @@ else
   [[ ${DEBUG} == "true" ]] && echo "getting auth config using kubectl"
   SECRET=$(kubectl get serviceaccount "${SERVICE_ACCOUNT}" -n "${NS}" -o json | jq -Mr '.secrets[].name | select(contains("token"))')
   TOKEN=$(kubectl get secret "${SECRET}" -n "${NS}" -o json | jq -Mr '.data.token' | base64 -d)
-  kubectl get secret "${SECRET}" -n "${NS}" -o json | jq -Mr '.data["ca.crt"]' | base64 -d >/tmp/ca.crt
+  kubectl get secret "${SECRET}" -n "${NS}" -o json | jq -Mr '.data["ca.crt"]' | base64 -d > /tmp/ca.crt
   APISERVER=https://$(kubectl get -n default endpoints kubernetes --no-headers | awk '{ print $2 }' | cut -d, -f1)
 
-  cat <<EOF >/tmp/kurlEnv
+  cat << EOF > /tmp/kurlEnv
 APISERVER="${APISERVER}"
 TOKEN="${TOKEN}"
 EOF
 fi
 
 case $OUTPUT in
-json)
-  CONVERT="jq ."
-  ;;
-yaml)
-  CONVERT="yq e -P -"
-  ;;
-stats) ;;
+  json)
+    CONVERT="jq ."
+    ;;
+  yaml)
+    CONVERT="yq e -P -"
+    ;;
+  stats) ;;
 
-*)
-  usage "Invalid output format: ${OUTPUT} \n" >&2
-  ;;
+  *)
+    usage "Invalid output format: ${OUTPUT} \n" >&2
+    ;;
 esac
 
 URI=${1}
@@ -113,7 +113,7 @@ URI=${1}
 shift
 
 if [[ $OUTPUT == "stats" ]]; then
-  curl "${APISERVER}/${URI}" -H "Authorization: Bearer $TOKEN" --cacert /tmp/ca.crt -w @- -o /dev/null -s <<'EOF'
+  curl "${APISERVER}/${URI}" -H "Authorization: Bearer $TOKEN" --cacert /tmp/ca.crt -w @- -o /dev/null -s << 'EOF'
     time_namelookup:  %{time_namelookup}\n
        time_connect:  %{time_connect}\n
     time_appconnect:  %{time_appconnect}\n

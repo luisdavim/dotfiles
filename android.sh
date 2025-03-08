@@ -82,6 +82,7 @@ osConfigs() {
   if [ ! -d "${HOME}/storage" ]; then
     termux-setup-storage
   fi
+  termux-fix-shebang /data/data/com.termux/files/usr/bin/*
 }
 
 installAll() {
@@ -92,16 +93,16 @@ installAll() {
 }
 
 case "$1" in
-"packages" | "pkgs")
-  installPackages
-  ;;
-"awscli")
-  installAwsCli
-  ;;
-"dotfiles")
-  installDotFiles
-  ;;
-*)
-  installAll
-  ;;
+  "packages" | "pkgs")
+    installPackages
+    ;;
+  "awscli")
+    installAwsCli
+    ;;
+  "dotfiles")
+    installDotFiles
+    ;;
+  *)
+    installAll
+    ;;
 esac

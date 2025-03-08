@@ -7,4 +7,4 @@ SERVER="${1}"
 QUERY="${2}"
 LABELS="${3}"
 
-curl -fs -G --data-urlencode "query=${QUERY}" "${SERVER}/api/v1/query" | jq -r ".data.result[] | [${LABELS}, .value[1] ] | @csv"
+curl -fs -Gg --data-urlencode "query=${QUERY}" "${SERVER}/api/v1/query" | jq -r ".data.result[] | [${LABELS}, .value[1] ] | @csv"

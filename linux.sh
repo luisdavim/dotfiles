@@ -43,7 +43,7 @@ detectRelease() {
     . /etc/os-release
     OS=${NAME:-}
     VER=${VERSION_ID:-}
-  elif type lsb_release >/dev/null 2>&1; then
+  elif type lsb_release > /dev/null 2>&1; then
     # linuxbase.org
     OS=$(lsb_release -si)
     VER=$(lsb_release -sr)
@@ -92,12 +92,12 @@ installLinuxbrew() {
 
 installPackages() {
   case "$(detectRelease)" in
-  "Arch"*)
-    ./arch.sh packages
-    ;;
-  *)
-    ./ubuntu.sh packages
-    ;;
+    "Arch"*)
+      ./arch.sh packages
+      ;;
+    *)
+      ./ubuntu.sh packages
+      ;;
   esac
 
   if ! [ -x "$(command -v terraform)" ]; then
@@ -165,22 +165,22 @@ installAll() {
 }
 
 case "$1" in
-"packages" | "pkgs")
-  installPackages
-  ;;
-"hashicorp")
-  installHashicorp "$2"
-  ;;
-"dotfiles")
-  installDotFiles
-  ;;
-"fonts")
-  installFonts
-  ;;
-"release" | "getRelease")
-  detectRelease
-  ;;
-*)
-  installAll
-  ;;
+  "packages" | "pkgs")
+    installPackages
+    ;;
+  "hashicorp")
+    installHashicorp "$2"
+    ;;
+  "dotfiles")
+    installDotFiles
+    ;;
+  "fonts")
+    installFonts
+    ;;
+  "release" | "getRelease")
+    detectRelease
+    ;;
+  *)
+    installAll
+    ;;
 esac

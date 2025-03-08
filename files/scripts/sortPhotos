@@ -28,7 +28,7 @@ if [ "$#" != "2" ]; then
   exit 1
 fi
 
-which $STAT_CMD >/dev/null
+which $STAT_CMD > /dev/null
 
 # make sure stat command is installed
 if [ $? -eq 1 ]; then
@@ -36,7 +36,7 @@ if [ $? -eq 1 ]; then
   exit 2
 fi
 
-which identify >/dev/null
+which identify > /dev/null
 
 # make sure identify command is installed
 if [ $? -eq 1 ]; then
@@ -45,7 +45,7 @@ if [ $? -eq 1 ]; then
 fi
 
 # using a tmp file you can have spaces in the file path
-find "$cfgSource" -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.cr2" -o -iname "*.nef" -o -iname "*.png" -o -iname "*.bmp" -o -iname "*.avi" -o -iname "*.mov" -o -iname "*.mpg" -o -iname "*.mp4" >/tmp/images.tmp
+find "$cfgSource" -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.cr2" -o -iname "*.nef" -o -iname "*.png" -o -iname "*.bmp" -o -iname "*.avi" -o -iname "*.mov" -o -iname "*.mpg" -o -iname "*.mp4" > /tmp/images.tmp
 
 SAVEIFS=$IFS
 IFS=$(echo -en "\n\b")
@@ -74,7 +74,7 @@ cat /tmp/images.tmp | while read f; do
       ##Using exif:
       #timestamp=$(exif "${f}" | grep Time | grep Date | grep Orig | cut -d"|" -f2)
       ##Using Identify:
-      timestamp=$(identify -format '%[exif:DateTimeOriginal]' "${f}" 2>/dev/null)
+      timestamp=$(identify -format '%[exif:DateTimeOriginal]' "${f}" 2> /dev/null)
     fi
 
     #If identify fails to read the date from exif

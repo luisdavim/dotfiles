@@ -27,27 +27,27 @@ while [[ $# -gt 0 ]]; do
   key="$1"
 
   case $key in
-  -h | --help) usage "" ;;
-  -d | --debug)
-    DEBUG="true"
-    shift
-    ;;
-  -p | --pending)
-    PENDING="true"
-    shift
-    ;;
-  -n | --namespace)
-    NAMESPACE="$2"
-    shift 2
-    ;;
-  -r | --revision)
-    REV="$2"
-    shift 2
-    ;;
-  *)
-    POSITIONAL+=("$1") # save it in an array for later
-    shift              # past argument
-    ;;
+    -h | --help) usage "" ;;
+    -d | --debug)
+      DEBUG="true"
+      shift
+      ;;
+    -p | --pending)
+      PENDING="true"
+      shift
+      ;;
+    -n | --namespace)
+      NAMESPACE="$2"
+      shift 2
+      ;;
+    -r | --revision)
+      REV="$2"
+      shift 2
+      ;;
+    *)
+      POSITIONAL+=("$1") # save it in an array for later
+      shift              # past argument
+      ;;
   esac
 done
 

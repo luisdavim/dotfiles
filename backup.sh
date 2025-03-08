@@ -43,13 +43,13 @@ function backupDotFiles() {
 }
 
 function backupTermux() {
-  pkg list-installed | cut -d '/' -f1 | grep -v '\.\.\.' | sort -u >files/pkgs/pkg.lst
+  pkg list-installed | cut -d '/' -f1 | grep -v '\.\.\.' | sort -u > files/pkgs/pkg.lst
   cp -r "${HOME}/.termux/"*.* files/termux/
   cp -r "${HOME}/.termux/".* files/termux/
 }
 
 function backupIterm() {
-  defaults read com.googlecode.iterm2 >files/iterm/com.googlecode.iterm2.plist
+  defaults read com.googlecode.iterm2 > files/iterm/com.googlecode.iterm2.plist
 }
 
 function restoreIterm() {
@@ -65,7 +65,7 @@ function exportItermColors() {
   # rm -f *
   /usr/libexec/PlistBuddy -c "print :'Custom Color Presets'" \
     ~/Library/Preferences/com.googlecode.iterm2.plist | grep '^    \w' |
-    ruby -e 'puts STDIN.read.gsub(/\s=\sDict\s{/,"").gsub(/^\s+/,"")' >list.txt
+    ruby -e 'puts STDIN.read.gsub(/\s=\sDict\s{/,"").gsub(/^\s+/,"")' > list.txt
   while read -r THEME; do
     echo "exporting ${THEME}"
     /usr/libexec/PlistBuddy -c "print :'Custom Color Presets':'$THEME'" \
@@ -73,8 +73,8 @@ function exportItermColors() {
       ruby -e "puts STDIN.read.strip.gsub(/Dict {/, '{')
         .gsub(/([A-Z][a-z0-9\\s]+)\\s=\\s/i, %Q{'\\\\1' = })
         .gsub(/(\\d(?:\.\\d+)?)$/, %Q{'\\\\1';})
-        .gsub(/}\\n/, %Q(};\n))" >"$THEME.itermcolors"
-  done <list.txt
+        .gsub(/}\\n/, %Q(};\n))" > "$THEME.itermcolors"
+  done < list.txt
   rm list.txt
   cd "${cdir}" || exit
 }
@@ -91,7 +91,7 @@ function importItermColors() {
 }
 
 function backupAtomPackages() {
-  apm list --installed --bare | cut -d'@' -f1 | grep -vE '^$' >files/pkgs/atom-packages.lst
+  apm list --installed --bare | cut -d'@' -f1 | grep -vE '^$' > files/pkgs/atom-packages.lst
   cp "${HOME}"/.atom/*.cson files/atom/
   cp "${HOME}"/.atom/*.coffee files/atom/
   cp "${HOME}"/.atom/*.less files/atom/
@@ -99,7 +99,7 @@ function backupAtomPackages() {
 }
 
 function backupVscode() {
-  code --list-extensions >files/pkgs/vscode-packages.lst
+  code --list-extensions > files/pkgs/vscode-packages.lst
   settings="${HOME}/.config/Code/User"
   if [[ ${OSTYPE} == "darwin"* ]]; then
     settings="${HOME}/Library/Application Support/Code/User"
@@ -115,22 +115,22 @@ function backupPPAs() {
       USER=$(echo "$ENTRY" | cut -d/ -f4)
       PPA=$(echo "$ENTRY" | cut -d/ -f5)
       if [ "ppa.launchpad.net" = "$HOST" ]; then
-        echo "ppa:$USER/$PPA" >>files/pkgs/ppa.lst
+        echo "ppa:$USER/$PPA" >> files/pkgs/ppa.lst
       else
-        echo "\"${ENTRY}\"" >>files/pkgs/apt-repo.lst
+        echo "\"${ENTRY}\"" >> files/pkgs/apt-repo.lst
       fi
     done
   done
 }
 
 function backupPacman() {
-  pacman -Qqe >files/pkgs/pacman.lst
+  pacman -Qqe > files/pkgs/pacman.lst
 }
 
 function backupPackages() {
   # Get list of installed packages
-  apt-mark showauto >files/pkgs/pkgs_auto.lst
-  apt-mark showmanual >files/pkgs/pkgs_manual.lst
+  apt-mark showauto > files/pkgs/pkgs_auto.lst
+  apt-mark showmanual > files/pkgs/pkgs_manual.lst
 }
 
 function backupAll() {
@@ -164,7 +164,7 @@ function restoreRepos() {
       [[ ${REPO} =~ ^#.*$ ]] && continue
       [[ ${REPO} =~ ^\\s*$ ]] && continue
       sudo apt-add-repository "${REPO}"
-    done <"files/pkgs/${LST}"
+    done < "files/pkgs/${LST}"
   done
   sudo apt update
 }
@@ -179,37 +179,37 @@ function restoreAll() {
 }
 
 case "$1" in
-"dotfiles")
-  backupDotFiles
-  ;;
-"atompackages" | "apkgs" | "atom")
-  backupAtomPackages
-  ;;
-"vscode")
-  backupVscode
-  ;;
-"ppas" | "repos")
-  backupPPAs
-  ;;
-"pacman")
-  backupPacman
-  ;;
-"termux")
-  backupTermux
-  ;;
-"homedir" | "home")
-  backupHomeDir "$2"
-  ;;
-"iterm" | "iterm2")
-  backupIterm
-  ;;
-"itermColors" | "iterm2Colors")
-  exportItermColors
-  ;;
-"restore")
-  restoreAll
-  ;;
-*)
-  backupAll
-  ;;
+  "dotfiles")
+    backupDotFiles
+    ;;
+  "atompackages" | "apkgs" | "atom")
+    backupAtomPackages
+    ;;
+  "vscode")
+    backupVscode
+    ;;
+  "ppas" | "repos")
+    backupPPAs
+    ;;
+  "pacman")
+    backupPacman
+    ;;
+  "termux")
+    backupTermux
+    ;;
+  "homedir" | "home")
+    backupHomeDir "$2"
+    ;;
+  "iterm" | "iterm2")
+    backupIterm
+    ;;
+  "itermColors" | "iterm2Colors")
+    exportItermColors
+    ;;
+  "restore")
+    restoreAll
+    ;;
+  *)
+    backupAll
+    ;;
 esac

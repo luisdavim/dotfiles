@@ -2,7 +2,7 @@
 
 # Example: digj www.example.com | jq 'group_by(.Name)[] | {(.[0].Name): [.[] | .Target]}'
 
-set -- "${1:-$(</dev/stdin)}" "${@:2}"
+set -- "${1:-$(< /dev/stdin)}" "${@:2}"
 if [ -z "$1" ]; then
   echo "missing arguments"
   dig --help

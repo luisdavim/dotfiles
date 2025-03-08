@@ -45,24 +45,24 @@ UPDATE=false
 
 while true; do
   case "$1" in
-  -h | --help) usage ;;
-  -d | --debug)
-    DEBUG=true
-    shift
-    ;;
-  -u | --update)
-    UPDATE=true
-    shift
-    ;;
-  -w | --workspace)
-    w="$2"
-    shift 2
-    ;;
-  --)
-    shift
-    break
-    ;;
-  *) break ;;
+    -h | --help) usage ;;
+    -d | --debug)
+      DEBUG=true
+      shift
+      ;;
+    -u | --update)
+      UPDATE=true
+      shift
+      ;;
+    -w | --workspace)
+      w="$2"
+      shift 2
+      ;;
+    --)
+      shift
+      break
+      ;;
+    *) break ;;
   esac
 done
 

@@ -2,7 +2,7 @@
 
 dotfiles_dir="$(dirname "$0")"
 
-isFunction() { declare -F -- "$@" >/dev/null; }
+isFunction() { declare -F -- "$@" > /dev/null; }
 
 path() {
   mkdir -p "$(dirname "$1")"
@@ -27,7 +27,7 @@ create_link() {
 }
 
 gem_install_or_update() {
-  if gem list "$1" --installed >/dev/null; then
+  if gem list "$1" --installed > /dev/null; then
     gem update "${@}"
   else
     gem install "${@}"
@@ -59,7 +59,7 @@ installPkgList() {
     echo ">>> ${PKG}"
     cmd=$(printf '%s %s' "${1}" "${PKG}")
     eval "${cmd}"
-  done <"${2}"
+  done < "${2}"
   cd "${INSTALLDIR}" || exit
 }
 
