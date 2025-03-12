@@ -2,9 +2,25 @@
 
 # Example usage:
 # ./pq http://prometheus.local 'avg by(resource)(avg_over_time(etcd_object_counts{resource=~".*marquis.*"}[5d]))' '.metric.resource'
+# see: https://gist.github.com/groner/e3b8c93d4b088f617d625b20d3d08112
 
 SERVER="${1}"
 QUERY="${2}"
 LABELS="${3}"
 
-curl -fs -Gg --data-urlencode "query=${QUERY}" "${SERVER}/api/v1/query" | jq -r ".data.result[] | [${LABELS}, .value[1] ] | @csv"
+RESULT="$(curl -fs -Gg --data-urlencode "query=${QUERY}" "${SERVER}/api/v1/query")"
+
+if jq -e '.status=="error"' <<<"${RESULT}" >/dev/null; then
+  jq <<<"${RESULT}" >&2 -r .error
+  return 1
+fi
+
+RESULT=$(jq -r '.data.result[]' <<<"${RESULT}")
+
+if [[ -n "${LABELS}" ]]; then
+  RESULT=$(jq -r ".|[${LABELS}, .value[1] ] | @csv" <<<"${RESULT}")
+  echo "${RESULT}"
+  return 0
+fi
+
+jq '.' <<<"${RESULT}"
