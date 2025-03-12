@@ -11,11 +11,15 @@ function _isFunction() {
 }
 
 # Extra aliases
-for f in $HOME/.aliases.d/*; do
-  if [ -f "$f" ]; then
-    source "$f"
+for f in "${HOME}/.aliases.d/"*; do
+  if [ -f "${f}" ]; then
+    source "${f}"
   fi
 done
+
+function randpass() {
+  tr -dc 'A-Za-z0-9!?%=' < /dev/urandom | head -c "${1:-13}"
+}
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -31,17 +35,18 @@ function envgrep() {
 
 function fr() {
   type=""
-  if ! [ -z "${3}" ]; then
+  if [ -n "${3}" ]; then
     type="-t ${3}"
   fi
-  perl -p -i -e "s/${1}/${2}/g" $(rg --hidden -g '!*vendor/*' ${type} -l "${1}")
+  perl -p -i -e "s/${1}/${2}/g" "$(rg --hidden -g '!*vendor/*' "${type}" -l "${1}")"
 }
 
 # Usage: df -h|fawk 2 ; replaces: df -h | awk '{print $2}'
 function fawk() {
-  local ARGS=( "$@" ); ARGS=( "${ARGS[@]:1}" )
+  local ARGS=("$@")
+  ARGS=("${ARGS[@]:1}")
   local first="awk '{print "
-  local last="}' $ARGS"
+  local last="}' ${ARGS}"
   local fields=""
   local cmd=""
   for i in ${1//,/ }; do
@@ -49,16 +54,16 @@ function fawk() {
   done
   fields=${fields%%,}
   cmd="${first}${fields}${last}"
-  eval $cmd
+  eval "${cmd}"
 }
 
 # History
 function hgrep() {
-  if [ ! -z "$1" ]; then
-  (
-    echo -e '#ID\t#USER\t#SEQ\t#DATE\t#TIME\t#DURATION\t#COMMAND'
-    grep --text "${@}" $_eternal_history_histfile
-  ) | column -ts $'\t'
+  if [ -n "$1" ]; then
+    (
+      echo -e '#ID\t#USER\t#SEQ\t#DATE\t#TIME\t#DURATION\t#COMMAND'
+      grep --text "${@}" "${_eternal_history_histfile}"
+    ) | column -ts $'\t'
   else
     history
   fi
@@ -68,15 +73,14 @@ function hbtween() {
   # Example:
   #   hbtween 202203301320 202203301530
   #   hbtween '2022-03-30 13:20' '2022-03-30 15:35' mysql
-  local start="$(echo ${1} | tr -d '\- :')"
-  local finish="$(echo ${2} | tr -d '\- :')"
+  local start="$(echo "${1}" | tr -d '\- :')"
+  local finish="$(echo "${2}" | tr -d '\- :')"
   (
     echo -e '#ID\t#USER\t#SEQ\t#DATE\t#TIME\t#DURATION\t#COMMAND'
-    gawk -v s=${start} -v f=${finish} 'match($4$5, "([0-9]+)-([0-9]+)-([0-9]+)\s?([0-9]+):([0-9]+)", ary) {D=ary[1] ary[2] ary[3] ary[4] ary[5]; if (D > s && D < f) print}' $_eternal_history_histfile | grep "${3}"
+    gawk -v s="${start}" -v f="${finish}" 'match($4$5, "([0-9]+)-([0-9]+)-([0-9]+)\s?([0-9]+):([0-9]+)", ary) {D=ary[1] ary[2] ary[3] ary[4] ary[5]; if (D > s && D < f) print}' "${_eternal_history_histfile}" | grep "${3}"
   ) | column -ts $'\t'
 }
 alias histg='hgrep'
-
 
 # Colored diffs
 if [ -x "$(command -v colordiff)" ]; then
@@ -158,9 +162,9 @@ alias screen-killall='for sess in $(screen -ls); do $ screen -X -S $sess quit'
 function ssh() {
   if [[ "$TERM" =~ "screen" ]] && [ -n "$TMUX" ]; then
     command ssh "$@"
-    tmux set-window-option automatic-rename "on" 1>/dev/null
+    tmux set-window-option automatic-rename "on" 1> /dev/null
   else
-    command env TERM=xterm-256color ssh -o "SendEnv TERM"  "$@"
+    command env TERM=xterm-256color ssh -o "SendEnv TERM" "$@"
   fi
 }
 
@@ -200,14 +204,14 @@ function dedup_pathvar() {
 }
 
 function trim() {
-    local trimmed="$1"
+  local trimmed="$1"
 
-    # Strip leading space.
-    trimmed="${trimmed## }"
-    # Strip trailing space.
-    trimmed="${trimmed%% }"
+  # Strip leading space.
+  trimmed="${trimmed## }"
+  # Strip trailing space.
+  trimmed="${trimmed%% }"
 
-    echo "$trimmed"
+  echo "$trimmed"
 }
 
 alias shfmt='shfmt -i 2 -ci -bn'
@@ -222,7 +226,7 @@ function explain-shell() {
 
 # Bash calculator.
 function calc() {
-  bc -l <<< "${1}";
+  bc -l <<< "${1}"
 }
 
 # Bash weather app
@@ -237,25 +241,25 @@ function extract() {
     # display usage if no parameters given
     echo "Usage: extract <path/file_name>.<zip|rar|bz2|gz|tar|tbz2|tgz|Z|7z|xz|ex|tar.bz2|tar.gz|tar.xz>"
   else
-    if [ -f "$1" ] ; then
+    if [ -f "$1" ]; then
       local nameInLowerCase=$(echo "${1}" | awk '{print tolower($0)}')
       case "$nameInLowerCase" in
-        *.tar.bz2)   tar xvjf ./"$1"    ;;
-        *.tar.gz)    tar xvzf ./"$1"    ;;
-        *.tar.xz)    tar xvJf ./"$1"    ;;
-        *.lzma)      unlzma ./"$1"      ;;
-        *.bz2)       bunzip2 ./"$1"     ;;
-        *.rar)       unrar x -ad ./"$1" ;;
-        *.gz)        gunzip ./"$1"      ;;
-        *.tar)       tar xvf ./"$1"     ;;
-        *.tbz2)      tar xvjf ./"$1"    ;;
-        *.tgz)       tar xvzf ./"$1"    ;;
-        *.zip)       unzip ./"$1"       ;;
-        *.Z)         uncompress ./"$1"  ;;
-        *.7z)        7z x ./"$1"        ;;
-        *.xz)        unxz ./"$1"        ;;
-        *.exe)       cabextract ./"$1"  ;;
-        *)           echo "extract: '$1' - unknown archive method" ;;
+        *.tar.bz2) tar xvjf ./"$1" ;;
+        *.tar.gz) tar xvzf ./"$1" ;;
+        *.tar.xz) tar xvJf ./"$1" ;;
+        *.lzma) unlzma ./"$1" ;;
+        *.bz2) bunzip2 ./"$1" ;;
+        *.rar) unrar x -ad ./"$1" ;;
+        *.gz) gunzip ./"$1" ;;
+        *.tar) tar xvf ./"$1" ;;
+        *.tbz2) tar xvjf ./"$1" ;;
+        *.tgz) tar xvzf ./"$1" ;;
+        *.zip) unzip ./"$1" ;;
+        *.Z) uncompress ./"$1" ;;
+        *.7z) 7z x ./"$1" ;;
+        *.xz) unxz ./"$1" ;;
+        *.exe) cabextract ./"$1" ;;
+        *) echo "extract: '$1' - unknown archive method" ;;
       esac
     else
       echo "'$1' - file does not exist"
