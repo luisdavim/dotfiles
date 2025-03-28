@@ -55,7 +55,9 @@
   vmap <C-v> p
   vmap <C-c> y
   nnoremap <F2> :set invpaste paste?<CR>
-  set pastetoggle=<F2>
+  " set pastetoggle=<F2>
+  nnoremap <silent> <F2> :set paste!<cr>
+  inoremap <silent> <F2> <esc>:set paste!<cr>i
   " Use a scratch file for clipboard
   "vmap <leader>y :w! /tmp/vitmp<CR>
   "nmap <leader>p :r! cat /tmp/vitmp<CR>
