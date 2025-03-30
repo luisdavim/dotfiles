@@ -490,18 +490,6 @@ now(function()
           },
         },
       })
-      vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
-        vim.lsp.handlers.hover, {
-          border = 'single',
-          width = math.floor(0.25 * vim.o.columns)
-        })
-      -- Signature help
-      vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
-        vim.lsp.handlers['signature_help'], {
-          border = 'single',
-          width = math.floor(0.25 * vim.o.columns),
-          close_events = { 'CursorMoved', 'BufHidden', 'WinLeave' },
-        })
 
       -- Diagnostics
       -- Function to check if a floating dialog exists and if not
@@ -607,12 +595,26 @@ now(function()
       cos.register({ '*.py', '*.go', '*.rb' }, { 'source.organizeImports' })
       cos.register({ '*.ts', '*.tsx' }, { 'source.organizeImports.biome', 'source.fixAll' })
 
+      local function bordered_hover(_opts)
+        _opts = _opts or {}
+        return vim.lsp.buf.hover(vim.tbl_deep_extend('force', _opts, {
+          border = 'single'
+        }))
+      end
+
+      local function bordered_signature_help(_opts)
+        _opts = _opts or {}
+        return vim.lsp.buf.signature_help(vim.tbl_deep_extend('force', _opts, {
+          border = 'single'
+        }))
+      end
+
       -- LSP keymaps
       keymap('n', '<leader>rn', function() Rename.rename() end, { silent = true })
       keymap('n', '<leader>ca', function() vim.lsp.buf.code_action() end, opts)
       keymap('n', '<leader>ld', function() MiniExtra.pickers.diagnostic() end, opts)
 
-      keymap('n', 'K', function() vim.lsp.buf.hover() end, opts)
+      keymap('n', 'K', bordered_hover, opts)
       -- keymap('n', 'gd', function() vim.lsp.buf.definition() end, opts)
       keymap('n', 'gd', function() MiniExtra.pickers.lsp({ scope = 'definition' }) end, opts)
       -- keymap('n', 'gD', function() vim.lsp.buf.declaration() end, opts)
@@ -623,14 +625,14 @@ now(function()
       keymap('n', 'go', function() MiniExtra.pickers.lsp({ scope = 'type_definition' }) end, opts)
       -- keymap('n', 'gr', function() vim.lsp.buf.references() end, opts)
       keymap('n', 'gr', function() MiniExtra.pickers.lsp({ scope = 'references' }) end, opts)
-      keymap('n', 'gs', function() vim.lsp.buf.signature_help() end, opts)
+      keymap('n', 'gs', bordered_signature_help, opts)
       keymap('n', 'gS', function() MiniExtra.pickers.lsp({ scope = 'document_symbol' }) end, opts)
       keymap('n', 'gf', function() MiniExtra.pickers.lsp({ scope = 'workspace_symbol' }) end, opts)
-      keymap('n', ']g', function() vim.diagnostic.goto_next() end, opts)
-      keymap('n', '[g', function() vim.diagnostic.goto_prev() end, opts)
+      keymap('n', ']g', function() vim.diagnostic.jump({ count = 1, float = true }) end, opts)
+      keymap('n', '[g', function() vim.diagnostic.jump({ count = -1, float = true }) end, opts)
       keymap({ 'n', 'x' }, '<F3>', function() vim.lsp.buf.format({ async = true }) end, opts)
-      keymap('n', '<F4>', function() vim.lsp.buf.code_action() end, opts)
-      keymap('n', '<F2>', function() vim.lsp.buf.rename() end, opts)
+      keymap('n', '<F4>', vim.lsp.buf.code_action, opts)
+      keymap('n', '<F2>', vim.lsp.buf.rename, opts)
     end,
   })
 end)
