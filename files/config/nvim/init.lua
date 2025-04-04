@@ -1048,7 +1048,12 @@ later(function()
   require("diffview").setup()
 end)
 
-later(function() require('mini.diff').setup() end)
+later(function()
+  local diff = require('mini.diff')
+  diff.setup({
+    source = { diff.gen_source.git(), diff.gen_source.save() }
+  })
+end)
 
 later(function()
   require('mini.git').setup()
