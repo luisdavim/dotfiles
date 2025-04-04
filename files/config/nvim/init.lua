@@ -453,7 +453,7 @@ now(function()
       local client = id and vim.lsp.get_client_by_id(id)
 
       -- highlight symbol under cursor
-      if client ~= nil and client.supports_method('textDocument/documentHighlight') then
+      if client ~= nil and client.supports_method('textDocument/documentHighlight', event.buf) then
         vim.b[event.buf].minicursorword_disable = true
 
         vim.api.nvim_set_hl(0, 'LspReferenceRead', { link = 'MiniCursorword' })
