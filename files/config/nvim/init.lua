@@ -156,7 +156,7 @@ end)
 --     },
 --   })
 --   -- Override completeopt
---   vim.opt.completeopt = 'longest,menuone'
+--   vim.opt.completeopt = 'longest,menuone,noselect'
 --   -- Use fuzzy matching for built-in completion
 --   if vim.fn.has "nvim-0.11" == 1 then
 --     vim.opt.completeopt:append "fuzzy"
@@ -166,6 +166,37 @@ end)
 --   vim.api.nvim_create_autocmd("FileType", {
 --     pattern = "snacks_*",
 --     command = "lua vim.b.minicompletion_disable = true"
+--   })
+--
+--   local term = vim.api.nvim_replace_termcodes('<C-z>', true, true, true)
+--   vim.opt.wildmenu = true
+--   vim.opt.wildoptions = 'pum,fuzzy'
+--   vim.opt.wildmode = 'noselect:lastused,full'
+--   vim.opt.wildcharm = vim.fn.char2nr(term)
+--
+--   vim.keymap.set('c', '<Up>', '<End><C-U><Up>', { silent = true })
+--   vim.keymap.set('c', '<Down>', '<End><C-U><Down>', { silent = true })
+--
+--   vim.api.nvim_create_autocmd('CmdlineChanged', {
+--     pattern = ':',
+--     callback = function()
+--       local cmdline = vim.fn.getcmdline()
+--       local curpos = vim.fn.getcmdpos()
+--       local last_char = cmdline:sub(-1)
+--
+--       if
+--           curpos == #cmdline + 1
+--           and vim.fn.pumvisible() == 0
+--           and last_char:match('[%w%/%: ]')
+--           and not cmdline:match('^%d+$')
+--       then
+--         vim.opt.eventignore:append('CmdlineChanged')
+--         vim.api.nvim_feedkeys(term, 'ti', false)
+--         vim.schedule(function()
+--           vim.opt.eventignore:remove('CmdlineChanged')
+--         end)
+--       end
+--     end,
 --   })
 -- end)
 
@@ -350,6 +381,7 @@ now(function()
     },
   })
 
+  -- local capabilities = MiniCompletion.get_lsp_capabilities()
   local capabilities = require('cmp_nvim_lsp').default_capabilities()
   local lspconfig = require('lspconfig')
   capabilities = vim.tbl_deep_extend('force', vim.lsp.protocol.make_client_capabilities(), capabilities)
@@ -524,15 +556,14 @@ now(function()
       })
 
       -- Inlay hints
-      if client ~= nil and client.supports_method('textDocument/inlayHint') then
-        local bufnr = event.buf
-        vim.lsp.inlay_hint.enable(true, { bufnr })
+      if client ~= nil and client.supports_method('textDocument/inlayHint', event.buf) then
+        vim.lsp.inlay_hint.enable(true, { event.buf })
         keymap('n', '<leader>H',
           function()
             if vim.lsp.inlay_hint.is_enabled() then
-              vim.lsp.inlay_hint.enable(false, { bufnr })
+              vim.lsp.inlay_hint.enable(false, { event.buf })
             else
-              vim.lsp.inlay_hint.enable(true, { bufnr })
+              vim.lsp.inlay_hint.enable(true, { event.buf })
             end
           end, opts)
       end
