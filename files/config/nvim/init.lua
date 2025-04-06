@@ -668,45 +668,56 @@ now(function()
   })
 end)
 
--- TODO: pick some snacks
--- now(function()
---   add({
---     source ="folke/snacks.nvim",
---   })
---
---   local snacks =require('snacks')
---   snacks.setup({
---     animate = { enabled = false },
---     bigfile = { enabled = true },
---     bufdelete = { enabled = false },
---     dashboard = { enabled = false },
---     debug = { enabled = false },
---     dim = { enabled = false },
---     explorer = { enabled = true },
---     git = { enabled = false },
---     gitbrowse = { enabled = false },
---     image = { enabled = false },
---     indent = { enabled = false },
---     input = { enabled = true },
---     layout = { enabled = false },
---     lazygit = { enabled = false },
---     notifier = {
---       enabled = false,
---       timeout = 3000,
---     },
---     picker = { enabled = true },
---     quickfile = { enabled = true },
---     scope = { enabled = false },
---     scroll = { enabled = false },
---     statuscolumn = { enabled = true },
---     words = { enabled = true },
---     styles = {
---       notification = {
---         -- wo = { wrap = true } -- Wrap notifications
---       }
---     }
---   })
--- end)
+now(function()
+  add({
+    source = "folke/snacks.nvim",
+  })
+
+  local snacks = require('snacks')
+  snacks.setup({
+    animate = { enabled = false },
+    bigfile = { enabled = true },
+    bufdelete = { enabled = false },
+    dashboard = { enabled = false },
+    debug = { enabled = false },
+    dim = { enabled = false },
+    explorer = {
+      enabled = true,
+      replace_netrw = true,
+    },
+    git = { enabled = false },
+    gitbrowse = { enabled = true },
+    image = { enabled = false },
+    indent = {
+      enabled = true,
+      indent = {
+        hl = "Whitespace",
+      },
+    },
+    input = { enabled = true },
+    layout = { enabled = false },
+    lazygit = { enabled = false },
+    notifier = {
+      enabled = false,
+      timeout = 3000,
+    },
+    picker = { enabled = true },
+    quickfile = { enabled = true },
+    scope = { enabled = false },
+    scroll = { enabled = false },
+    statuscolumn = { enabled = false },
+    words = { enabled = true },
+    zen = { enabled = false },
+    styles = {
+      notification = {
+        relative = "editor",
+        wo = { wrap = true }, -- Wrap notifications
+      },
+    },
+  })
+
+  keymap('n', '<C-_>', Snacks.explorer.reveal, {})
+end)
 
 -- Safely execute later
 
@@ -884,7 +895,7 @@ later(function()
 
   keymap('n', '<C-p>', '<cmd>Pick files<cr>', {})
   keymap('n', '<C-f>', '<cmd>Pick grep_live<cr>', {})
-  keymap('n', '<C-_>', '<cmd>Pick explorer<cr>', {})
+  -- keymap('n', '<C-_>', '<cmd>Pick explorer<cr>', {})
 end)
 
 later(function()
@@ -959,7 +970,7 @@ later(function()
     end,
   })
 
-  keymap('n', '<C-o>', function() MiniFiles.open() end, {})
+  keymap('n', '<C-o>', MiniFiles.open, {})
 end)
 
 later(function() require('mini.pairs').setup({ modes = { insert = true, command = true, terminal = true } }) end)
@@ -1014,7 +1025,7 @@ later(function()
 end)
 
 -- Indentation marks and scope
-later(function() require('mini.indentscope').setup() end)
+-- later(function() require('mini.indentscope').setup() end)
 
 -- later(function()
 --   add({
@@ -1028,19 +1039,19 @@ later(function() require('mini.indentscope').setup() end)
 --   vim.cmd.highlight('IndentLineCurrent guifg=#123456')
 -- end)
 
-later(function()
-  add({
-    source = 'lukas-reineke/indent-blankline.nvim',
-  })
-
-  require("ibl").setup {
-    scope = { enabled = false },
-    indent = {
-      char = "▎",
-      tab_char = "▎",
-    },
-  }
-end)
+-- later(function()
+--   add({
+--     source = 'lukas-reineke/indent-blankline.nvim',
+--   })
+--
+--   require("ibl").setup {
+--     scope = { enabled = false },
+--     indent = {
+--       char = "▎",
+--       tab_char = "▎",
+--     },
+--   }
+-- end)
 
 -- Git and diff
 
