@@ -162,11 +162,6 @@ end)
 --     vim.opt.completeopt:append "fuzzy"
 --   end
 --
---   -- Disable auto-completion in snacks inputs
---   vim.api.nvim_create_autocmd("FileType", {
---     pattern = "snacks_*",
---     command = "lua vim.b.minicompletion_disable = true"
---   })
 --
 --   local term = vim.api.nvim_replace_termcodes('<C-z>', true, true, true)
 --   vim.opt.wildmenu = true
@@ -742,9 +737,18 @@ now(function()
 
   keymap('n', '<C-p>', Snacks.picker.files, {})
   keymap('n', '<C-f>', Snacks.picker.grep, {})
-  keymap('n', '<C-_>', Snacks.explorer.reveal, {})
+  keymap('n', '<C-_>', function() Snacks.explorer() end, {})
 
   vim.api.nvim_create_user_command('Gitbrowse', Snacks.gitbrowse.open, {})
+
+  -- Disable Mini.nvi Functionality in snacks inputs
+  vim.api.nvim_create_autocmd("FileType", {
+    pattern = "snacks_*",
+    callback = function(args)
+      vim.b[args.buf].minicompletion_disable = true
+      vim.b[args.buf].minidiff_disable = true
+    end
+  })
 end)
 
 -- Safely execute later
