@@ -565,44 +565,6 @@ now(function()
 
       require('glance').setup()
 
-      -- Rename UI
-      local function dorename(win)
-        local new_name = vim.trim(vim.fn.getline('.'))
-        vim.api.nvim_win_close(win, true)
-        vim.lsp.buf.rename(new_name)
-      end
-
-      local function rename()
-        local cword = vim.fn.expand('<cword>')
-        local width = cword:len() + 5
-        if width < 30 then width = 30 end
-        local ropts = {
-          relative = 'cursor',
-          row = 0,
-          col = 0,
-          width = width,
-          height = 1,
-          style = 'minimal',
-          border = 'single',
-          title = 'Rename'
-        }
-        local buf = vim.api.nvim_create_buf(false, true)
-        local win = vim.api.nvim_open_win(buf, true, ropts)
-        local fmt = '<cmd>lua Rename.dorename(%d)<CR>'
-        local fmtc = '<cmd>lua vim.api.nvim_win_close(%d, true)<CR>'
-        vim.b[buf].minicompletion_disable = true
-
-        vim.api.nvim_buf_set_lines(buf, 0, -1, false, { cword })
-        vim.api.nvim_buf_set_keymap(buf, 'i', '<CR>', string.format(fmt, win), { silent = true })
-        vim.api.nvim_buf_set_keymap(buf, 'n', '<Esc>', string.format(fmtc, win), { silent = true })
-        vim.api.nvim_buf_set_keymap(buf, 'i', '<Esc>', string.format(fmtc, win), { silent = true })
-      end
-
-      _G.Rename = {
-        rename = rename,
-        dorename = dorename
-      }
-
       -- Format on save
       vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
         -- buffer = 0, -- if 0 doesn't work do vim.api.nvim_get_current_buf()
@@ -636,7 +598,16 @@ now(function()
       end
 
       -- LSP keymaps
-      keymap('n', '<leader>rn', function() Rename.rename() end, { silent = true })
+      keymap('n', '<leader>rn',
+        function()
+          local cword = vim.fn.expand('<cword>')
+          Snacks.input(
+            { prompt = 'Rename', default = cword, win = { relative = 'cursor', row = -3, col = 0 } },
+            vim.lsp.buf.rename
+          )
+        end,
+        { silent = true }
+      )
       keymap('n', '<leader>ca', function() vim.lsp.buf.code_action() end, opts)
       -- keymap('n', '<leader>ld', function() MiniExtra.pickers.diagnostic() end, opts)
       keymap('n', '<leader>ld', Snacks.picker.diagnostics, opts)
