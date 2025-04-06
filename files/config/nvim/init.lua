@@ -643,31 +643,50 @@ now(function()
       -- LSP keymaps
       keymap('n', '<leader>rn', function() Rename.rename() end, { silent = true })
       keymap('n', '<leader>ca', function() vim.lsp.buf.code_action() end, opts)
-      keymap('n', '<leader>ld', function() MiniExtra.pickers.diagnostic() end, opts)
+      -- keymap('n', '<leader>ld', function() MiniExtra.pickers.diagnostic() end, opts)
+      keymap('n', '<leader>ld', Snacks.picker.diagnostics, opts)
 
-      keymap('n', 'K', bordered_hover, opts)
+
       -- keymap('n', 'gd', function() vim.lsp.buf.definition() end, opts)
-      keymap('n', 'gd', function() MiniExtra.pickers.lsp({ scope = 'definition' }) end, opts)
+      -- keymap('n', 'gd', function() MiniExtra.pickers.lsp({ scope = 'definition' }) end, opts)
+      keymap('n', 'gd', Snacks.picker.lsp_definitions, opts)
+
       -- keymap('n', 'gD', function() vim.lsp.buf.declaration() end, opts)
-      keymap('n', 'gD', function() MiniExtra.pickers.lsp({ scope = 'declaration' }) end, opts)
+      -- keymap('n', 'gD', function() MiniExtra.pickers.lsp({ scope = 'declaration' }) end, opts)
+      keymap('n', 'gD', Snacks.picker.lsp_declarations, opts)
+
       -- keymap('n', 'gi', function() vim.lsp.buf.implementation() end, opts)
-      keymap('n', 'gi', function() MiniExtra.pickers.lsp({ scope = 'implementation' }) end, opts)
+      -- keymap('n', 'gi', function() MiniExtra.pickers.lsp({ scope = 'implementation' }) end, opts)
+      keymap('n', 'gi', Snacks.picker.lsp_implementations, opts)
+
       -- keymap('n', 'go', function() vim.lsp.buf.type_definition() end, opts)
-      keymap('n', 'go', function() MiniExtra.pickers.lsp({ scope = 'type_definition' }) end, opts)
+      -- keymap('n', 'go', function() MiniExtra.pickers.lsp({ scope = 'type_definition' }) end, opts)
+      keymap('n', 'go', Snacks.picker.lsp_type_definitions, opts)
+
       -- keymap('n', 'gr', function() vim.lsp.buf.references() end, opts)
-      keymap('n', 'gr', function() MiniExtra.pickers.lsp({ scope = 'references' }) end, opts)
+      -- keymap('n', 'gr', function() MiniExtra.pickers.lsp({ scope = 'references' }) end, opts)
+      keymap('n', 'gr', Snacks.picker.lsp_references, opts)
+
       keymap('n', 'gs', bordered_signature_help, opts)
-      keymap('n', 'gS', function() MiniExtra.pickers.lsp({ scope = 'document_symbol' }) end, opts)
-      keymap('n', 'gf', function() MiniExtra.pickers.lsp({ scope = 'workspace_symbol' }) end, opts)
+
+      -- keymap('n', 'gS', function() MiniExtra.pickers.lsp({ scope = 'document_symbol' }) end, opts)
+      keymap('n', 'gS', Snacks.picker.lsp_symbols, opts)
+
+      -- keymap('n', 'gf', function() MiniExtra.pickers.lsp({ scope = 'workspace_symbol' }) end, opts)
+      keymap('n', 'gf', Snacks.picker.lsp_workspace_symbols, opts)
+
       keymap('n', ']g', function() vim.diagnostic.jump({ count = 1, float = true }) end, opts)
       keymap('n', '[g', function() vim.diagnostic.jump({ count = -1, float = true }) end, opts)
+
       keymap({ 'n', 'x' }, '<F3>', function() vim.lsp.buf.format({ async = true }) end, opts)
       keymap('n', '<F4>', vim.lsp.buf.code_action, opts)
       keymap('n', '<F2>', vim.lsp.buf.rename, opts)
+      keymap('n', 'K', bordered_hover, opts)
     end,
   })
 end)
 
+-- Snacks
 now(function()
   add({
     source = "folke/snacks.nvim",
@@ -701,7 +720,12 @@ now(function()
       enabled = false,
       timeout = 3000,
     },
-    picker = { enabled = true },
+    picker = {
+      enabled = true,
+      layout = {
+        preset = 'ivy',
+      },
+    },
     quickfile = { enabled = true },
     scope = { enabled = false },
     scroll = { enabled = false },
@@ -716,7 +740,11 @@ now(function()
     },
   })
 
+  keymap('n', '<C-p>', Snacks.picker.files, {})
+  keymap('n', '<C-f>', Snacks.picker.grep, {})
   keymap('n', '<C-_>', Snacks.explorer.reveal, {})
+
+  vim.api.nvim_create_user_command('Gitbrowse', Snacks.gitbrowse.open, {})
 end)
 
 -- Safely execute later
@@ -893,8 +921,8 @@ later(function()
     return MiniPick.ui_select(items, opts, on_choice, start_opts)
   end
 
-  keymap('n', '<C-p>', '<cmd>Pick files<cr>', {})
-  keymap('n', '<C-f>', '<cmd>Pick grep_live<cr>', {})
+  -- keymap('n', '<C-p>', '<cmd>Pick files<cr>', {})
+  -- keymap('n', '<C-f>', '<cmd>Pick grep_live<cr>', {})
   -- keymap('n', '<C-_>', '<cmd>Pick explorer<cr>', {})
 end)
 
