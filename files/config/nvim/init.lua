@@ -997,7 +997,7 @@ later(function()
   -- local hi_words = MiniExtra.gen_highlighter.words
   local hi_words = function(words, group, extmark_opts)
     local pattern = vim.tbl_map(function(x)
-      return '%f[%w]' .. vim.pesc(x) .. '%f[%s]'
+      return '%f[%w]' .. vim.pesc(x) .. '%f[^' .. x:sub(-1) .. ']'
     end, words)
     return { pattern = pattern, group = group, extmark_opts = extmark_opts }
   end
