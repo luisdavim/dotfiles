@@ -994,13 +994,24 @@ later(function() require('mini.cursorword').setup() end)
 
 later(function()
   local hipatterns = require('mini.hipatterns')
-  local hi_words = MiniExtra.gen_highlighter.words
+  -- local hi_words = MiniExtra.gen_highlighter.words
+  local hi_words = function(words, group, extmark_opts)
+    local pattern = vim.tbl_map(function(x)
+      return '%f[%w]' .. vim.pesc(x) .. '%f[%s]'
+    end, words)
+    return { pattern = pattern, group = group, extmark_opts = extmark_opts }
+  end
+  local add_suffix = function(lst, suffix)
+    return vim.tbl_map(function(x)
+      return x .. suffix
+    end, lst)
+  end
   hipatterns.setup({
     highlighters = {
-      fixme = hi_words({ 'FIXME', 'Fixme', 'fixme' }, 'MiniHipatternsFixme'),
-      hack = hi_words({ 'HACK', 'Hack', 'hack' }, 'MiniHipatternsHack'),
-      todo = hi_words({ 'TODO', 'Todo', 'todo' }, 'MiniHipatternsTodo'),
-      note = hi_words({ 'NOTE', 'Note', 'note' }, 'MiniHipatternsNote'),
+      fixme = hi_words(add_suffix({ 'FIXME', 'Fixme', 'fixme' }, ':'), 'MiniHipatternsFixme'),
+      hack = hi_words(add_suffix({ 'HACK', 'Hack', 'hack' }, ':'), 'MiniHipatternsHack'),
+      todo = hi_words(add_suffix({ 'TODO', 'Todo', 'todo' }, ':'), 'MiniHipatternsTodo'),
+      note = hi_words(add_suffix({ 'NOTE', 'Note', 'note' }, ':'), 'MiniHipatternsNote'),
 
       hex_color = hipatterns.gen_highlighter.hex_color(),
     },
@@ -1029,18 +1040,6 @@ end)
 
 -- Indentation marks and scope
 -- later(function() require('mini.indentscope').setup() end)
-
--- later(function()
---   add({
---     source = 'nvimdev/indentmini.nvim'
---   })
---   require("indentmini").setup()
---   -- Colors are applied automatically based on user-defined highlight groups.
---   -- There is no default value.
---   vim.cmd.highlight('IndentLine guifg=#999999')
---   -- Current indent line highlight
---   vim.cmd.highlight('IndentLineCurrent guifg=#123456')
--- end)
 
 -- later(function()
 --   add({

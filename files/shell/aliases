@@ -27,7 +27,7 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 
 # Grep aliases
 alias gr='rg --hidden -g "!*vendor/*"'
-alias todos="rg --hidden -n --nogroup '(TODO|FIX(ME)?):'"
+alias todos="rg --hidden -n --no-heading '(TODO|FIX(ME)?):'"
 
 function envgrep() {
   printenv | awk "/${1}/ {print \$1}"
