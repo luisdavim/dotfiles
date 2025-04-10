@@ -224,6 +224,23 @@ function explain-shell() {
   cat -s <(grep -v -e explainshell -e • -e □ -e 'source manpages' <<< "$response")
 }
 
+function termbin() {
+  local input=""
+
+  if [[ -p /dev/stdin ]]; then
+    cat - | nc termbin.com 9999
+    return
+  else
+    input="${*}"
+  fi
+
+  if [[ -z "${input}" ]]; then
+    return 1
+  fi
+
+  eval "${input} | nc termbin.com 9999"
+}
+
 # Bash calculator.
 function calc() {
   bc -l <<< "${1}"
