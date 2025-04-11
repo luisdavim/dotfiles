@@ -671,7 +671,23 @@ now(function()
       replace_netrw = true,
     },
     git = { enabled = false },
-    gitbrowse = { enabled = true },
+    gitbrowse = {
+      enabled = true,
+      url_patterns = {
+        [".*github.*%..+"] = {
+          branch = "/tree/{branch}",
+          file = "/blob/{branch}/{file}#L{line_start}-L{line_end}",
+          permalink = "/blob/{commit}/{file}#L{line_start}-L{line_end}",
+          commit = "/commit/{commit}",
+        },
+        [".*gitlab.*%..+"] = {
+          branch = "/-/tree/{branch}",
+          file = "/-/blob/{branch}/{file}#L{line_start}-L{line_end}",
+          permalink = "/-/blob/{commit}/{file}#L{line_start}-L{line_end}",
+          commit = "/-/commit/{commit}",
+        },
+      },
+    },
     image = { enabled = false },
     indent = {
       enabled = true,
@@ -723,6 +739,61 @@ now(function()
 end)
 
 -- Safely execute later
+
+-- Git and diff
+
+later(function()
+  add({
+    source = 'tanvirtin/vgit.nvim',
+    depends = {
+      'nvim-lua/plenary.nvim'
+    }
+  })
+  require("vgit").setup({
+    settings = {
+      live_blame = {
+        enabled = false,
+      },
+    },
+  })
+end)
+
+later(function()
+  add({
+    source = 'sindrets/diffview.nvim'
+  })
+  require("diffview").setup()
+end)
+
+later(function()
+  local diff = require('mini.diff')
+  diff.setup({
+    source = { diff.gen_source.git(), diff.gen_source.save() }
+  })
+end)
+
+later(function()
+  require('mini.git').setup()
+
+  local align_blame = function(au_data)
+    if au_data.data.git_subcommand ~= 'blame' then return end
+
+    -- Align blame output with source
+    local win_src = au_data.data.win_source
+    vim.wo.wrap = false
+    vim.fn.winrestview({ topline = vim.fn.line('w0', win_src) })
+    vim.api.nvim_win_set_cursor(0, { vim.fn.line('.', win_src), 0 })
+
+    -- Bind both windows so that they scroll together
+    vim.wo[win_src].scrollbind, vim.wo.scrollbind = true, true
+  end
+
+  local au_opts = { pattern = 'MiniGitCommandSplit', callback = align_blame }
+  vim.api.nvim_create_autocmd('User', au_opts)
+  vim.api.nvim_create_user_command('Gblame', function()
+    pcall(vim.cmd('vertical Git blame -- %'))
+  end, {})
+end)
 
 -- DAP
 later(function()
@@ -1054,73 +1125,6 @@ end)
 --     },
 --   }
 -- end)
-
--- Git and diff
-
--- TODO: this doesn't seem to play nice with later
-now(function()
-  add({
-    source = 'tanvirtin/vgit.nvim',
-    depends = {
-      'nvim-lua/plenary.nvim'
-    }
-  })
-  require("vgit").setup({
-    settings = {
-      live_blame = {
-        enabled = false,
-      },
-    },
-  })
-end)
-
--- later(function()
---   add({
---     source = 'f-person/git-blame.nvim'
---   })
---   require('gitblame').setup {
---     enabled = false,
---     schedule_event = 'CursorHold',
---     clear_event = 'CursorHoldI',
---   }
--- end)
-
-later(function()
-  add({
-    source = 'sindrets/diffview.nvim'
-  })
-  require("diffview").setup()
-end)
-
-later(function()
-  local diff = require('mini.diff')
-  diff.setup({
-    source = { diff.gen_source.git(), diff.gen_source.save() }
-  })
-end)
-
-later(function()
-  require('mini.git').setup()
-
-  local align_blame = function(au_data)
-    if au_data.data.git_subcommand ~= 'blame' then return end
-
-    -- Align blame output with source
-    local win_src = au_data.data.win_source
-    vim.wo.wrap = false
-    vim.fn.winrestview({ topline = vim.fn.line('w0', win_src) })
-    vim.api.nvim_win_set_cursor(0, { vim.fn.line('.', win_src), 0 })
-
-    -- Bind both windows so that they scroll together
-    vim.wo[win_src].scrollbind, vim.wo.scrollbind = true, true
-  end
-
-  local au_opts = { pattern = 'MiniGitCommandSplit', callback = align_blame }
-  vim.api.nvim_create_autocmd('User', au_opts)
-  vim.api.nvim_create_user_command('Gblame', function()
-    pcall(vim.cmd('vertical Git blame -- %'))
-  end, {})
-end)
 
 -- Buffer and window management
 
