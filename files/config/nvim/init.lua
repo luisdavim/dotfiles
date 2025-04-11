@@ -759,20 +759,6 @@ later(function()
 end)
 
 later(function()
-  add({
-    source = 'sindrets/diffview.nvim'
-  })
-  require("diffview").setup()
-end)
-
-later(function()
-  local diff = require('mini.diff')
-  diff.setup({
-    source = { diff.gen_source.git(), diff.gen_source.save() }
-  })
-end)
-
-later(function()
   require('mini.git').setup()
 
   local align_blame = function(au_data)
@@ -793,6 +779,23 @@ later(function()
   vim.api.nvim_create_user_command('Gblame', function()
     pcall(vim.cmd('vertical Git blame -- %'))
   end, {})
+end)
+
+later(function()
+  add({
+    source = 'sindrets/diffview.nvim'
+  })
+  require("diffview").setup()
+end)
+
+later(function()
+  local diff = require('mini.diff')
+  diff.setup({
+    source = { diff.gen_source.git(), diff.gen_source.save() },
+    view = {
+      style = 'number'
+    },
+  })
 end)
 
 -- DAP
