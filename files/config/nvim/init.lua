@@ -147,6 +147,13 @@ end)
 
 -- Auto-completion
 
+-- later(function()
+--   local snippets = require('mini.snippets')
+--   local gen_loader = snippets.gen_loader
+--   snippets.setup({ snippets = { gen_loader.from_lang() } })
+--   MiniSnippets.start_lsp_server()
+-- end)
+
 -- Using mini.completion
 -- now(function()
 --   require('mini.completion').setup({
@@ -1189,12 +1196,6 @@ later(function()
     PasteWindow('tabnew')
   end, { silent = true })
 end)
-
--- later(function()
---   local snippets = require('mini.snippets')
---   local gen_loader = snippets.gen_loader
---   snippets.setup({ snippets = { gen_loader.from_lang() } })
--- end)
 
 -- later(function()
 --   local miniclue = require('mini.clue')
