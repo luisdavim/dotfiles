@@ -133,20 +133,17 @@ now(function() require('mini.statusline').setup() end)
 now(function() require('mini.starter').setup() end)
 
 now(function()
-  local misc = require('mini.misc')
-  misc.setup({ make_global = { "put", "put_text" } })
-  misc.setup_restore_cursor()
-end)
-
-now(function()
-  add({
-    source = 'ahmedkhalf/project.nvim'
+  require('mini.misc').setup({ make_global = { "put", "put_text" } })
+  MiniMisc.setup_restore_cursor()
+  MiniMisc.setup_auto_root({
+    'requirements.txt', 'setup.cfg', 'package.json', 'go.mod', 'Cargo.toml', '.projections.json',
+    'Makefile', '.root', '.repo', '.git', '.hg', '.bzr', '.svn',
   })
-  require('project_nvim').setup()
 end)
 
 -- Auto-completion
 
+-- Sinppets
 -- later(function()
 --   local snippets = require('mini.snippets')
 --   local gen_loader = snippets.gen_loader
