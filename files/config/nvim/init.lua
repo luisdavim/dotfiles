@@ -746,23 +746,7 @@ end)
 
 -- Git and diff
 
-later(function()
-  add({
-    source = 'tanvirtin/vgit.nvim',
-    depends = {
-      'nvim-lua/plenary.nvim'
-    }
-  })
-  require("vgit").setup({
-    settings = {
-      live_blame = {
-        enabled = false,
-      },
-    },
-  })
-end)
-
-later(function()
+now(function()
   require('mini.git').setup()
 
   local align_blame = function(au_data)
@@ -785,14 +769,7 @@ later(function()
   end, {})
 end)
 
-later(function()
-  add({
-    source = 'sindrets/diffview.nvim'
-  })
-  require("diffview").setup()
-end)
-
-later(function()
+now(function()
   local diff = require('mini.diff')
   diff.setup({
     source = { diff.gen_source.git(), diff.gen_source.save() },
@@ -800,6 +777,29 @@ later(function()
       style = 'number'
     },
   })
+end)
+
+later(function()
+  add({
+    source = 'tanvirtin/vgit.nvim',
+    depends = {
+      'nvim-lua/plenary.nvim',
+    }
+  })
+  require("vgit").setup({
+    settings = {
+      live_blame = {
+        enabled = false,
+      },
+    },
+  })
+end)
+
+later(function()
+  add({
+    source = 'sindrets/diffview.nvim'
+  })
+  require("diffview").setup()
 end)
 
 -- DAP
