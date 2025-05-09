@@ -365,7 +365,8 @@ now(function()
   --   handlers = {},
   -- })
   require('mason').setup()
-  require("mason-lspconfig").setup({
+  local mason_lspconfig = require("mason-lspconfig")
+  mason_lspconfig.setup({
     automatic_installation = true,
   })
   require('mason-tool-installer').setup({
@@ -384,7 +385,7 @@ now(function()
   local capabilities = require('cmp_nvim_lsp').default_capabilities()
   local lspconfig = require('lspconfig')
   capabilities = vim.tbl_deep_extend('force', vim.lsp.protocol.make_client_capabilities(), capabilities)
-  require('mason-lspconfig').setup_handlers({
+  mason_lspconfig.setup_handlers({
     -- The first entry (without a key) will be the default handler
     -- and will be called for each installed server that doesn't have
     -- a dedicated handler.
