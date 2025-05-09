@@ -365,9 +365,10 @@ now(function()
   --   handlers = {},
   -- })
   require('mason').setup()
-  local mason_lspconfig = require("mason-lspconfig")
+  local mason_lspconfig = require('mason-lspconfig')
   mason_lspconfig.setup({
-    automatic_installation = true,
+    automatic_enable = true,
+    ensure_installed = {},
   })
   require('mason-tool-installer').setup({
     auto_update = false,
@@ -381,92 +382,6 @@ now(function()
     },
   })
 
-  -- local capabilities = MiniCompletion.get_lsp_capabilities()
-  local capabilities = require('cmp_nvim_lsp').default_capabilities()
-  local lspconfig = require('lspconfig')
-  capabilities = vim.tbl_deep_extend('force', vim.lsp.protocol.make_client_capabilities(), capabilities)
-  mason_lspconfig.setup_handlers({
-    -- The first entry (without a key) will be the default handler
-    -- and will be called for each installed server that doesn't have
-    -- a dedicated handler.
-    function(server_name) -- default handler (optional)
-      lspconfig[server_name].setup {
-        capabilities = capabilities,
-      }
-    end,
-    -- Next, you can provide a dedicated handler for specific servers.
-    -- For example, a handler override for the `rust_analyzer`:
-    -- ['rust_analyzer'] = function ()
-    --   require('rust-tools').setup {}
-    -- end
-    ['gopls'] = function()
-      lspconfig.gopls.setup {
-        capabilities = capabilities,
-        cmd = { "gopls", "-remote=auto" },
-        filetypes = { "go", "gomod", "gowork", "gotmpl", "gohtmltmpl", "gotexttmpl" },
-        root_dir = vim.fs.dirname(
-          vim.fs.find({ 'go.mod', 'go.work', '.git' }, { upward = true })[1]
-        ),
-        settings = {
-          gopls = {
-            gofumpt = true,
-            staticcheck = true,
-            semanticTokens = true,
-            usePlaceholders = true,
-            completeUnimported = true,
-            completionDocumentation = true,
-            deepCompletion = true,
-            matcher = "Fuzzy",
-            directoryFilters = { "-.git", "-.vscode", "-.idea", "-.vscode-test", "-node_modules", "-.nvim" },
-            codelenses = {
-              gc_details = false,
-              generate = true,
-              regenerate_cgo = true,
-              run_govulncheck = true,
-              test = true,
-              tidy = true,
-              upgrade_dependency = true,
-              vendor = true,
-            },
-            hints = {
-              assignVariableTypes = true,
-              compositeLiteralTypes = true,
-              compositeLiteralFields = true,
-              functionTypeParameters = true,
-              parameterNames = true,
-              rangeVariableTypes = true,
-              constantValues = true
-            },
-            analyses = {
-              nilness = true,
-              unusedparams = true,
-              unusedwrite = true,
-              useany = true,
-              unreachable = false,
-              shadow = true,
-            },
-          },
-        },
-      }
-    end,
-    ['bashls'] = function()
-      lspconfig.bashls.setup {
-        settings = {
-          bashIde = {
-            shfmt = {
-              -- simplifyCode = true,
-              -- binaryNextLine = true,
-              languageDialect = "auto",
-              spaceRedirects = true,
-              caseIndent = true,
-              indentSize = 2,
-            },
-          },
-        },
-      }
-    end
-  })
-
   add({
     source = 'fnune/codeactions-on-save.nvim',
   })
@@ -474,187 +389,282 @@ now(function()
     source = 'dnlhc/glance.nvim',
   })
 
-  vim.api.nvim_create_autocmd('LspAttach', {
-    desc = 'LSP actions',
-    callback = function(event)
-      local opts = { buffer = event.buf }
+  -- local capabilities = MiniCompletion.get_lsp_capabilities()
+  local capabilities = require('cmp_nvim_lsp').default_capabilities()
+  local lspconfig = require('lspconfig')
+  capabilities = vim.tbl_deep_extend('force', vim.lsp.protocol.make_client_capabilities(), capabilities)
 
-      MiniIcons.tweak_lsp_kind()
+  -- vim.api.nvim_create_autocmd('LspAttach', {
+  --   desc = 'LSP actions',
+  --   callback = function(event)
+  --     local buffnr = event.buf
+  --     local id = vim.tbl_get(event, 'data', 'client_id')
+  --     local client = id and vim.lsp.get_client_by_id(id)
 
-      local id = vim.tbl_get(event, 'data', 'client_id')
-      local client = id and vim.lsp.get_client_by_id(id)
+  local on_attach = function(client, buffnr)
+    local opts = { buffer = buffnr }
 
-      -- highlight symbol under cursor
-      if client ~= nil and client.supports_method('textDocument/documentHighlight', event.buf) then
-        vim.b[event.buf].minicursorword_disable = true
+    MiniIcons.tweak_lsp_kind()
 
-        vim.api.nvim_set_hl(0, 'LspReferenceRead', { link = 'MiniCursorword' })
-        vim.api.nvim_set_hl(0, 'LspReferenceText', { link = 'MiniCursorword' })
-        vim.api.nvim_set_hl(0, 'LspReferenceWrite', { link = 'MiniCursorword' })
+    -- highlight symbol under cursor
+    if client ~= nil and client.supports_method('textDocument/documentHighlight', buffnr) then
+      vim.b[buffnr].minicursorword_disable = true
 
-        local group = vim.api.nvim_create_augroup('highlight_symbol', { clear = false })
-        vim.api.nvim_clear_autocmds({ buffer = event.buf, group = group })
-        vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
-          group = group,
-          buffer = event.buf,
-          callback = vim.lsp.buf.document_highlight,
-        })
-        vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
-          group = group,
-          buffer = event.buf,
-          callback = vim.lsp.buf.clear_references,
-        })
-      end
+      vim.api.nvim_set_hl(0, 'LspReferenceRead', { link = 'MiniCursorword' })
+      vim.api.nvim_set_hl(0, 'LspReferenceText', { link = 'MiniCursorword' })
+      vim.api.nvim_set_hl(0, 'LspReferenceWrite', { link = 'MiniCursorword' })
 
-      -- LSP UI settings
-      vim.diagnostic.config({
-        virtual_text = false,
-        float = {
-          border = 'single',
-          width = math.floor(0.25 * vim.o.columns)
+      local group = vim.api.nvim_create_augroup('highlight_symbol', { clear = false })
+      vim.api.nvim_clear_autocmds({ buffer = buffnr, group = group })
+      vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+        group = group,
+        buffer = buffnr,
+        callback = vim.lsp.buf.document_highlight,
+      })
+      vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+        group = group,
+        buffer = buffnr,
+        callback = vim.lsp.buf.clear_references,
+      })
+    end
+
+    -- LSP UI settings
+    vim.diagnostic.config({
+      virtual_text = false,
+      float = {
+        border = 'single',
+        width = math.floor(0.25 * vim.o.columns)
+      },
+      signs = {
+        text = {
+          [vim.diagnostic.severity.ERROR] = '✘',
+          [vim.diagnostic.severity.WARN] = '▲',
+          [vim.diagnostic.severity.HINT] = '⚑',
+          [vim.diagnostic.severity.INFO] = '»',
         },
-        signs = {
-          text = {
-            [vim.diagnostic.severity.ERROR] = '✘',
-            [vim.diagnostic.severity.WARN] = '▲',
-            [vim.diagnostic.severity.HINT] = '⚑',
-            [vim.diagnostic.severity.INFO] = '»',
-          },
+      },
+    })
+
+    -- Diagnostics
+    -- Function to check if a floating dialog exists and if not
+    -- then check for diagnostics under the cursor
+    function OpenDiagnosticIfNoFloat()
+      for _, winid in pairs(vim.api.nvim_tabpage_list_wins(0)) do
+        if vim.api.nvim_win_get_config(winid).zindex then
+          return
+        end
+      end
+      vim.diagnostic.open_float(nil, {
+        scope = 'line',
+        border = 'single',
+        width = math.floor(0.25 * vim.o.columns),
+        focusable = false,
+        close_events = {
+          'CursorMoved',
+          'CursorMovedI',
+          'BufHidden',
+          'InsertCharPre',
+          'WinLeave',
         },
       })
+    end
 
-      -- Diagnostics
-      -- Function to check if a floating dialog exists and if not
-      -- then check for diagnostics under the cursor
-      function OpenDiagnosticIfNoFloat()
-        for _, winid in pairs(vim.api.nvim_tabpage_list_wins(0)) do
-          if vim.api.nvim_win_get_config(winid).zindex then
-            return
-          end
-        end
-        vim.diagnostic.open_float(nil, {
-          scope = 'line',
-          border = 'single',
-          width = math.floor(0.25 * vim.o.columns),
-          focusable = false,
-          close_events = {
-            'CursorMoved',
-            'CursorMovedI',
-            'BufHidden',
-            'InsertCharPre',
-            'WinLeave',
-          },
-        })
-      end
+    -- Show diagnostics under the cursor when holding position
+    vim.api.nvim_create_augroup('lsp_diagnostics_hold', { clear = true })
+    vim.api.nvim_create_autocmd({ 'CursorHold' }, {
+      pattern = "*",
+      command = "lua OpenDiagnosticIfNoFloat()",
+      group = 'lsp_diagnostics_hold',
+    })
 
-      -- Show diagnostics under the cursor when holding position
-      vim.api.nvim_create_augroup('lsp_diagnostics_hold', { clear = true })
-      vim.api.nvim_create_autocmd({ 'CursorHold' }, {
-        pattern = "*",
-        command = "lua OpenDiagnosticIfNoFloat()",
-        group = 'lsp_diagnostics_hold',
-      })
-
-      -- Inlay hints
-      if client ~= nil and client.supports_method('textDocument/inlayHint', event.buf) then
-        vim.lsp.inlay_hint.enable(true, { event.buf })
-        keymap('n', '<leader>H',
-          function()
-            if vim.lsp.inlay_hint.is_enabled() then
-              vim.lsp.inlay_hint.enable(false, { event.buf })
-            else
-              vim.lsp.inlay_hint.enable(true, { event.buf })
-            end
-          end, opts)
-      end
-
-      require('glance').setup()
-
-      -- Format on save
-      vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
-        -- buffer = 0, -- if 0 doesn't work do vim.api.nvim_get_current_buf()
-        callback = function(_)
-          vim.lsp.buf.format({ async = false })
-          -- vim.lsp.buf.code_action is async and may not resolve before the buffer is closed
-          -- vim.lsp.buf.code_action { context = { only = { 'source.organizeImports' } }, apply = true }
-          -- vim.lsp.buf.code_action { context = { only = { 'source.fixAll' } }, apply = true }
-        end
-      })
-      vim.api.nvim_create_user_command('Format', function()
-        vim.lsp.buf.format({ async = false })
-      end, {})
-
-      local cos = require('codeactions-on-save')
-      cos.register({ '*.py', '*.go', '*.rb' }, { 'source.organizeImports' })
-      cos.register({ '*.ts', '*.tsx' }, { 'source.organizeImports.biome', 'source.fixAll' })
-
-      local function bordered_hover(_opts)
-        _opts = _opts or {}
-        return vim.lsp.buf.hover(vim.tbl_deep_extend('force', _opts, {
-          border = 'single'
-        }))
-      end
-
-      local function bordered_signature_help(_opts)
-        _opts = _opts or {}
-        return vim.lsp.buf.signature_help(vim.tbl_deep_extend('force', _opts, {
-          border = 'single'
-        }))
-      end
-
-      -- LSP keymaps
-      keymap('n', '<leader>rn',
+    -- Inlay hints
+    if client ~= nil and client.supports_method('textDocument/inlayHint', buffnr) then
+      vim.lsp.inlay_hint.enable(true, { buffnr })
+      keymap('n', '<leader>H',
         function()
-          local cword = vim.fn.expand('<cword>')
-          Snacks.input(
-            { prompt = 'Rename', default = cword, win = { relative = 'cursor', row = -3, col = 0 } },
-            vim.lsp.buf.rename
-          )
-        end,
-        { silent = true }
-      )
-      keymap('n', '<leader>ca', function() vim.lsp.buf.code_action() end, opts)
-      -- keymap('n', '<leader>ld', function() MiniExtra.pickers.diagnostic() end, opts)
-      keymap('n', '<leader>ld', Snacks.picker.diagnostics, opts)
+          if vim.lsp.inlay_hint.is_enabled() then
+            vim.lsp.inlay_hint.enable(false, { buffnr })
+          else
+            vim.lsp.inlay_hint.enable(true, { buffnr })
+          end
+        end, opts)
+    end
+
+    require('glance').setup()
+
+    -- Format on save
+    vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
+      -- buffer = 0, -- if 0 doesn't work do vim.api.nvim_get_current_buf()
+      callback = function(_)
+        vim.lsp.buf.format({ async = false })
+        -- vim.lsp.buf.code_action is async and may not resolve before the buffer is closed
+        -- vim.lsp.buf.code_action { context = { only = { 'source.organizeImports' } }, apply = true }
+        -- vim.lsp.buf.code_action { context = { only = { 'source.fixAll' } }, apply = true }
+      end
+    })
+    vim.api.nvim_create_user_command('Format', function()
+      vim.lsp.buf.format({ async = false })
+    end, {})
+
+    local cos = require('codeactions-on-save')
+    cos.register({ '*.py', '*.go', '*.rb' }, { 'source.organizeImports' })
+    cos.register({ '*.ts', '*.tsx' }, { 'source.organizeImports.biome', 'source.fixAll' })
+
+    local function bordered_hover(_opts)
+      _opts = _opts or {}
+      return vim.lsp.buf.hover(vim.tbl_deep_extend('force', _opts, {
+        border = 'single'
+      }))
+    end
+
+    local function bordered_signature_help(_opts)
+      _opts = _opts or {}
+      return vim.lsp.buf.signature_help(vim.tbl_deep_extend('force', _opts, {
+        border = 'single'
+      }))
+    end
+
+    -- LSP keymaps
+    keymap('n', '<leader>rn',
+      function()
+        local cword = vim.fn.expand('<cword>')
+        Snacks.input(
+          { prompt = 'Rename', default = cword, win = { relative = 'cursor', row = -3, col = 0 } },
+          vim.lsp.buf.rename
+        )
+      end,
+      { silent = true }
+    )
+    keymap('n', '<leader>ca', function() vim.lsp.buf.code_action() end, opts)
+    -- keymap('n', '<leader>ld', function() MiniExtra.pickers.diagnostic() end, opts)
+    keymap('n', '<leader>ld', Snacks.picker.diagnostics, opts)
 
 
-      -- keymap('n', 'gd', function() vim.lsp.buf.definition() end, opts)
-      -- keymap('n', 'gd', function() MiniExtra.pickers.lsp({ scope = 'definition' }) end, opts)
-      keymap('n', 'gd', Snacks.picker.lsp_definitions, opts)
+    -- keymap('n', 'gd', function() vim.lsp.buf.definition() end, opts)
+    -- keymap('n', 'gd', function() MiniExtra.pickers.lsp({ scope = 'definition' }) end, opts)
+    keymap('n', 'gd', Snacks.picker.lsp_definitions, opts)
 
-      -- keymap('n', 'gD', function() vim.lsp.buf.declaration() end, opts)
-      -- keymap('n', 'gD', function() MiniExtra.pickers.lsp({ scope = 'declaration' }) end, opts)
-      keymap('n', 'gD', Snacks.picker.lsp_declarations, opts)
+    -- keymap('n', 'gD', function() vim.lsp.buf.declaration() end, opts)
+    -- keymap('n', 'gD', function() MiniExtra.pickers.lsp({ scope = 'declaration' }) end, opts)
+    keymap('n', 'gD', Snacks.picker.lsp_declarations, opts)
 
-      -- keymap('n', 'gi', function() vim.lsp.buf.implementation() end, opts)
-      -- keymap('n', 'gi', function() MiniExtra.pickers.lsp({ scope = 'implementation' }) end, opts)
-      keymap('n', 'gi', Snacks.picker.lsp_implementations, opts)
+    -- keymap('n', 'gi', function() vim.lsp.buf.implementation() end, opts)
+    -- keymap('n', 'gi', function() MiniExtra.pickers.lsp({ scope = 'implementation' }) end, opts)
+    keymap('n', 'gi', Snacks.picker.lsp_implementations, opts)
 
-      -- keymap('n', 'go', function() vim.lsp.buf.type_definition() end, opts)
-      -- keymap('n', 'go', function() MiniExtra.pickers.lsp({ scope = 'type_definition' }) end, opts)
-      keymap('n', 'go', Snacks.picker.lsp_type_definitions, opts)
+    -- keymap('n', 'go', function() vim.lsp.buf.type_definition() end, opts)
+    -- keymap('n', 'go', function() MiniExtra.pickers.lsp({ scope = 'type_definition' }) end, opts)
+    keymap('n', 'go', Snacks.picker.lsp_type_definitions, opts)
 
-      -- keymap('n', 'gr', function() vim.lsp.buf.references() end, opts)
-      -- keymap('n', 'gr', function() MiniExtra.pickers.lsp({ scope = 'references' }) end, opts)
-      keymap('n', 'gr', Snacks.picker.lsp_references, opts)
+    -- keymap('n', 'gr', function() vim.lsp.buf.references() end, opts)
+    -- keymap('n', 'gr', function() MiniExtra.pickers.lsp({ scope = 'references' }) end, opts)
+    keymap('n', 'gr', Snacks.picker.lsp_references, opts)
 
-      keymap('n', 'gs', bordered_signature_help, opts)
+    keymap('n', 'gs', bordered_signature_help, opts)
 
-      -- keymap('n', 'gS', function() MiniExtra.pickers.lsp({ scope = 'document_symbol' }) end, opts)
-      keymap('n', 'gS', Snacks.picker.lsp_symbols, opts)
+    -- keymap('n', 'gS', function() MiniExtra.pickers.lsp({ scope = 'document_symbol' }) end, opts)
+    keymap('n', 'gS', Snacks.picker.lsp_symbols, opts)
 
-      -- keymap('n', 'gf', function() MiniExtra.pickers.lsp({ scope = 'workspace_symbol' }) end, opts)
-      keymap('n', 'gf', Snacks.picker.lsp_workspace_symbols, opts)
+    -- keymap('n', 'gf', function() MiniExtra.pickers.lsp({ scope = 'workspace_symbol' }) end, opts)
+    keymap('n', 'gf', Snacks.picker.lsp_workspace_symbols, opts)
 
-      keymap('n', ']g', function() vim.diagnostic.jump({ count = 1, float = true }) end, opts)
-      keymap('n', '[g', function() vim.diagnostic.jump({ count = -1, float = true }) end, opts)
+    keymap('n', ']g', function() vim.diagnostic.jump({ count = 1, float = true }) end, opts)
+    keymap('n', '[g', function() vim.diagnostic.jump({ count = -1, float = true }) end, opts)
 
-      keymap({ 'n', 'x' }, '<F3>', function() vim.lsp.buf.format({ async = true }) end, opts)
-      keymap('n', '<F4>', vim.lsp.buf.code_action, opts)
-      keymap('n', '<F2>', vim.lsp.buf.rename, opts)
-      keymap('n', 'K', bordered_hover, opts)
-    end,
-  })
+    keymap({ 'n', 'x' }, '<F3>', function() vim.lsp.buf.format({ async = true }) end, opts)
+    keymap('n', '<F4>', vim.lsp.buf.code_action, opts)
+    keymap('n', '<F2>', vim.lsp.buf.rename, opts)
+    keymap('n', 'K', bordered_hover, opts)
+    -- end,
+    -- })
+  end
+
+  local custom_lspconfig = {
+    ['gopls'] = {
+      capabilities = capabilities,
+      on_attach = on_attach,
+      cmd = { "gopls", "-remote=auto" },
+      filetypes = { "go", "gomod", "gowork", "gotmpl", "gohtmltmpl", "gotexttmpl" },
+      root_dir = vim.fs.dirname(
+        vim.fs.find({ 'go.mod', 'go.work', '.git' }, { upward = true })[1]
+      ),
+      settings = {
+        gopls = {
+          gofumpt = true,
+          staticcheck = true,
+          semanticTokens = true,
+          usePlaceholders = true,
+          completeUnimported = true,
+          completionDocumentation = true,
+          deepCompletion = true,
+          matcher = "Fuzzy",
+          directoryFilters = { "-.git", "-.vscode", "-.idea", "-.vscode-test", "-node_modules", "-.nvim" },
+          codelenses = {
+            gc_details = false,
+            generate = true,
+            regenerate_cgo = true,
+            run_govulncheck = true,
+            test = true,
+            tidy = true,
+            upgrade_dependency = true,
+            vendor = true,
+          },
+          hints = {
+            assignVariableTypes = true,
+            compositeLiteralTypes = true,
+            compositeLiteralFields = true,
+            functionTypeParameters = true,
+            parameterNames = true,
+            rangeVariableTypes = true,
+            constantValues = true
+          },
+          analyses = {
+            nilness = true,
+            unusedparams = true,
+            unusedwrite = true,
+            useany = true,
+            unreachable = false,
+            shadow = true,
+          },
+        },
+      },
+    },
+    ['bashls'] = {
+      capabilities = capabilities,
+      on_attach = on_attach,
+      settings = {
+        bashIde = {
+          shfmt = {
+            -- simplifyCode = true,
+            -- binaryNextLine = true,
+            languageDialect = "auto",
+            spaceRedirects = true,
+            caseIndent = true,
+            indentSize = 2,
+          },
+        },
+      },
+    }
+  }
+
+  for _, server in ipairs(mason_lspconfig.get_installed_servers()) do
+    local srv_settings = vim.tbl_get(custom_lspconfig, server)
+    if srv_settings ~= nil then
+      -- vim.notify('LSP: setting up ' .. server .. ' with custom configs')
+      vim.lsp.config(server, srv_settings)
+    else
+      -- vim.notify('LSP: setting up ' .. server)
+      vim.lsp.config(server, {
+        capabilities = capabilities,
+        on_attach = on_attach,
+      })
+    end
+  end
+
+  -- vim.lsp.config("*", {
+  --   capabilities = capabilities,
+  --   on_attach = on_attach,
+  -- })
 end)
 
 -- Snacks
