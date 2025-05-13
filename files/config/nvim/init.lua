@@ -18,6 +18,10 @@ local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
 local laterGroup = vim.api.nvim_create_augroup("laterGroup", { clear = true })
 local later_on = function(event, callback)
   vim.api.nvim_create_autocmd(event, {
+    -- TODO: is any of the following needed or better?
+    -- callback = function() now(callback) end,
+    -- callback = function() later(callback) end,
+    -- callback = vim.schedule_wrap(callback),
     callback = callback,
     once = true,
     group = laterGroup,
