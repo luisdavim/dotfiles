@@ -15,6 +15,14 @@ require('mini.deps').setup({ path = { package = path_package } })
 -- Use 'mini.deps'. `now()` and `later()` are helpers for a safe two-stage
 -- startup and are optional.
 local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
+local laterGroup = vim.api.nvim_create_augroup("laterGroup", { clear = true })
+local later_on = function(event, callback)
+  vim.api.nvim_create_autocmd(event, {
+    callback = callback,
+    once = true,
+    group = laterGroup,
+  })
+end
 local keymap = vim.keymap.set
 
 -- Safely execute immediately
@@ -215,6 +223,7 @@ now(function()
       'hrsh7th/vim-vsnip',
       'hrsh7th/cmp-nvim-lsp-signature-help',
       'hrsh7th/cmp-nvim-lsp-document-symbol',
+      -- 'petertriho/cmp-git',
     }
   })
   -- Set up nvim-cmp.
@@ -389,17 +398,11 @@ now(function()
     source = 'dnlhc/glance.nvim',
   })
 
+  require('lspconfig')
+
   -- local capabilities = MiniCompletion.get_lsp_capabilities()
   local capabilities = require('cmp_nvim_lsp').default_capabilities()
-  local lspconfig = require('lspconfig')
   capabilities = vim.tbl_deep_extend('force', vim.lsp.protocol.make_client_capabilities(), capabilities)
-
-  -- vim.api.nvim_create_autocmd('LspAttach', {
-  --   desc = 'LSP actions',
-  --   callback = function(event)
-  --     local buffnr = event.buf
-  --     local id = vim.tbl_get(event, 'data', 'client_id')
-  --     local client = id and vim.lsp.get_client_by_id(id)
 
   local on_attach = function(client, buffnr)
     local opts = { buffer = buffnr }
@@ -575,8 +578,6 @@ now(function()
     keymap('n', '<F4>', vim.lsp.buf.code_action, opts)
     keymap('n', '<F2>', vim.lsp.buf.rename, opts)
     keymap('n', 'K', bordered_hover, opts)
-    -- end,
-    -- })
   end
 
   local custom_lspconfig = {
@@ -643,7 +644,7 @@ now(function()
     }
   }
 
-  local base_lsp_conf = {
+  local base_lspconfig = {
     capabilities = capabilities,
     on_attach = on_attach,
   }
@@ -652,17 +653,14 @@ now(function()
     local srv_settings = vim.tbl_get(custom_lspconfig, server)
     if srv_settings ~= nil then
       -- vim.notify('LSP: setting up ' .. server .. ' with custom configs')
-      vim.lsp.config(server, vim.tbl_deep_extend('force', srv_settings, base_lsp_conf))
+      vim.lsp.config(server, vim.tbl_deep_extend('force', srv_settings, base_lspconfig))
     else
       -- vim.notify('LSP: setting up ' .. server)
-      vim.lsp.config(server, base_lsp_conf)
+      vim.lsp.config(server, base_lspconfig)
     end
   end
 
-  -- vim.lsp.config("*", {
-  --   capabilities = capabilities,
-  --   on_attach = on_attach,
-  -- })
+  -- vim.lsp.config("*", base_lspconfig)
 end)
 
 -- Snacks
@@ -788,7 +786,7 @@ now(function()
   })
 end)
 
-now(function()
+later_on('VimEnter', function()
   add({
     source = 'tanvirtin/vgit.nvim',
     depends = {
