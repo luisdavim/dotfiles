@@ -473,7 +473,7 @@ now(function()
     vim.api.nvim_create_augroup('lsp_diagnostics_hold', { clear = true })
     vim.api.nvim_create_autocmd({ 'CursorHold' }, {
       pattern = "*",
-      command = "lua OpenDiagnosticIfNoFloat()",
+      callback = OpenDiagnosticIfNoFloat,
       group = 'lsp_diagnostics_hold',
     })
 
@@ -581,8 +581,6 @@ now(function()
 
   local custom_lspconfig = {
     ['gopls'] = {
-      capabilities = capabilities,
-      on_attach = on_attach,
       cmd = { "gopls", "-remote=auto" },
       filetypes = { "go", "gomod", "gowork", "gotmpl", "gohtmltmpl", "gotexttmpl" },
       root_dir = vim.fs.dirname(
@@ -630,8 +628,6 @@ now(function()
       },
     },
     ['bashls'] = {
-      capabilities = capabilities,
-      on_attach = on_attach,
       settings = {
         bashIde = {
           shfmt = {
@@ -647,17 +643,19 @@ now(function()
     }
   }
 
+  local base_lsp_conf = {
+    capabilities = capabilities,
+    on_attach = on_attach,
+  }
+
   for _, server in ipairs(mason_lspconfig.get_installed_servers()) do
     local srv_settings = vim.tbl_get(custom_lspconfig, server)
     if srv_settings ~= nil then
       -- vim.notify('LSP: setting up ' .. server .. ' with custom configs')
-      vim.lsp.config(server, srv_settings)
+      vim.lsp.config(server, vim.tbl_deep_extend('force', srv_settings, base_lsp_conf))
     else
       -- vim.notify('LSP: setting up ' .. server)
-      vim.lsp.config(server, {
-        capabilities = capabilities,
-        on_attach = on_attach,
-      })
+      vim.lsp.config(server, base_lsp_conf)
     end
   end
 
