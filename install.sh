@@ -9,7 +9,7 @@ CMD="${1:-all}"
 shift
 ARGS=("${@}")
 
-NVIM_FLAVOUR="${NVIM_FLAVOUR:-coc}"
+NVIM_FLAVOUR="${NVIM_FLAVOUR:-mini}"
 
 # shellcheck source=./files/scripts/hubinstall
 source "${dotfiles_dir}/files/scripts/hubinstall"
