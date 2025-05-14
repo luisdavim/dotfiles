@@ -19,10 +19,10 @@ local laterGroup = vim.api.nvim_create_augroup("laterGroup", { clear = true })
 local later_on = function(event, callback)
   vim.api.nvim_create_autocmd(event, {
     -- TODO: is any of the following needed or better?
-    -- callback = function() now(callback) end,
+    callback = function() now(callback) end,
     -- callback = function() later(callback) end,
     -- callback = vim.schedule_wrap(callback),
-    callback = callback,
+    -- callback = callback,
     once = true,
     group = laterGroup,
   })
@@ -543,11 +543,11 @@ now(function()
       { silent = true }
     )
     keymap('n', '<leader>ca', function() vim.lsp.buf.code_action() end, opts)
-    -- keymap('n', '<leader>ld', function() MiniExtra.pickers.diagnostic() end, opts)
+    -- keymap('n', '<leader>ld', MiniExtra.pickers.diagnostic, opts)
     keymap('n', '<leader>ld', Snacks.picker.diagnostics, opts)
 
-
     -- keymap('n', 'gd', function() vim.lsp.buf.definition() end, opts)
+    -- keymap('n', gd, function() require('glance').open("definitions") end, opts)
     -- keymap('n', 'gd', function() MiniExtra.pickers.lsp({ scope = 'definition' }) end, opts)
     keymap('n', 'gd', Snacks.picker.lsp_definitions, opts)
 
@@ -1115,9 +1115,15 @@ later(function()
     pattern = 'MiniFilesBufferCreate',
     callback = function(args)
       local buf_id = args.data.buf_id
-      -- Tweak keys to your liking
       map_split(buf_id, '<C-s>', 'belowright horizontal')
       map_split(buf_id, '<C-v>', 'belowright vertical')
+    end,
+  })
+
+  vim.api.nvim_create_autocmd("User", {
+    pattern = "MiniFilesActionRename",
+    callback = function(event)
+      Snacks.rename.on_rename_file(event.data.from, event.data.to)
     end,
   })
 
