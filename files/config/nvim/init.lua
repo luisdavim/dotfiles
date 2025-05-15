@@ -12,11 +12,10 @@ end
 -- Set up 'mini.deps'
 require('mini.deps').setup({ path = { package = path_package } })
 
--- Use 'mini.deps'. `now()` and `later()` are helpers for a safe two-stage
--- startup and are optional.
+-- Use 'mini.deps' helpers
 local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
 local laterGroup = vim.api.nvim_create_augroup("laterGroup", { clear = true })
-local later_on = function(event, callback)
+local function later_on(event, callback)
   vim.api.nvim_create_autocmd(event, {
     -- TODO: is any of the following needed or better?
     callback = function() now(callback) end,
@@ -408,7 +407,7 @@ now(function()
   local capabilities = require('cmp_nvim_lsp').default_capabilities()
   capabilities = vim.tbl_deep_extend('force', vim.lsp.protocol.make_client_capabilities(), capabilities)
 
-  local on_attach = function(client, buffnr)
+  local function on_attach(client, buffnr)
     local opts = { buffer = buffnr }
 
     MiniIcons.tweak_lsp_kind()
@@ -455,7 +454,7 @@ now(function()
     -- Diagnostics
     -- Function to check if a floating dialog exists and if not
     -- then check for diagnostics under the cursor
-    function OpenDiagnosticIfNoFloat()
+    local function openDiagnosticIfNoFloat()
       for _, winid in pairs(vim.api.nvim_tabpage_list_wins(0)) do
         if vim.api.nvim_win_get_config(winid).zindex then
           return
@@ -480,7 +479,7 @@ now(function()
     vim.api.nvim_create_augroup('lsp_diagnostics_hold', { clear = true })
     vim.api.nvim_create_autocmd({ 'CursorHold' }, {
       pattern = "*",
-      callback = OpenDiagnosticIfNoFloat,
+      callback = openDiagnosticIfNoFloat,
       group = 'lsp_diagnostics_hold',
     })
 
@@ -760,7 +759,7 @@ end)
 now(function()
   require('mini.git').setup()
 
-  local align_blame = function(au_data)
+  local function align_blame(au_data)
     if au_data.data.git_subcommand ~= 'blame' then return end
 
     -- Align blame output with source
@@ -776,7 +775,7 @@ now(function()
   local au_opts = { pattern = 'MiniGitCommandSplit', callback = align_blame }
   vim.api.nvim_create_autocmd('User', au_opts)
   vim.api.nvim_create_user_command('Gblame', function()
-    pcall(vim.cmd('vertical Git blame -- %'))
+    vim.cmd('vertical Git blame -- %')
   end, {})
 end)
 
@@ -1024,7 +1023,7 @@ later(function()
 
   -- vim.ui.select = MiniPick.ui_select
   vim.ui.select = function(items, opts, on_choice)
-    local get_cursor_anchor = function() return vim.fn.screenrow() < 0.5 * vim.o.lines and "NW" or "SW" end
+    local function get_cursor_anchor() return vim.fn.screenrow() < 0.5 * vim.o.lines and "NW" or "SW" end
     local num_items = #items
     local max_height = math.floor(0.45 * vim.o.columns)
     local height = math.min(math.max(num_items, 1), max_height)
@@ -1072,12 +1071,12 @@ later(function()
 
   local show_dotfiles = true
 
-  local filter_show = function(_) return true end
-  local filter_hide = function(fs_entry)
+  local function filter_show(_) return true end
+  local function filter_hide(fs_entry)
     return not vim.startswith(fs_entry.name, '.')
   end
 
-  local toggle_dotfiles = function()
+  local function toggle_dotfiles()
     show_dotfiles = not show_dotfiles
     local new_filter = show_dotfiles and filter_show or filter_hide
     MiniFiles.refresh({ content = { filter = new_filter } })
@@ -1092,8 +1091,8 @@ later(function()
     end,
   })
 
-  local map_split = function(buf_id, lhs, direction)
-    local rhs = function()
+  local function map_split(buf_id, lhs, direction)
+    local function rhs()
       -- Make new window and set it as target
       local cur_target = MiniFiles.get_explorer_state().target_window
       local path = (MiniFiles.get_fs_entry() or {}).path
@@ -1149,13 +1148,13 @@ later(function() require('mini.cursorword').setup() end)
 later(function()
   local hipatterns = require('mini.hipatterns')
   -- local hi_words = MiniExtra.gen_highlighter.words
-  local hi_words = function(words, group, extmark_opts)
+  local function hi_words(words, group, extmark_opts)
     local pattern = vim.tbl_map(function(x)
       return '%f[%w]' .. vim.pesc(x) .. '%f[^' .. x:sub(-1) .. ']'
     end, words)
     return { pattern = pattern, group = group, extmark_opts = extmark_opts }
   end
-  local add_suffix = function(lst, suffix)
+  local function add_suffix(lst, suffix)
     return vim.tbl_map(function(x)
       return x .. suffix
     end, lst)
@@ -1229,7 +1228,7 @@ end)
 
 -- Yank/paste buffers
 later(function()
-  local function PasteWindow(direction)
+  local function pasteWindow(direction)
     if vim.g.yanked_buffer then
       local temp_buffer = nil
       if direction == 'edit' then
@@ -1254,19 +1253,19 @@ later(function()
   end, { silent = true })
 
   keymap("n", "<leader>wp", function()
-    PasteWindow('edit')
+    pasteWindow('edit')
   end, { silent = true })
 
   keymap("n", "<leader>ws", function()
-    PasteWindow('split')
+    pasteWindow('split')
   end, { silent = true })
 
   keymap("n", "<leader>wv", function()
-    PasteWindow('vsplit')
+    pasteWindow('vsplit')
   end, { silent = true })
 
   keymap("n", "<leader>wt", function()
-    PasteWindow('tabnew')
+    pasteWindow('tabnew')
   end, { silent = true })
 end)
 
