@@ -14,18 +14,34 @@ require('mini.deps').setup({ path = { package = path_package } })
 
 -- Use 'mini.deps' helpers
 local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
+-- Run latter on events
 local laterGroup = vim.api.nvim_create_augroup("laterGroup", { clear = true })
 local function later_on(event, callback)
   vim.api.nvim_create_autocmd(event, {
-    -- TODO: is any of the following needed or better?
     callback = function() now(callback) end,
-    -- callback = function() later(callback) end,
-    -- callback = vim.schedule_wrap(callback),
-    -- callback = callback,
     once = true,
     group = laterGroup,
   })
 end
+-- Alternative where only one auttocmd is created per event
+-- local event_callback_queues = {}
+-- local laterGroup = vim.api.nvim_create_augroup("laterGroup", { clear = true })
+-- local function later_on(event, callback)
+--   if event_callback_queues[event] == nil then
+--     event_callback_queues[event] = {}
+--     vim.api.nvim_create_autocmd(event, {
+--       callback = function()
+--         for _, f in ipairs(event_callback_queues[event]) do
+--           now(f)
+--         end
+--       end,
+--       once = true,
+--       group = laterGroup,
+--     })
+--   end
+--   table.insert(event_callback_queues[event], callback)
+-- end
+
 local keymap = vim.keymap.set
 
 -- Safely execute immediately
