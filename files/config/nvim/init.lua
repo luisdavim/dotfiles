@@ -1146,7 +1146,7 @@ later(function()
 end)
 
 later(function() require('mini.pairs').setup({ modes = { insert = true, command = true, terminal = true } }) end)
-later(function() require('mini.splitjoin').setup() end)
+later(function() require('mini.splitjoin').setup({ mappings = { toggle = 'sj' } }) end)
 
 later(function()
   require('mini.surround').setup()
