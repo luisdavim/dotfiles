@@ -377,12 +377,12 @@ now(function()
   vim.opt.foldtext = "v:lua.vim.treesitter.foldtext()"
 
   add({
-    source = 'neovim/nvim-lspconfig',
+    source = 'folke/lazydev.nvim',
     depends = {
+      'neovim/nvim-lspconfig',
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
-      'folke/lazydev.nvim',
       -- 'jay-babu/mason-null-ls.nvim',
       -- 'nvimtools/none-ls.nvim',
     },
@@ -551,7 +551,7 @@ now(function()
       function()
         local cword = vim.fn.expand('<cword>')
         Snacks.input(
-          { prompt = 'Rename', default = cword, win = { relative = 'cursor', row = -3, col = 0 } },
+          { prompt = 'Rename', default = cword, win = { relative = 'cursor', row = -3, col = -3 } },
           vim.lsp.buf.rename
         )
       end,
