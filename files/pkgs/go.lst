@@ -14,6 +14,7 @@ github.com/cloudposse/slack-notifier
 github.com/doronbehar/pistol/cmd/pistol
 github.com/fairwindsops/rbac-lookup
 github.com/fiatjaf/jiq/cmd/jiq
+github.com/flowerinthenight/kubepfm
 github.com/go-bindata/go-bindata/...
 github.com/go-critic/go-critic/cmd/gocritic
 github.com/go-delve/delve/cmd/dlv
