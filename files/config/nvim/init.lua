@@ -44,8 +44,6 @@ end
 
 local keymap = vim.keymap.set
 
--- Safely execute immediately
-
 -- Vim setup
 now(function()
   -- indent using tab
@@ -767,58 +765,6 @@ now(function()
 
   -- vim.lsp.config("*", base_lspconfig)
 end)
-
--- Safely execute later
-
--- AI
--- later(function()
---   -- GitHub Copilot (for general inline completions)
---   add({
---     source = "zbirenbaum/copilot.lua",
---   })
---   require("copilot").setup({
---     suggestion = {
---       auto_trigger = true, -- Automatically trigger suggestions
---       debounce = 75,
---       keymap = {
---         accept = "<Tab>",  -- Accept suggestion with Tab
---         next = "<M-]>",    -- Cycle to next suggestion
---         prev = "<M-[>",    -- Cycle to previous suggestion
---         dismiss = "<C-e>", -- Dismiss suggestion
---       },
---     },
---     panel = {
---       enabled = false, -- You might prefer CodeCompanion's chat for panel interactions
---     },
---   })
---
---   -- CodeCompanion (for chat, agents, and integrated AI workflows)
---   add({
---     source = "olimorris/codecompanion.nvim",
---     dependencies = {
---       "nvim-lua/plenary.nvim",
---       "nvim-treesitter/nvim-treesitter",
---     },
---   })
---   require("codecompanion").setup({
---     adapters = {
---       copilot = function()
---         return require("codecompanion.adapters").extend("copilot", {
---           -- CodeCompanion will typically use the existing Copilot setup.
---           -- No API key is usually needed here as Copilot uses GitHub authentication.
---         })
---       end,
---     },
---     strategies = {
---       chat = { adapter = "copilot" },
---       inline = { adapter = "copilot" },
---       agent = { adapter = "copilot" },
---     },
---     opts = {
---       -- log_level = "DEBUG", -- Uncomment for debugging
---     },
---   })
--- end)
 
 -- Git and diff
 
