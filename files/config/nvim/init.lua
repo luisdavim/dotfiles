@@ -347,6 +347,92 @@ now(function()
   })
 end)
 
+-- Snacks
+now(function()
+  add({
+    source = "folke/snacks.nvim",
+  })
+
+  local snacks = require('snacks')
+  snacks.setup({
+    animate = { enabled = false },
+    bigfile = { enabled = true },
+    bufdelete = { enabled = false },
+    dashboard = { enabled = false },
+    debug = { enabled = false },
+    dim = { enabled = false },
+    explorer = {
+      enabled = true,
+      replace_netrw = true,
+    },
+    git = { enabled = false },
+    gitbrowse = {
+      enabled = true,
+      url_patterns = {
+        [".*github.*%..+"] = {
+          branch = "/tree/{branch}",
+          file = "/blob/{branch}/{file}#L{line_start}-L{line_end}",
+          permalink = "/blob/{commit}/{file}#L{line_start}-L{line_end}",
+          commit = "/commit/{commit}",
+        },
+        [".*gitlab.*%..+"] = {
+          branch = "/-/tree/{branch}",
+          file = "/-/blob/{branch}/{file}#L{line_start}-L{line_end}",
+          permalink = "/-/blob/{commit}/{file}#L{line_start}-L{line_end}",
+          commit = "/-/commit/{commit}",
+        },
+      },
+    },
+    image = { enabled = false },
+    indent = {
+      enabled = true,
+      indent = {
+        hl = "Whitespace",
+      },
+    },
+    input = { enabled = true },
+    layout = { enabled = false },
+    lazygit = { enabled = false },
+    notifier = {
+      enabled = false,
+      timeout = 3000,
+    },
+    picker = {
+      enabled = true,
+      layout = {
+        preset = 'ivy',
+      },
+    },
+    quickfile = { enabled = true },
+    scope = { enabled = false },
+    scroll = { enabled = false },
+    statuscolumn = { enabled = false },
+    words = { enabled = true },
+    zen = { enabled = false },
+    styles = {
+      notification = {
+        relative = "editor",
+        wo = { wrap = true }, -- Wrap notifications
+      },
+    },
+  })
+
+  keymap('n', '<C-p>', Snacks.picker.files, {})
+  keymap('n', '<C-f>', Snacks.picker.grep, {})
+  keymap('n', '<C-_>', function() Snacks.explorer() end, {})
+
+  vim.api.nvim_create_user_command('Gitbrowse', Snacks.gitbrowse.open, {})
+
+  -- Disable Mini.nvi Functionality in snacks inputs
+  vim.api.nvim_create_autocmd("FileType", {
+    pattern = "snacks_*",
+    callback = function(args)
+      vim.b[args.buf].minicompletion_disable = true
+      vim.b[args.buf].minidiff_disable = true
+    end
+  })
+end)
+
 -- LSP config
 now(function()
   -- Treesitter
@@ -682,93 +768,57 @@ now(function()
   -- vim.lsp.config("*", base_lspconfig)
 end)
 
--- Snacks
-now(function()
-  add({
-    source = "folke/snacks.nvim",
-  })
-
-  local snacks = require('snacks')
-  snacks.setup({
-    animate = { enabled = false },
-    bigfile = { enabled = true },
-    bufdelete = { enabled = false },
-    dashboard = { enabled = false },
-    debug = { enabled = false },
-    dim = { enabled = false },
-    explorer = {
-      enabled = true,
-      replace_netrw = true,
-    },
-    git = { enabled = false },
-    gitbrowse = {
-      enabled = true,
-      url_patterns = {
-        [".*github.*%..+"] = {
-          branch = "/tree/{branch}",
-          file = "/blob/{branch}/{file}#L{line_start}-L{line_end}",
-          permalink = "/blob/{commit}/{file}#L{line_start}-L{line_end}",
-          commit = "/commit/{commit}",
-        },
-        [".*gitlab.*%..+"] = {
-          branch = "/-/tree/{branch}",
-          file = "/-/blob/{branch}/{file}#L{line_start}-L{line_end}",
-          permalink = "/-/blob/{commit}/{file}#L{line_start}-L{line_end}",
-          commit = "/-/commit/{commit}",
-        },
-      },
-    },
-    image = { enabled = false },
-    indent = {
-      enabled = true,
-      indent = {
-        hl = "Whitespace",
-      },
-    },
-    input = { enabled = true },
-    layout = { enabled = false },
-    lazygit = { enabled = false },
-    notifier = {
-      enabled = false,
-      timeout = 3000,
-    },
-    picker = {
-      enabled = true,
-      layout = {
-        preset = 'ivy',
-      },
-    },
-    quickfile = { enabled = true },
-    scope = { enabled = false },
-    scroll = { enabled = false },
-    statuscolumn = { enabled = false },
-    words = { enabled = true },
-    zen = { enabled = false },
-    styles = {
-      notification = {
-        relative = "editor",
-        wo = { wrap = true }, -- Wrap notifications
-      },
-    },
-  })
-
-  keymap('n', '<C-p>', Snacks.picker.files, {})
-  keymap('n', '<C-f>', Snacks.picker.grep, {})
-  keymap('n', '<C-_>', function() Snacks.explorer() end, {})
-
-  vim.api.nvim_create_user_command('Gitbrowse', Snacks.gitbrowse.open, {})
-
-  -- Disable Mini.nvi Functionality in snacks inputs
-  vim.api.nvim_create_autocmd("FileType", {
-    pattern = "snacks_*",
-    callback = function(args)
-      vim.b[args.buf].minicompletion_disable = true
-      vim.b[args.buf].minidiff_disable = true
-    end
-  })
-end)
-
 -- Safely execute later
+
+-- AI
+-- later(function()
+--   -- GitHub Copilot (for general inline completions)
+--   add({
+--     source = "zbirenbaum/copilot.lua",
+--   })
+--   require("copilot").setup({
+--     suggestion = {
+--       auto_trigger = true, -- Automatically trigger suggestions
+--       debounce = 75,
+--       keymap = {
+--         accept = "<Tab>",  -- Accept suggestion with Tab
+--         next = "<M-]>",    -- Cycle to next suggestion
+--         prev = "<M-[>",    -- Cycle to previous suggestion
+--         dismiss = "<C-e>", -- Dismiss suggestion
+--       },
+--     },
+--     panel = {
+--       enabled = false, -- You might prefer CodeCompanion's chat for panel interactions
+--     },
+--   })
+--
+--   -- CodeCompanion (for chat, agents, and integrated AI workflows)
+--   add({
+--     source = "olimorris/codecompanion.nvim",
+--     dependencies = {
+--       "nvim-lua/plenary.nvim",
+--       "nvim-treesitter/nvim-treesitter",
+--     },
+--   })
+--   require("codecompanion").setup({
+--     adapters = {
+--       copilot = function()
+--         return require("codecompanion.adapters").extend("copilot", {
+--           -- CodeCompanion will typically use the existing Copilot setup.
+--           -- No API key is usually needed here as Copilot uses GitHub authentication.
+--         })
+--       end,
+--     },
+--     strategies = {
+--       chat = { adapter = "copilot" },
+--       inline = { adapter = "copilot" },
+--       agent = { adapter = "copilot" },
+--     },
+--     opts = {
+--       -- log_level = "DEBUG", -- Uncomment for debugging
+--     },
+--   })
+-- end)
 
 -- Git and diff
 
