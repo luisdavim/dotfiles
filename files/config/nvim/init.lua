@@ -495,21 +495,27 @@ now(function()
     -- Perform action after every checkout
     hooks = { post_checkout = function() vim.cmd('TSUpdate') end },
   })
-  require('nvim-treesitter.configs').setup({
-    sync_install = false,
-    auto_install = true,
-    highlight = { enable = true },
+  add({
+    source = 'nvim-treesitter/nvim-treesitter-textobjects',
+    checkout = 'master',
+    monitor = 'main',
   })
   add({
     source = 'nvim-treesitter/nvim-treesitter-context',
   })
-  require('treesitter-context').setup()
-  add({
-    source = 'nvim-treesitter/nvim-treesitter-textobjects',
-  })
   add({
     source = 'nvim-treesitter/nvim-treesitter-refactor',
   })
+
+  require('nvim-treesitter.configs').setup({
+    sync_install = false,
+    auto_install = true,
+    ignore_install = {},
+    highlight = { enable = true },
+    ensure_installed = {},
+    modules = {},
+  })
+  require('treesitter-context').setup()
 
   vim.opt.foldtext = "v:lua.vim.treesitter.foldtext()"
 
