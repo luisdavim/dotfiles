@@ -938,13 +938,6 @@ later_on('VimEnter', function()
   })
 end)
 
-later(function()
-  add({
-    source = 'sindrets/diffview.nvim'
-  })
-  require("diffview").setup()
-end)
-
 -- using now instead of later so the gitv shell alias works
 now(function()
   add({
@@ -953,6 +946,9 @@ now(function()
       'sindrets/diffview.nvim',
     }
   })
+
+  require("diffview").setup()
+
   local gitgraph = require('gitgraph')
   gitgraph.setup({
     symbols = {
