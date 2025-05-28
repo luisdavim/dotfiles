@@ -63,6 +63,7 @@ chart-releaser
 checkov
 chpharos
 chrome-cli
+clusterctl
 cmake
 coffeescript
 colima
@@ -105,9 +106,9 @@ egison
 eksctl
 elktail
 entr
-eza
 exif
 exiftool
+eza
 faq
 fd
 fff
