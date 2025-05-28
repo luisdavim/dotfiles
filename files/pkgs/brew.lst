@@ -4,6 +4,7 @@
 # bosh-init
 # chunkwm
 # chunkwm-blur
+# colima
 # docker-completion
 # docker-compose-completion
 # gotty
@@ -66,7 +67,6 @@ chrome-cli
 clusterctl
 cmake
 coffeescript
-colima
 colordiff
 commitizen
 consul-template
@@ -246,6 +246,7 @@ openshift-cli
 openssl
 operator-sdk
 oras
+orbstack
 p7zip
 packer
 pam-reattach
