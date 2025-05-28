@@ -1,5 +1,9 @@
 # homebrew/cask
+# homebrew/cask-drivers
+# homebrew/cask-fonts
+# homebrew/cask-versions
 # homebrew/core
+# homebrew/services
 # reactiveops/tap
 FairwindsOps/tap
 aws/tap
@@ -27,13 +31,7 @@ habitat-sh/habitat
 hashicorp/tap
 helix-editor/helix
 helm/tap
-homebrew/cask-drivers
-homebrew/cask-fonts
-homebrew/cask-fonts
-homebrew/cask-versions
-homebrew/cask-versions
 homebrew/command-not-found
-homebrew/services
 homeport/tap
 instrumenta/instrumenta
 jakehilborn/jakehilborn
