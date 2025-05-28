@@ -41,6 +41,7 @@ bash-completion@2
 bat
 bat-extras
 bats-core
+bazel
 bbl
 bfg
 binutils
