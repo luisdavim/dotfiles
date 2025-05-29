@@ -57,18 +57,18 @@ alias kindenv='export KUBECONFIG=~/.kube/kind-config'
 # generate aliases for each context
 if [ -d ~/.kube/config.d ]; then
   for CTX in $(find ~/.kube/config.d/ -type f -printf "%f\n"); do
-    local cmd="alias k8s-${CTX/#${USER}-}='kubectl --kubeconfig ${HOME}/.kube/config.d/${CTX}'"
+    cmd="alias k8s-${CTX/#${USER}-}='kubectl --kubeconfig ${HOME}/.kube/config.d/${CTX}'"
     eval "${cmd}"
-    local cmd="alias helm-${CTX/#${USER}-}='helm --kubeconfig ${HOME}/.kube/config.d/${CTX}'"
+    cmd="alias helm-${CTX/#${USER}-}='helm --kubeconfig ${HOME}/.kube/config.d/${CTX}'"
     eval "${cmd}"
   done
 fi
 
 if [ -f ~/.kube/config ]; then
   for CTX in $(\kubectl config get-contexts -o name); do
-    local cmd="alias k8s-${CTX/#${USER}-}='kubectl --kubeconfig ${HOME}/.kube/config --context ${CTX}'"
+    cmd="alias k8s-${CTX/#${USER}-}='kubectl --kubeconfig ${HOME}/.kube/config --context ${CTX}'"
     eval "${cmd}"
-    local cmd="alias helm-${CTX/#${USER}-}='helm --kubeconfig ${HOME}/.kube/config --context ${CTX}'"
+    cmd="alias helm-${CTX/#${USER}-}='helm --kubeconfig ${HOME}/.kube/config --context ${CTX}'"
     eval "${cmd}"
   done
 fi
@@ -234,13 +234,13 @@ function kubectl-ctx() {
     return
   fi
   KFG_DIR=${KFG_DIR:-~/.kube/config.d}
-  if [ -d "${KFG_DIR}" ] && [[ "$KUBECONFIG" != "~/.kube/config" ]]; then
+if [ -d "${KFG_DIR}" ] && [[ "$KUBECONFIG" != "~/.kube/config" ]] && [ -z "$(find "${KFG_DIR}" -maxdepth 0 -empty)" ]; then
     if [ -n "$1" ] && [ -f "${KFG_DIR}/${1}" ]; then
       export KUBECONFIG="${KFG_DIR}/${1}"
       return
     fi
     # files=$(find "${KFG_DIR}/" -type f -name "*${1}*" -printf "%f\n")
-    files=$(ls -1 "${KFG_DIR}/" | fzf --filter="${1}")
+    files=$(find "${KFG_DIR}" -type f -printf "%f\n" | fzf --filter="${1}")
     l=$(echo -n "${files}" | grep -c '^')
     if [ $l -eq 0 ]; then
       echo "no matching context found"
