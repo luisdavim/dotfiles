@@ -2,11 +2,11 @@
 # helix:set-language bash:
 
 # Kubectl aliases
-[ -f ${HOME}/.ktx ] && source ${HOME}/.ktx/ktx
-[ -f $HOME/.kbenv/kbenv.sh ] && source $HOME/.kbenv/kbenv.sh
-[ -f $HOME/.helmenv/helmenv.sh ] && source $HOME/.helmenv/helmenv.sh
-[ -f ${HOME}/.kube-fzf/kube-fzf.sh ] && source ${HOME}/.kube-fzf/kube-fzf.sh
-[ -f ${HOME}/.fubectl/fubectl.source ] && source ${HOME}/.fubectl/fubectl.source
+[ -f "${HOME}/.ktx" ] && source "${HOME}/.ktx/ktx"
+[ -f "$HOME/.kbenv/kbenv.sh" ] && source "${HOME}/.kbenv/kbenv.sh"
+[ -f "$HOME/.helmenv/helmenv.sh" ] && source "${HOME}/.helmenv/helmenv.sh"
+[ -f "${HOME}/.kube-fzf/kube-fzf.sh" ] && source "${HOME}/.kube-fzf/kube-fzf.sh"
+[ -f "${HOME}/.fubectl/fubectl.source" ] && source "${HOME}/.fubectl/fubectl.source"
 
 [ -f ~/.kubectl_aliases/.kubectl_aliases ] && source ~/.kubectl_aliases/.kubectl_aliases
 # to use GNU watch command instead of kubectl [...] --watch
@@ -27,7 +27,7 @@ function kctl() {
   if [ -x "$(command -v grc)" ]  && [[ ',modify-secret,edit,exec,ssh,access-matrix,shell,remote_shell,debug,ephemeral,' != *",${CMD},"* ]]; then
     COLOR="grc -es --colour=auto"
   fi
-  local args=(${COLOR} kubectl ${CMD})
+  local args=("${COLOR}" kubectl "${CMD}")
   for arg in "${@}"; do
     args+=( "$(printf '%q' "$arg")" )
   done
@@ -74,28 +74,28 @@ if [ -f ~/.kube/config ]; then
 fi
 
 function kgy() {
-  \kubectl get ${@} -o yaml | bat --paging never --theme ${BAT_THEME:-TwoDark} -p -l yaml
+  \kubectl get "${@}" -o yaml | bat --paging never --theme "${BAT_THEME:-TwoDark}" -p -l yaml
 }
 
 function kgj() {
-  \kubectl get ${@} -o json | bat --paging never --theme ${BAT_THEME:-TwoDark} -p -l json
+  \kubectl get "${@}" -o json | bat --paging never --theme "${BAT_THEME:-TwoDark}" -p -l json
 }
 
 function kubectl-printenv() {
-  \kubectl exec ${@} -- strings /proc/1/environ
+  \kubectl exec "${@}" -- strings /proc/1/environ
 }
 alias kprintenv='kubectl-printenv'
 alias kpe='kubectl-printenv'
 
 function kubectl-diff() {
-  \kubectl diff ${@} | delta -s
+  \kubectl diff "${@}" | delta -s
 }
 alias kdiff='kubectl-diff'
 
 function kubectl-getNotReady(){
   local filter='.items[]| select(.status != null)|select(.status.conditions[] != null)|select([.status.conditions[]|select(.type == "Ready" and .status == "False")]|length == 1)'
   local table="([\"NAMESPACE\",\"NAME\"] | (., map(length*\"-\"))),(${filter} | [.metadata.namespace, .metadata.name]) | @tsv"
-  \kubectl get ${@} -o json | jq -r "${table}"
+  \kubectl get "${@}" -o json | jq -r "${table}"
 }
 alias kgnr='kctl getNotReady'
 
@@ -124,7 +124,7 @@ function kubectl-get-all() {
     namespaced='false'
     args+=( '-A' )
   fi
-  \kubectl api-resources --verbs=list --namespaced="${namespaced}" -o name | xargs -n 1 kubectl get --show-kind --ignore-not-found ${args[@]}
+  \kubectl api-resources --verbs=list --namespaced="${namespaced}" -o name | xargs -n 1 kubectl get --show-kind --ignore-not-found "${args[@]}"
 }
 alias kgaa='kubectl-get-all'
 
@@ -170,7 +170,7 @@ function kubectl-parallel() {
   ctxs=$(kubectl-get-ctx "${args[1]}")
   args[1]="${cmd}"
 
-  echo -e "Running:\n\t${args}\non:\n${ctxs}\n---"
+  echo -e "Running:\n\t${args[*]}\non:\n${ctxs}\n---"
   echo -n "Are you sure? [y/N] "
   read REPLY
   if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -223,6 +223,24 @@ function kubectl-get-ctx() {
   fi
 }
 
+function is_default_kubeconfig() {
+  if [ ! -f ~/.kube/config ]; then
+    return 1
+  fi
+  if [ -z "${KUBECONFIG}" ]; then
+    return 0
+  fi
+
+  local default_id="$(stat --format='%s:%i' ~/.kube/config)"
+  local kubeconfig_id="$(stat --format='%s:%i' "${KUBECONFIG}")"
+
+  if [[ "${kubeconfig_id}" != "${default_id}" ]]; then
+    return 1
+  fi
+
+  return 0
+}
+
 function kubectl-ctx() {
   if [[ "${1}" == "kind" ]]; then
     export KUBECONFIG=~/.kube/kind-config
@@ -234,7 +252,8 @@ function kubectl-ctx() {
     return
   fi
   KFG_DIR=${KFG_DIR:-~/.kube/config.d}
-if [ -d "${KFG_DIR}" ] && [[ "$KUBECONFIG" != "~/.kube/config" ]] && [ -z "$(find "${KFG_DIR}" -maxdepth 0 -empty)" ]; then
+
+  if [ -d "${KFG_DIR}" ] && ( ! is_default_kubeconfig || [ -z "${KUBECONFIG}" ] ) && [ -z "$(find "${KFG_DIR}" -maxdepth 0 -empty)" ]; then
     if [ -n "$1" ] && [ -f "${KFG_DIR}/${1}" ]; then
       export KUBECONFIG="${KFG_DIR}/${1}"
       return
@@ -242,11 +261,11 @@ if [ -d "${KFG_DIR}" ] && [[ "$KUBECONFIG" != "~/.kube/config" ]] && [ -z "$(fin
     # files=$(find "${KFG_DIR}/" -type f -name "*${1}*" -printf "%f\n")
     files=$(find "${KFG_DIR}" -type f -printf "%f\n" | fzf --filter="${1}")
     l=$(echo -n "${files}" | grep -c '^')
-    if [ $l -eq 0 ]; then
+    if [ "$l" -eq 0 ]; then
       echo "no matching context found"
       return
     fi
-    if [ $l -eq 1 ]; then
+    if [ "$l" -eq 1 ]; then
       export KUBECONFIG="${KFG_DIR}/${files}"
       return
     fi
@@ -269,7 +288,7 @@ function kubectl-cfg() {
     split)
       mkdir -p "${KFG_DIR}"
       for ctx in $(\kubectl --kubeconfig="${KFG}" config get-contexts -o name); do
-        \kubectl --kubeconfig="${KFG}" config view --minify --flatten --raw --context=${ctx} > "${KFG_DIR}/${ctx}"
+        \kubectl --kubeconfig="${KFG}" config view --minify --flatten --raw --context="${ctx}" > "${KFG_DIR}/${ctx}"
       done
       chmod 600 "${KFG_DIR}"/*
       rename -f 's/:/./g' "${KFG_DIR}"/*
@@ -346,8 +365,8 @@ function kubectl-purge_crd() {
     echo 'please provide a CRD name'
     return
   fi
-  \kubectl get ${1} --all-namespaces --no-headers | awk '{print $2 " -n " $1}' | xargs -L1 -r \kubectl patch -p '{"metadata":{"finalizers": []}}' --type=merge ${1};
-  \kubectl get ${1} --all-namespaces --no-headers | awk '{print $2 " -n " $1}' | xargs -L1 -r \kubectl delete ${1};
+  \kubectl get "${1}" --all-namespaces --no-headers | awk '{print $2 " -n " $1}' | xargs -L1 -r \kubectl patch -p '{"metadata":{"finalizers": []}}' --type=merge "${1}";
+  \kubectl get "${1}" --all-namespaces --no-headers | awk '{print $2 " -n " $1}' | xargs -L1 -r \kubectl delete "${1}";
   \kubectl api-resources -o name | grep "${1}" | awk '{print $1}' | xargs -r \kubectl delete crd
 }
 alias kctl-clean_crd='kubectl-purge_crd'
