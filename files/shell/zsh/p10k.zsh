@@ -350,6 +350,7 @@
   # typeset -g POWERLEVEL9K_DIR_PREFIX='%fin '
 
   #####################################[ vcs: git status ]######################################
+  typeset -g POWERLEVEL9K_VCS_MAX_SYNC_LATENCY_SECONDS=0
   typeset -g POWERLEVEL9K_VCS_GIT_ICON=''
   typeset -g POWERLEVEL9K_VCS_GIT_GITHUB_ICON=''
   typeset -g POWERLEVEL9K_VCS_GIT_GITLAB_ICON=''
