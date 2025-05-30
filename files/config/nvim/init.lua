@@ -164,7 +164,7 @@ now(function()
   require('treesitter-context').setup()
 
   local ensure_installed = { 'comment', 'lua', 'go', 'bash', 'yaml', 'json', 'python', 'markdown', 'markdown_inline' }
-  local already_installed = ts_config.installed_parsers()
+  local already_installed = ts_config.get_installed('parsers')
   local parsers_to_install = vim.iter(ensure_installed)
       :filter(function(parser) return not vim.tbl_contains(already_installed, parser) end)
       :totable()
