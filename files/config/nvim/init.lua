@@ -214,7 +214,7 @@ now(function()
       local parser_exists = pcall(vim.treesitter.get_parser, bufnr, parser_name)
 
       if not parser_exists then
-        -- check if parser is already installed
+        -- Check if parser is already installed
         if vim.tbl_contains(already_installed, parser_name) then
           vim.notify("Parser for " .. parser_name .. " already installed.", vim.log.levels.INFO)
         else
@@ -805,6 +805,9 @@ now(function()
   end
 
   local custom_lspconfig = {
+    ["harper_ls"] = {
+      filetypes = { "markdown", "gitcommit", "html" },
+    },
     ['gopls'] = {
       cmd = { "gopls", "-remote=auto" },
       filetypes = { "go", "gomod", "gowork", "gotmpl", "gohtmltmpl", "gotexttmpl" },
