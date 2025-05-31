@@ -163,16 +163,17 @@ now(function()
   require('nvim-treesitter-textobjects').setup()
   require('treesitter-context').setup()
 
-  local ensure_installed = { 'comment', 'lua', 'go', 'bash', 'yaml', 'json', 'python', 'markdown', 'markdown_inline' }
+  local ensure_installed = { 'comment', 'lua', 'go', 'bash', 'yaml', 'json', 'python', 'markdown', 'markdown_inline',
+    'diff' }
   local already_installed = ts_config.get_installed('parsers')
   local parsers_to_install = vim.iter(ensure_installed)
       :filter(function(parser) return not vim.tbl_contains(already_installed, parser) end)
       :totable()
-  treesitter.install(parsers_to_install)
-
+  if #parsers_to_install > 0 then
+    treesitter.install(parsers_to_install)
+  end
 
   local function ts_start(bufnr, parser_name)
-    -- vim.notify(vim.inspect("Starting treesitter parser " .. parser_name .. " for filetype: " .. filetype), vim.log.levels.WARN)
     -- vim.treesitter.start(bufnr, parser_name)
     vim.treesitter.start()
     -- Use regex based syntax-highlighting as fallback as some plugins might need it
@@ -218,9 +219,14 @@ now(function()
         if vim.tbl_contains(already_installed, parser_name) then
           vim.notify("Parser for " .. parser_name .. " already installed.", vim.log.levels.INFO)
         else
-          -- If not installed, install parser synchronously
+          -- If not installed, install parser asynchronously and start treesitter
           vim.notify("Installing parser for " .. parser_name, vim.log.levels.INFO)
-          treesitter.install({ parser_name }):wait(300000) -- wait max. 5 minutes
+          treesitter.install({ parser_name }):await(
+            function()
+              ts_start(bufnr, parser_name)
+            end
+          )
+          return
         end
       end
 
@@ -601,7 +607,7 @@ now(function()
   local mason_lspconfig = require('mason-lspconfig')
   mason_lspconfig.setup({
     automatic_enable = true,
-    ensure_installed = {},
+    ensure_installed = { 'lua_ls', 'gopls', 'bashls' },
   })
   require('mason-tool-installer').setup({
     auto_update = false,
