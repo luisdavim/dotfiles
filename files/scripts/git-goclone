@@ -109,8 +109,15 @@ fi
 if [ -d "${path}" ] && [[ ${UPDATE} == "true" ]]; then
   cd "${path}" || exit
   git pull
+  git gc --prune=all
   cd "${cdir}" || exit
 else
   mkdir -p "${path}"
   git clone --recurse-submodules "${url}" "${path}"
+fi
+
+if [ -x "$(command -v scalar)" ]; then
+  cd "${path}" || exit
+  scalar reconfigure
+  cd "${cdir}" || exit
 fi
