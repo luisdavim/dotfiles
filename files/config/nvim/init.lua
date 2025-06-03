@@ -113,6 +113,8 @@ now(function()
       ['Terrafile'] = 'yaml',
       ['terrafile'] = 'yaml',
       ['nginx.conf'] = 'nginx',
+      ['Tiltfile'] = 'tiltfile',
+      ['tiltfile'] = 'tiltfile'
     },
     pattern = {
       ['.*/etc/nginx/.*'] = { 'nginx', { priority = 10 } },
