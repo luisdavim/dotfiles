@@ -166,7 +166,10 @@ now(function()
   require('treesitter-context').setup()
 
   local ensure_installed = { 'comment', 'lua', 'go', 'bash', 'yaml', 'json', 'python', 'markdown', 'markdown_inline',
-    'diff' }
+    'diff', 'starlark' }
+  local syntax_map = {
+    ['tiltfile'] = 'starlark',
+  }
   local already_installed = ts_config.get_installed('parsers')
   local parsers_to_install = vim.iter(ensure_installed)
       :filter(function(parser) return not vim.tbl_contains(already_installed, parser) end)
@@ -176,8 +179,8 @@ now(function()
   end
 
   local function ts_start(bufnr, parser_name)
-    -- vim.treesitter.start(bufnr, parser_name)
-    vim.treesitter.start()
+    vim.treesitter.start(bufnr, parser_name)
+    -- vim.treesitter.start()
     -- Use regex based syntax-highlighting as fallback as some plugins might need it
     vim.bo[bufnr].syntax = "ON"
     -- Use treesitter for folds
@@ -202,9 +205,15 @@ now(function()
       end
 
       -- Get parser name based on filetype
-      local parser_name = vim.treesitter.language.get_lang(filetype)
+      local lang = vim.tbl_get(syntax_map, filetype)
+      if lang == nil then
+        lang = filetype
+      else
+        vim.notify("Using language override " .. lang)
+      end
+      local parser_name = vim.treesitter.language.get_lang(lang)
       if not parser_name then
-        vim.notify(vim.inspect("No treesitter parser found for filetype: " .. filetype), vim.log.levels.WARN)
+        vim.notify(vim.inspect("No treesitter parser found for filetype: " .. lang), vim.log.levels.WARN)
         return
       end
 
@@ -609,7 +618,7 @@ now(function()
   local mason_lspconfig = require('mason-lspconfig')
   mason_lspconfig.setup({
     automatic_enable = true,
-    ensure_installed = { 'lua_ls', 'gopls', 'bashls' },
+    ensure_installed = { 'lua_ls', 'gopls', 'bashls', 'bzl', 'buf_ls' },
   })
   require('mason-tool-installer').setup({
     auto_update = false,
@@ -631,6 +640,8 @@ now(function()
   })
 
   require('lspconfig')
+  -- TODO: this should not be needed
+  vim.lsp.enable('tilt_ls')
 
   -- local capabilities = MiniCompletion.get_lsp_capabilities()
   local capabilities = require('cmp_nvim_lsp').default_capabilities()
