@@ -39,6 +39,7 @@ alias kga='kctl get -A'
 alias kd='kctl describe'
 alias kvs='kctl view-secret'
 alias keds='kctl modify-secret'
+alias kedst='kctl edit_status'
 alias ked='kctl edit'
 alias krr='kctl rollout restart'
 alias ktop='kctl top'
@@ -410,17 +411,17 @@ function helm-clean() {
   fi
   for N in ${NS}; do
     echo "Looking for ConfigMaps in ${N}:"
-    \kubectl delete cm -n ${N} -l 'owner=helm' -l 'status in (failed,superseded,deleted)'
+    \kubectl delete cm -n "${N}" -l 'owner=helm' -l 'status in (failed,superseded,deleted)'
     echo "Looking for Secrets in ${N}:"
-    \kubectl delete secrets -n ${N} -l 'owner=helm' -l 'status in (failed,superseded,deleted)'
+    \kubectl delete secrets -n "${N}" -l 'owner=helm' -l 'status in (failed,superseded,deleted)'
   done
 }
 
 function helm-getSecrets() {
   HELM_HOME="${HELM_HOME:-~/.helm}"
-  \kubectl get secret -n kube-system tiller-secret -o go-template='{{index .data "ca.crt"| base64decode}}' > $HELM_HOME/ca.pem
-  \kubectl get secret -n kube-system tiller-secret -o go-template='{{index .data "tls.crt"| base64decode}}' > $HELM_HOME/cert.pem
-  \kubectl get secret -n kube-system tiller-secret -o go-template='{{index .data "tls.key"| base64decode}}' > $HELM_HOME/key.pem
+  \kubectl get secret -n kube-system tiller-secret -o go-template='{{index .data "ca.crt"| base64decode}}' > "${HELM_HOME}/ca.pem"
+  \kubectl get secret -n kube-system tiller-secret -o go-template='{{index .data "tls.crt"| base64decode}}' > "${HELM_HOME}/cert.pem"
+  \kubectl get secret -n kube-system tiller-secret -o go-template='{{index .data "tls.key"| base64decode}}' > "${HELM_HOME}/key.pem"
 }
 
 function helm-raw() {
