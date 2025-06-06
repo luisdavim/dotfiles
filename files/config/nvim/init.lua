@@ -728,12 +728,11 @@ now(function()
       vim.lsp.inlay_hint.enable(true, { buffnr })
       keymap('n', '<leader>H',
         function()
-          if vim.lsp.inlay_hint.is_enabled() then
-            vim.lsp.inlay_hint.enable(false, { buffnr })
-          else
-            vim.lsp.inlay_hint.enable(true, { buffnr })
-          end
+          vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled(), { buffnr })
         end, opts)
+      vim.api.nvim_create_user_command('LspToggleHints', function()
+        vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled(), { buffnr })
+      end, {})
     end
 
     require('glance').setup()
