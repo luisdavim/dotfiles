@@ -333,6 +333,11 @@ now(function()
       layout = {
         preset = 'ivy',
       },
+      -- sources = {
+      --   explorer = {
+      --     auto_close = true,
+      --   },
+      -- },
     },
     quickfile = { enabled = true },
     scope = { enabled = false },
@@ -350,7 +355,21 @@ now(function()
 
   keymap('n', '<C-p>', Snacks.picker.files, {})
   keymap('n', '<C-f>', Snacks.picker.grep, {})
-  keymap('n', '<C-_>', function() Snacks.explorer() end, {})
+  -- keymap('n', '<C-_>', function() Snacks.explorer() end, {})
+  keymap('n', '<C-_>',
+    function()
+      local explorer_pickers = Snacks.picker.get({ source = "explorer" })
+      for _, v in pairs(explorer_pickers) do
+        if v:is_focused() then
+          v:close()
+        else
+          v:focus()
+        end
+      end
+      if #explorer_pickers == 0 then
+        Snacks.picker.explorer()
+      end
+    end, {})
 
   vim.api.nvim_create_user_command('Gitbrowse', Snacks.gitbrowse.open, {})
 
