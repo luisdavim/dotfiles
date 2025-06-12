@@ -27,6 +27,8 @@ function usage() {
 export NAMESPACE="kube-system"
 ETCD_MANAGER="false"
 ETCD_POD=""
+ETCD_HOST=""
+ETCD_PORT=""
 
 DEBUG="false"
 POSITIONAL=()
@@ -52,6 +54,18 @@ while [[ $# -gt 0 ]]; do
       ETCD_POD="$2"
       shift 2
       ;;
+    -P | --port)
+      ETCD_PORT="$2"
+      shift 2
+      ;;
+    -H | --host)
+      ETCD_HOST="$2"
+      shift 2
+      ;;
+    -6 | --ipv6)
+      ETCD_HOST="[::1]"
+      shift
+      ;;
     --)
       shift
       break
@@ -68,18 +82,31 @@ pod='$(kubectl get po -n ${NAMESPACE} -l component=etcd -o name | head -n1)'
 
 read -r -d '' cmd_prefix << 'EOF'
 export ETCDCTL_API=3
-alias etcdctl='etcdctl --command-timeout=120s --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key --endpoints=https://127.0.0.1:2379'
+alias etcdctl="etcdctl --command-timeout=120s --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key --endpoints=${ENDPOINT}"
 EOF
 
 if [[ ${ETCD_MANAGER} == "true" ]]; then
+  if [[ -z "${ETCD_PORT}" ]]; then
+    ETCD_PORT="4001"
+  fi
   pod='$(kubectl get po -n ${NAMESPACE} -l k8s-app=etcd-manager-main -o name | head -n1)'
   read -r -d '' cmd_prefix << 'EOF'
 export ETCDCTL_API=3
 export DIRNAME="/opt/$(ls /opt -1 | tail -n 1)"
 export CERTDIR=/rootfs/srv/kubernetes/kube-apiserver/
-alias etcdctl="$DIRNAME/etcdctl --cacert=$CERTDIR/etcd-ca.crt --cert=$CERTDIR/etcd-client.crt --key=$CERTDIR/etcd-client.key --endpoints=https://127.0.0.1:4001"
+alias etcdctl="$DIRNAME/etcdctl --cacert=$CERTDIR/etcd-ca.crt --cert=$CERTDIR/etcd-client.crt --key=$CERTDIR/etcd-client.key --endpoints=${ENDPOINT}"
 EOF
 fi
+
+if [[ -z "${ETCD_PORT}" ]]; then
+  ETCD_PORT="2379"
+fi
+
+if [[ -z "${ETCD_HOST}" ]]; then
+  ETCD_HOST="127.0.0.1"
+fi
+
+cmd_prefix="$(echo -e "export ENDPOINT=https://${ETCD_HOST}:${ETCD_PORT}\n${cmd_prefix}")"
 
 if [[ -n "${ETCD_POD}" ]]; then
   pod="${ETCD_POD}"
