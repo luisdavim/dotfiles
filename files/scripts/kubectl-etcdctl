@@ -78,6 +78,7 @@ while [[ $# -gt 0 ]]; do
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters
 
+# shellcheck disable=SC2016 # this will be evaluated latter
 pod='$(kubectl get po -n ${NAMESPACE} -l component=etcd -o name | head -n1)'
 
 read -r -d '' cmd_prefix << 'EOF'
@@ -89,6 +90,7 @@ if [[ ${ETCD_MANAGER} == "true" ]]; then
   if [[ -z "${ETCD_PORT}" ]]; then
     ETCD_PORT="4001"
   fi
+  # shellcheck disable=SC2016 # this will be evaluated latter
   pod='$(kubectl get po -n ${NAMESPACE} -l k8s-app=etcd-manager-main -o name | head -n1)'
   read -r -d '' cmd_prefix << 'EOF'
 export ETCDCTL_API=3

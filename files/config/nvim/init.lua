@@ -853,7 +853,7 @@ now(function()
       ),
       settings = {
         gopls = {
-          gofumpt = true,
+          gofumpt = false,
           staticcheck = true,
           semanticTokens = true,
           usePlaceholders = true,
