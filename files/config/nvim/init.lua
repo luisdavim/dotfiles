@@ -53,6 +53,15 @@ now(function()
   keymap('n', '<S-Tab>', '<<_', {})
   keymap('i', '<S-Tab>', '<C-D>', {})
 
+  -- Make <Tab> work for snippets
+  -- keymap({ 'i', 's' }, '<Tab>', function()
+  --    if vim.snippet.active({ direction = 1 }) then
+  --      return '<cmd>lua vim.snippet.jump(1)<cr>'
+  --    else
+  --      return '<Tab>'
+  --    end
+  --  end, { expr = true })
+
   -- clear search highlight
   keymap('n', '<C-L>', '<cmd>noh<CR>', { noremap = true, silent = true })
 
@@ -76,6 +85,10 @@ now(function()
   set.updatetime = 300
   set.completeopt = 'menuone'
   set.hlsearch = true
+
+  -- Use rg
+  -- vim.o.grepprg = [[rg --glob "!.git" --no-heading --vimgrep --follow $*]]
+  -- vim.opt.grepformat = vim.opt.grepformat ^ { "%f:%l:%c:%m" }
 
   -- Automatically create parent directories
   local automkdirGroup = vim.api.nvim_create_augroup("automkdirGroup", { clear = true })
