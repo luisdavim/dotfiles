@@ -667,8 +667,6 @@ now(function()
   capabilities = vim.tbl_deep_extend('force', vim.lsp.protocol.make_client_capabilities(), capabilities)
 
   local function on_attach(client, buffnr)
-    local opts = { buffer = buffnr }
-
     MiniIcons.tweak_lsp_kind()
 
     -- highlight symbol under cursor
@@ -748,7 +746,7 @@ now(function()
       keymap('n', '<leader>H',
         function()
           vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled(), { buffnr })
-        end, opts)
+        end, { buffer = buffnr, desc = "Toggle inlay hints" })
       vim.api.nvim_create_user_command('LspToggleHints', function()
         vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled(), { buffnr })
       end, {})
@@ -799,46 +797,49 @@ now(function()
       end,
       { silent = true }
     )
-    keymap('n', '<leader>ca', function() vim.lsp.buf.code_action() end, opts)
-    -- keymap('n', '<leader>ld', MiniExtra.pickers.diagnostic, opts)
-    keymap('n', '<leader>ld', Snacks.picker.diagnostics, opts)
+    keymap('n', '<leader>ca', function() vim.lsp.buf.code_action() end, { buffer = buffnr, desc = "Code actions" })
+    -- keymap('n', '<leader>ld', MiniExtra.pickers.diagnostic, { buffer = buffnr, desc = "Diagnostics" })
+    keymap('n', '<leader>ld', Snacks.picker.diagnostics, { buffer = buffnr, desc = "Diagnostics" })
 
-    -- keymap('n', 'gd', function() vim.lsp.buf.definition() end, opts)
-    -- keymap('n', gd, function() require('glance').open("definitions") end, opts)
-    -- keymap('n', 'gd', function() MiniExtra.pickers.lsp({ scope = 'definition' }) end, opts)
-    keymap('n', 'gd', Snacks.picker.lsp_definitions, opts)
+    -- keymap('n', 'gd', function() vim.lsp.buf.definition() end, { buffer = buffnr, desc = "Go to definition" })
+    -- keymap('n', gd, function() require('glance').open("definitions") end, { buffer = buffnr, desc = "Go to definition" })
+    -- keymap('n', 'gd', function() MiniExtra.pickers.lsp({ scope = 'definition' }) end, { buffer = buffnr, desc = "Go to definition" })
+    keymap('n', 'gd', Snacks.picker.lsp_definitions, { buffer = buffnr, desc = "Go to definition" })
 
-    -- keymap('n', 'gD', function() vim.lsp.buf.declaration() end, opts)
-    -- keymap('n', 'gD', function() MiniExtra.pickers.lsp({ scope = 'declaration' }) end, opts)
-    keymap('n', 'gD', Snacks.picker.lsp_declarations, opts)
+    -- keymap('n', 'gD', function() vim.lsp.buf.declaration() end, { buffer = buffnr, desc = "go to declaration" })
+    -- keymap('n', 'gD', function() MiniExtra.pickers.lsp({ scope = 'declaration' }) end, { buffer = buffnr, desc = "go to declaration" })
+    keymap('n', 'gD', Snacks.picker.lsp_declarations, { buffer = buffnr, desc = "go to declaration" })
 
-    -- keymap('n', 'gi', function() vim.lsp.buf.implementation() end, opts)
-    -- keymap('n', 'gi', function() MiniExtra.pickers.lsp({ scope = 'implementation' }) end, opts)
-    keymap('n', 'gi', Snacks.picker.lsp_implementations, opts)
+    -- keymap('n', 'gi', function() vim.lsp.buf.implementation() end, { buffer = buffnr, desc = "go to implementation" })
+    -- keymap('n', 'gi', function() MiniExtra.pickers.lsp({ scope = 'implementation' }) end, { buffer = buffnr, desc = "go to implementation" })
+    keymap('n', 'gi', Snacks.picker.lsp_implementations, { buffer = buffnr, desc = "go to implementation" })
 
-    -- keymap('n', 'go', function() vim.lsp.buf.type_definition() end, opts)
-    -- keymap('n', 'go', function() MiniExtra.pickers.lsp({ scope = 'type_definition' }) end, opts)
-    keymap('n', 'go', Snacks.picker.lsp_type_definitions, opts)
+    -- keymap('n', 'go', function() vim.lsp.buf.type_definition() end, { buffer = buffnr, desc = "go to type definition" })
+    -- keymap('n', 'go', function() MiniExtra.pickers.lsp({ scope = 'type_definition' }) end, { buffer = buffnr, desc = "go to type definition" })
+    keymap('n', 'go', Snacks.picker.lsp_type_definitions, { buffer = buffnr, desc = "go to type definition" })
 
-    -- keymap('n', 'gr', function() vim.lsp.buf.references() end, opts)
-    -- keymap('n', 'gr', function() MiniExtra.pickers.lsp({ scope = 'references' }) end, opts)
-    keymap('n', 'gr', Snacks.picker.lsp_references, opts)
+    -- keymap('n', 'gr', function() vim.lsp.buf.references() end, { buffer = buffnr, desc = "list references" })
+    -- keymap('n', 'gr', function() MiniExtra.pickers.lsp({ scope = 'references' }) end, { buffer = buffnr, desc = "list references" })
+    keymap('n', 'gr', Snacks.picker.lsp_references, { buffer = buffnr, desc = "list references" })
 
-    keymap('n', 'gs', bordered_signature_help, opts)
+    keymap('n', 'gs', bordered_signature_help, { buffer = buffnr, desc = "signature help" })
 
-    -- keymap('n', 'gS', function() MiniExtra.pickers.lsp({ scope = 'document_symbol' }) end, opts)
-    keymap('n', 'gS', Snacks.picker.lsp_symbols, opts)
+    -- keymap('n', 'gS', function() MiniExtra.pickers.lsp({ scope = 'document_symbol' }) end, { buffer = buffnr, desc = "list symbols" })
+    keymap('n', 'gS', Snacks.picker.lsp_symbols, { buffer = buffnr, desc = "list symbols" })
 
-    -- keymap('n', 'gf', function() MiniExtra.pickers.lsp({ scope = 'workspace_symbol' }) end, opts)
-    keymap('n', 'gf', Snacks.picker.lsp_workspace_symbols, opts)
+    -- keymap('n', 'gf', function() MiniExtra.pickers.lsp({ scope = 'workspace_symbol' }) end, { buffer = buffnr, desc = "list workspace symbols" })
+    keymap('n', 'gf', Snacks.picker.lsp_workspace_symbols, { buffer = buffnr, desc = "list workspace symbols" })
 
-    keymap('n', ']g', function() vim.diagnostic.jump({ count = 1, float = true }) end, opts)
-    keymap('n', '[g', function() vim.diagnostic.jump({ count = -1, float = true }) end, opts)
+    keymap('n', ']g', function() vim.diagnostic.jump({ count = 1, float = true }) end,
+      { buffer = buffnr, desc = "go to next diagnostic" })
+    keymap('n', '[g', function() vim.diagnostic.jump({ count = -1, float = true }) end,
+      { buffer = buffnr, desc = "go to previous diagnostic" })
 
-    keymap({ 'n', 'x' }, '<F3>', function() vim.lsp.buf.format({ async = true }) end, opts)
-    keymap('n', '<F4>', vim.lsp.buf.code_action, opts)
-    keymap('n', '<F2>', vim.lsp.buf.rename, opts)
-    keymap('n', 'K', bordered_hover, opts)
+    keymap({ 'n', 'x' }, '<F3>', function() vim.lsp.buf.format({ async = true }) end,
+      { buffer = buffnr, desc = "format file" })
+    keymap('n', '<F4>', vim.lsp.buf.code_action, { buffer = buffnr, desc = "code actions" })
+    keymap('n', '<F2>', vim.lsp.buf.rename, { buffer = buffnr, desc = "rename symbol" })
+    keymap('n', 'K', bordered_hover, { buffer = buffnr, desc = "show help" })
   end
 
   local custom_lspconfig = {
@@ -1440,40 +1441,57 @@ end)
 
 -- later(function()
 --   local miniclue = require('mini.clue')
---   --stylua: ignore
 --   miniclue.setup({
+--     triggers = {
+--       -- Leader triggers
+--       { mode = 'n', keys = '<Leader>' },
+--       { mode = 'x', keys = '<Leader>' },
+--
+--       -- Built-in completion
+--       { mode = 'i', keys = '<C-x>' },
+--
+--       -- `g` key
+--       { mode = 'n', keys = 'g' },
+--       { mode = 'x', keys = 'g' },
+--
+--       -- Marks
+--       { mode = 'n', keys = "'" },
+--       { mode = 'n', keys = '`' },
+--       { mode = 'x', keys = "'" },
+--       { mode = 'x', keys = '`' },
+--
+--       -- Registers
+--       { mode = 'n', keys = '"' },
+--       { mode = 'x', keys = '"' },
+--       { mode = 'i', keys = '<C-r>' },
+--       { mode = 'c', keys = '<C-r>' },
+--
+--       -- Window commands
+--       { mode = 'n', keys = '<C-w>' },
+--
+--       -- `z` key
+--       { mode = 'n', keys = 'z' },
+--       { mode = 'x', keys = 'z' },
+--     },
+--
 --     clues = {
---       -- TODO: add custom mappings clues
+--       -- Enhance this by adding descriptions for <Leader> mapping groups
 --       miniclue.gen_clues.builtin_completion(),
 --       miniclue.gen_clues.g(),
 --       miniclue.gen_clues.marks(),
 --       miniclue.gen_clues.registers(),
---       miniclue.gen_clues.windows({ submode_resize = true }),
+--       miniclue.gen_clues.windows({
+--         submode_move = true,
+--         submode_navigate = true,
+--         submode_resize = true,
+--       }),
 --       miniclue.gen_clues.z(),
 --     },
---     triggers = {
---       { mode = 'n', keys = '<Leader>' }, -- Leader triggers
---       { mode = 'x', keys = '<Leader>' },
---       { mode = 'n', keys = [[\]] },      -- mini.basics
---       { mode = 'n', keys = '[' },        -- mini.bracketed
---       { mode = 'n', keys = ']' },
---       { mode = 'x', keys = '[' },
---       { mode = 'x', keys = ']' },
---       { mode = 'i', keys = '<C-x>' }, -- Built-in completion
---       { mode = 'n', keys = 'g' },     -- `g` key
---       { mode = 'x', keys = 'g' },
---       { mode = 'n', keys = "'" },     -- Marks
---       { mode = 'n', keys = '`' },
---       { mode = 'x', keys = "'" },
---       { mode = 'x', keys = '`' },
---       { mode = 'n', keys = '"' }, -- Registers
---       { mode = 'x', keys = '"' },
---       { mode = 'i', keys = '<C-r>' },
---       { mode = 'c', keys = '<C-r>' },
---       { mode = 'n', keys = '<C-w>' }, -- Window commands
---       { mode = 'n', keys = 'z' },     -- `z` key
---       { mode = 'x', keys = 'z' },
+--
+--     window = {
+--       config = {
+--         width = 'auto',
+--       },
 --     },
---     window = { config = { border = 'double' } },
 --   })
 -- end)
