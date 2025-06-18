@@ -1452,6 +1452,18 @@ later(function()
   end, { silent = true })
 end)
 
+later(function()
+  add({
+    source = 'chrishrb/gx.nvim',
+    depends = {
+      'nvim-lua/plenary.nvim',
+    }
+  })
+
+  require("gx").setup({})
+  keymap({ "n", "x" }, "gx", "<cmd>Browse<cr>", {})
+end)
+
 -- later(function()
 --   local miniclue = require('mini.clue')
 --   miniclue.setup({
