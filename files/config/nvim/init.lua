@@ -1460,7 +1460,16 @@ later(function()
     }
   })
 
-  require("gx").setup({})
+  require("gx").setup({
+    handlers = {
+      plugin = true,
+      github = true,
+      brewfile = true,
+      package_json = true,
+      search = true,
+      go = true,
+    }
+  })
   keymap({ "n", "x" }, "gx", "<cmd>Browse<cr>", {})
 end)
 
