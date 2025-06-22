@@ -193,7 +193,6 @@ now(function()
 
   local function ts_start(bufnr, parser_name)
     vim.treesitter.start(bufnr, parser_name)
-    -- vim.treesitter.start()
     -- Use regex based syntax-highlighting as fallback as some plugins might need it
     vim.bo[bufnr].syntax = "ON"
     -- Use treesitter for folds
@@ -206,11 +205,11 @@ now(function()
   end
 
   -- Auto-install and start parsers for any buffer
-  vim.api.nvim_create_autocmd({ "BufRead", "FileType" }, {
+  vim.api.nvim_create_autocmd({ "FileType" }, {
     desc = "Enable Treesitter",
     callback = function(event)
       local bufnr = event.buf
-      local filetype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
+      local filetype = event.match
 
       -- Skip if no filetype
       if filetype == "" then
@@ -231,27 +230,18 @@ now(function()
       end
 
       -- Try to get existing parser
-      local parser_configs = require('nvim-treesitter.parsers')
-      if not parser_configs[parser_name] then
-        return -- Parser not available, skip silently
-      end
+      if not vim.tbl_contains(ts_config.get_available(), parser_name) then return end
 
-      local parser_exists = pcall(vim.treesitter.get_parser, bufnr, parser_name)
-
-      if not parser_exists then
-        -- Check if parser is already installed
-        if vim.tbl_contains(already_installed, parser_name) then
-          vim.notify("Parser for " .. parser_name .. " already installed.", vim.log.levels.INFO)
-        else
-          -- If not installed, install parser asynchronously and start treesitter
-          vim.notify("Installing parser for " .. parser_name, vim.log.levels.INFO)
-          treesitter.install({ parser_name }):await(
-            function()
-              ts_start(bufnr, parser_name)
-            end
-          )
-          return
-        end
+      -- Check if parser is already installed
+      if not vim.tbl_contains(already_installed, parser_name) then
+        -- If not installed, install parser asynchronously and start treesitter
+        vim.notify("Installing parser for " .. parser_name, vim.log.levels.INFO)
+        treesitter.install({ parser_name }):await(
+          function()
+            ts_start(bufnr, parser_name)
+          end
+        )
+        return
       end
 
       -- Start treesitter for this buffer
