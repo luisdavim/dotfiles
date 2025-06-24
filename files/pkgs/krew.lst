@@ -15,6 +15,7 @@ kubescape
 modify-secret
 mtail
 neat
+node-resource
 node-restart
 node-shell
 ns
