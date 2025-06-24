@@ -934,6 +934,27 @@ end)
 -- Git and diff
 
 now(function()
+  -- Define a function to toggle diff mode in all windows
+  function DiffToggle()
+    if vim.wo.diff then
+      -- If already in diff mode, turn on cursorline and turn off diff in all windows
+      vim.cmd('windo set cursorline')
+      vim.cmd('windo diffoff')
+    else
+      -- If not in diff mode, turn off cursorline and turn on diff in all windows
+      vim.cmd('windo set nocursorline')
+      vim.cmd('windo diffthis')
+    end
+  end
+
+  -- Create a command :DiffToggle that calls the function
+  vim.api.nvim_create_user_command('DiffToggle', DiffToggle, {})
+
+  -- Create a normal-mode mapping for <Leader>df to call DiffToggle
+  vim.keymap.set('n', '<Leader>df', DiffToggle, { silent = true })
+end)
+
+now(function()
   require('mini.git').setup()
 
   local function align_blame(au_data)
