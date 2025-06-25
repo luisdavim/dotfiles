@@ -86,6 +86,8 @@ now(function()
   set.completeopt = 'menuone'
   set.hlsearch = true
 
+  vim.o.number = true
+
   -- Use rg
   vim.o.grepprg = [[rg --glob "!.git" --no-heading --vimgrep --follow $*]]
   vim.opt.grepformat = vim.opt.grepformat ^ { "%f:%l:%c:%m" }
@@ -149,6 +151,27 @@ now(function()
     end,
   })
 end)
+
+now(function()
+  require('mini.basics').setup({
+    options = { basic = true, extra_ui = true, win_borders = "single" },
+    mappings = { basic = true, windows = true, move_with_alt = true },
+  })
+  vim.opt.completeopt = 'menuone'
+end)
+
+now(function() require('mini.extra').setup() end)
+
+-- later(function() require('mini.animate').setup() end)
+-- later(function() require('mini.base16').setup() end)
+-- later(function() require('mini.colors').setup() end)
+-- later(function() require('mini.hues').setup() end)
+
+later(function() require('mini.ai').setup() end)
+later(function() require('mini.align').setup() end)
+later(function() require('mini.comment').setup() end)
+later(function() require('mini.move').setup() end)
+later(function() require('mini.operators').setup() end)
 
 -- Treesitter
 now(function()
@@ -1190,27 +1213,6 @@ later(function()
     substitude_command_name = 'S',
   })
 end)
-
-later(function()
-  require('mini.basics').setup({
-    options = { extra_ui = true, win_borders = "single" },
-    mappings = { basic = true, windows = true, move_with_alt = true },
-  })
-  vim.opt.completeopt = 'menuone'
-end)
-
-later(function() require('mini.extra').setup() end)
-
--- later(function() require('mini.animate').setup() end)
--- later(function() require('mini.base16').setup() end)
--- later(function() require('mini.colors').setup() end)
--- later(function() require('mini.hues').setup() end)
-
-later(function() require('mini.ai').setup() end)
-later(function() require('mini.align').setup() end)
-later(function() require('mini.comment').setup() end)
-later(function() require('mini.move').setup() end)
-later(function() require('mini.operators').setup() end)
 
 later(function()
   require('mini.pick').setup()
