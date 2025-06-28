@@ -133,7 +133,7 @@ kubelogin
 lazygit
 ldns
 less
-lesspipe
+# lesspipe
 lhasa
 libandroid-execinfo
 libandroid-glob
