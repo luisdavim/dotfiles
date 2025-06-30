@@ -5,11 +5,11 @@ alias :q='exit'
 
 # Geeknote alias
 function gn_sync_notebook() {
-  gnsync --path ~/Evernote/$1 --logpath ~/.log/geeknote$1.log --format markdown --notebook "$1" --two-way TWO_WAY
+  gnsync --path "${HOME}/Evernote/${1}" --logpath "${HOME}/.log/geeknote$1.log" --format markdown --notebook "$1" --two-way TWO_WAY
 }
 
 function gn_sync_all() {
-  for D in *; do gn_sync_notebook $D; done
+  for D in *; do gn_sync_notebook "${D}"; done
 }
 
 alias vim-geeknote='vi -c Geeknote'
@@ -28,6 +28,10 @@ fi
 
 alias fzvi='vi "$(rg -g "!*vendor/*" -l . | fzf --height=100% --preview='\''pistol {}'\'')"'
 alias vzf='fzvi'
+
+vimgrep() {
+  rg "${@}" -l | xargs nvim -p
+}
 
 # Aliases for vim Vundle
 # alias vim-install='vi +PluginInstall +qall'
@@ -50,4 +54,3 @@ function codi() {
   shift
   vi -c "Codi $syntax" "$@"
 }
-
