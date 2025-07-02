@@ -425,12 +425,15 @@ end)
 -- Auto-completion
 
 -- Sinppets
+
 -- later(function()
 --   local snippets = require('mini.snippets')
 --   local gen_loader = snippets.gen_loader
 --   snippets.setup({ snippets = { gen_loader.from_lang() } })
 --   MiniSnippets.start_lsp_server()
 -- end)
+
+-- Completion Menu
 
 -- Using mini.completion
 -- now(function()
@@ -463,7 +466,6 @@ end)
 --       local cmdline = vim.fn.getcmdline()
 --       local curpos = vim.fn.getcmdpos()
 --       local last_char = cmdline:sub(-1)
---
 --       if
 --           curpos == #cmdline + 1
 --           and vim.fn.pumvisible() == 0
@@ -481,133 +483,184 @@ end)
 -- end)
 
 -- Using nvim-cmp
+-- now(function()
+--   add({
+--     source = 'hrsh7th/nvim-cmp',
+--     depends = {
+--       'neovim/nvim-lspconfig',
+--       'onsails/lspkind.nvim',
+--       'hrsh7th/cmp-nvim-lsp',
+--       'hrsh7th/cmp-buffer',
+--       'hrsh7th/cmp-path',
+--       'hrsh7th/cmp-emoji',
+--       'hrsh7th/cmp-cmdline',
+--       'hrsh7th/cmp-vsnip',
+--       'hrsh7th/vim-vsnip',
+--       'hrsh7th/cmp-nvim-lsp-signature-help',
+--       'hrsh7th/cmp-nvim-lsp-document-symbol',
+--       -- 'petertriho/cmp-git',
+--     }
+--   })
+--
+--   -- AI autocomplete
+--   -- add({
+--   --   source = "zbirenbaum/copilot-cmp",
+--   --   depends = { 'zbirenbaum/copilot.lua' },
+--   -- })
+--
+--   -- Set up nvim-cmp.
+--   local cmp = require('cmp')
+--   local lspkind = require('lspkind')
+--   -- require("copilot_cmp").setup()
+--
+--   cmp.setup({
+--     snippet = {
+--       -- REQUIRED - you must specify a snippet engine
+--       expand = function(args)
+--         vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+--         -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+--         -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
+--         -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+--         -- vim.snippet.expand(args.body) -- For native neovim snippets (Neovim v0.10+)
+--
+--         -- For `mini.snippets` users:
+--         -- local insert = MiniSnippets.config.expand.insert or MiniSnippets.default_insert
+--         -- insert({ body = args.body }) -- Insert at cursor
+--         -- cmp.resubscribe({ "TextChangedI", "TextChangedP" })
+--         -- require("cmp.config").set_onetime({ sources = {} })
+--       end,
+--     },
+--     window = {
+--       completion = cmp.config.window.bordered(),
+--       documentation = cmp.config.window.bordered(),
+--     },
+--     mapping = cmp.mapping.preset.insert({
+--       ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+--       ['<C-f>'] = cmp.mapping.scroll_docs(4),
+--       ['<C-Space>'] = cmp.mapping.complete(),
+--       ['<C-e>'] = cmp.mapping.abort(),
+--       ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+--     }),
+--     formatting = {
+--       expandable_indicator = true,
+--       format = lspkind.cmp_format({
+--         mode = "symbol_text",
+--         menu = ({
+--           buffer = "[Buffer]",
+--           nvim_lsp = "[LSP]",
+--           luasnip = "[LuaSnip]",
+--           nvim_lua = "[Lua]",
+--           latex_symbols = "[Latex]",
+--           -- copilot = "[Copilot]",
+--           path = "[Path]"
+--         })
+--       }),
+--     },
+--     completion = {
+--       completeopt = 'menuone',
+--     },
+--     sources = cmp.config.sources({
+--       -- { name = "copilot" },
+--       { name = 'nvim_lsp' },
+--       { name = 'nvim_lsp_signature_help' },
+--       { name = 'path' },
+--       { name = 'emoji' },
+--       { name = 'vsnip' }, -- For vsnip users.
+--       -- { name = 'luasnip' }, -- For luasnip users.
+--       -- { name = 'ultisnips' }, -- For ultisnips users.
+--       -- { name = 'snippy' }, -- For snippy users.
+--     }, {
+--       { name = 'buffer' },
+--     })
+--   })
+--
+--   -- To use git you need to install the plugin petertriho/cmp-git and uncomment lines below
+--   -- Set configuration for specific filetype.
+--   --[[ cmp.setup.filetype('gitcommit', {
+--     sources = cmp.config.sources({
+--       { name = 'git' },
+--     }, {
+--       { name = 'buffer' },
+--     })
+--  })
+--  require("cmp_git").setup() ]] --
+--
+--   -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
+--   cmp.setup.cmdline({ '/', '?' }, {
+--     mapping = cmp.mapping.preset.cmdline(),
+--     completion = {
+--       completeopt = 'menuone,noselect',
+--     },
+--     sources = cmp.config.sources({
+--       { name = 'nvim_lsp_document_symbol' },
+--     }, {
+--       { name = 'buffer' },
+--     }),
+--   })
+--
+--   -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+--   cmp.setup.cmdline(':', {
+--     mapping = cmp.mapping.preset.cmdline(),
+--     completion = {
+--       completeopt = 'menuone,noselect',
+--     },
+--     sources = cmp.config.sources({
+--       { name = 'path' },
+--     }, {
+--       { name = 'cmdline' },
+--     }),
+--     matching = { disallow_symbol_nonprefix_matching = false }
+--   })
+-- end)
+
+-- Using blink.cmp
 now(function()
+  local function build_blink(params)
+    vim.notify('Building blink.cmp', vim.log.levels.INFO)
+    local obj = vim.system({ 'cargo', 'build', '--release' }, { cwd = params.path }):wait()
+    if obj.code == 0 then
+      vim.notify('Building blink.cmp done', vim.log.levels.INFO)
+    else
+      vim.notify('Building blink.cmp failed', vim.log.levels.ERROR)
+    end
+  end
+
   add({
-    source = 'hrsh7th/nvim-cmp',
-    depends = {
-      'neovim/nvim-lspconfig',
-      'onsails/lspkind.nvim',
-      'hrsh7th/cmp-nvim-lsp',
-      'hrsh7th/cmp-buffer',
-      'hrsh7th/cmp-path',
-      'hrsh7th/cmp-emoji',
-      'hrsh7th/cmp-cmdline',
-      'hrsh7th/cmp-vsnip',
-      'hrsh7th/vim-vsnip',
-      'hrsh7th/cmp-nvim-lsp-signature-help',
-      'hrsh7th/cmp-nvim-lsp-document-symbol',
-      -- 'petertriho/cmp-git',
-    }
+    source = 'Saghen/blink.cmp',
+    hooks = {
+      post_install = build_blink,
+      post_checkout = build_blink,
+    },
   })
 
-  -- AI autocomplete
-  -- add({
-  --   source = "zbirenbaum/copilot-cmp",
-  --   depends = { 'zbirenbaum/copilot.lua' },
-  -- })
-
-  -- Set up nvim-cmp.
-  local cmp = require('cmp')
-  local lspkind = require('lspkind')
-  -- require("copilot_cmp").setup()
-
-  cmp.setup({
-    snippet = {
-      -- REQUIRED - you must specify a snippet engine
-      expand = function(args)
-        vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
-        -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
-        -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
-        -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
-        -- vim.snippet.expand(args.body) -- For native neovim snippets (Neovim v0.10+)
-
-        -- For `mini.snippets` users:
-        -- local insert = MiniSnippets.config.expand.insert or MiniSnippets.default_insert
-        -- insert({ body = args.body }) -- Insert at cursor
-        -- cmp.resubscribe({ "TextChangedI", "TextChangedP" })
-        -- require("cmp.config").set_onetime({ sources = {} })
-      end,
+  require('blink.cmp').setup({
+    appearance = {
+      use_nvim_cmp_as_default = true,
     },
-    window = {
-      completion = cmp.config.window.bordered(),
-      documentation = cmp.config.window.bordered(),
-    },
-    mapping = cmp.mapping.preset.insert({
-      ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-      ['<C-f>'] = cmp.mapping.scroll_docs(4),
-      ['<C-Space>'] = cmp.mapping.complete(),
-      ['<C-e>'] = cmp.mapping.abort(),
-      ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-    }),
-    formatting = {
-      expandable_indicator = true,
-      format = lspkind.cmp_format({
-        mode = "symbol_text",
-        menu = ({
-          buffer = "[Buffer]",
-          nvim_lsp = "[LSP]",
-          luasnip = "[LuaSnip]",
-          nvim_lua = "[Lua]",
-          latex_symbols = "[Latex]",
-          -- copilot = "[Copilot]",
-          path = "[Path]"
-        })
-      }),
+    keymap = {
+      preset = 'enter',
     },
     completion = {
-      completeopt = 'menuone',
+      accept = { auto_brackets = { enabled = true } },
+      documentation = {
+        auto_show = true,
+        auto_show_delay_ms = 250,
+        treesitter_highlighting = true,
+        window = { border = 'rounded' },
+      },
+      menu = {
+        border = 'rounded',
+        auto_show = true,
+        draw = {
+          treesitter = { 'lsp' },
+          columns = { { 'label', 'label_description', gap = 1 }, { 'kind_icon' }, { "kind" } },
+        },
+      },
     },
-    sources = cmp.config.sources({
-      -- { name = "copilot" },
-      { name = 'nvim_lsp' },
-      { name = 'nvim_lsp_signature_help' },
-      { name = 'path' },
-      { name = 'emoji' },
-      { name = 'vsnip' }, -- For vsnip users.
-      -- { name = 'luasnip' }, -- For luasnip users.
-      -- { name = 'ultisnips' }, -- For ultisnips users.
-      -- { name = 'snippy' }, -- For snippy users.
-    }, {
-      { name = 'buffer' },
-    })
-  })
-
-  -- To use git you need to install the plugin petertriho/cmp-git and uncomment lines below
-  -- Set configuration for specific filetype.
-  --[[ cmp.setup.filetype('gitcommit', {
-    sources = cmp.config.sources({
-      { name = 'git' },
-    }, {
-      { name = 'buffer' },
-    })
- })
- require("cmp_git").setup() ]] --
-
-  -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
-  cmp.setup.cmdline({ '/', '?' }, {
-    mapping = cmp.mapping.preset.cmdline(),
-    completion = {
-      completeopt = 'menuone,noselect',
+    signature = {
+      enabled = true,
+      window = { border = 'rounded' },
     },
-    sources = cmp.config.sources({
-      { name = 'nvim_lsp_document_symbol' },
-    }, {
-      { name = 'buffer' },
-    }),
-  })
-
-  -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-  cmp.setup.cmdline(':', {
-    mapping = cmp.mapping.preset.cmdline(),
-    completion = {
-      completeopt = 'menuone,noselect',
-    },
-    sources = cmp.config.sources({
-      { name = 'path' },
-    }, {
-      { name = 'cmdline' },
-    }),
-    matching = { disallow_symbol_nonprefix_matching = false }
   })
 end)
 
@@ -663,6 +716,8 @@ now(function()
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
+      -- 'hrsh7th/cmp-nvim-lsp',
+      'saghen/blink.cmp'
       -- 'jay-babu/mason-null-ls.nvim',
       -- 'nvimtools/none-ls.nvim',
     },
@@ -703,7 +758,8 @@ now(function()
   vim.lsp.enable('tilt_ls')
 
   -- local capabilities = MiniCompletion.get_lsp_capabilities()
-  local capabilities = require('cmp_nvim_lsp').default_capabilities()
+  -- local capabilities = require('cmp_nvim_lsp').default_capabilities()
+  local capabilities = require('blink.cmp').get_lsp_capabilities()
   capabilities = vim.tbl_deep_extend('force', vim.lsp.protocol.make_client_capabilities(), capabilities)
 
   local function on_attach(client, buffnr)
