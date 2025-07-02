@@ -316,6 +316,8 @@ now(function()
     source = "folke/snacks.nvim",
   })
 
+  local truncate_width = vim.api.nvim_win_get_width(0) * 0.5
+
   local snacks = require('snacks')
   snacks.setup({
     animate = { enabled = false },
@@ -362,6 +364,11 @@ now(function()
     },
     picker = {
       enabled = true,
+      formatters = {
+        file = {
+          truncate = truncate_width,
+        },
+      },
       layout = {
         preset = 'ivy',
       },
@@ -681,6 +688,7 @@ now(function()
       -- ['mason-null-ls'] = true,
       ['mason-nvim-dap'] = true,
     },
+    ensure_installed = { 'shfmt', 'shellcheck', 'gofumpt' },
   })
 
   add({

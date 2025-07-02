@@ -38,6 +38,8 @@ azure-cli
 bandwhich
 bash
 bash-completion@2
+bash-language-server
+shfmt
 bat
 bat-extras
 bats-core
