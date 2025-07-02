@@ -634,6 +634,7 @@ now(function()
   })
 
   require('blink.cmp').setup({
+    fuzzy = { implementation = "prefer_rust" },
     appearance = {
       use_nvim_cmp_as_default = true,
     },
