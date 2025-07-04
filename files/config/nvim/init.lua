@@ -632,7 +632,7 @@ now(function()
     -- Format on save
     vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
       -- buffer = 0, -- if 0 doesn't work do vim.api.nvim_get_current_buf()
-      pattern = { "*.yaml", "*.yml", "*.go", "*.ts", "*.tf", "*.sh" },
+      -- pattern = { "*.yaml", "*.yml", "*.go", "*.ts", "*.tf", "*.sh" },
       callback = function(_)
         vim.lsp.buf.format({ async = false })
         -- vim.lsp.buf.code_action is async and may not resolve before the buffer is closed
