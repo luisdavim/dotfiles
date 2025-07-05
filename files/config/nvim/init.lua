@@ -43,35 +43,17 @@ end
 -- end
 
 local keymap = vim.keymap.set
+local border_style = 'rounded'
 
 -- Vim setup
 now(function()
-  -- indent using tab
-  keymap('v', '<Tab>', '>gv', {})
-  keymap('v', '<S-Tab>', '<gv', {})
-  keymap('n', '<Tab>', '>>_', {})
-  keymap('n', '<S-Tab>', '<<_', {})
-  keymap('i', '<S-Tab>', '<C-D>', {})
-
-  -- Make <Tab> work for snippets
-  keymap({ 'i', 's' }, '<Tab>', function()
-    if vim.snippet.active({ direction = 1 }) then
-      return '<cmd>lua vim.snippet.jump(1)<cr>'
-    else
-      return '<Tab>'
-    end
-  end, { expr = true })
-
-  -- clear search highlight
-  keymap('n', '<C-L>', '<cmd>noh<CR>', { noremap = true, silent = true })
-
   vim.g.mapleader = "\\"
   vim.g.fileformats = "unix,dos,mac"
 
   local set = vim.opt -- set options
 
   set.encoding = "utf-8"
-  set.clipboard = "unnamed"
+  set.clipboard = "unnamedplus"
   set.tabstop = 2
   set.softtabstop = 2
   set.shiftwidth = 2
@@ -150,6 +132,30 @@ now(function()
       vim.opt_local.commentstring = "{{/* %s */}}"
     end,
   })
+
+  -- keymaps
+
+  -- indent using tab
+  keymap('v', '<Tab>', '>gv', {})
+  keymap('v', '<S-Tab>', '<gv', {})
+  keymap('n', '<Tab>', '>>_', {})
+  keymap('n', '<S-Tab>', '<<_', {})
+  keymap('i', '<S-Tab>', '<C-D>', {})
+
+  -- Make <Tab> work for snippets
+  keymap({ 'i', 's' }, '<Tab>', function()
+    if vim.snippet.active({ direction = 1 }) then
+      return '<cmd>lua vim.snippet.jump(1)<cr>'
+    else
+      return '<Tab>'
+    end
+  end, { expr = true })
+
+  -- clear search highlight
+  keymap('n', '<C-L>', '<cmd>noh<CR>', { noremap = true, silent = true })
+  keymap('n', '<leader>sc', function()
+    vim.opt.spell = not (vim.opt.spell:get())
+  end)
 end)
 
 now(function()
@@ -160,7 +166,7 @@ end)
 
 now(function()
   require('mini.basics').setup({
-    options = { basic = true, extra_ui = true, win_borders = "single" },
+    options = { basic = true, extra_ui = true, win_borders = border_style },
     mappings = { basic = true, windows = true, move_with_alt = true },
   })
   vim.opt.completeopt = 'menuone'
@@ -471,10 +477,10 @@ now(function()
         auto_show = true,
         auto_show_delay_ms = 250,
         treesitter_highlighting = true,
-        window = { border = 'rounded' },
+        window = { border = border_style },
       },
       menu = {
-        border = 'rounded',
+        border = border_style,
         auto_show = true,
         draw = {
           treesitter = { 'lsp' },
@@ -484,7 +490,7 @@ now(function()
     },
     signature = {
       enabled = true,
-      window = { border = 'rounded' },
+      window = { border = border_style },
     },
   })
 end)
@@ -571,7 +577,7 @@ now(function()
     vim.diagnostic.config({
       virtual_text = false,
       float = {
-        border = 'single',
+        border = border_style,
         width = math.floor(0.25 * vim.o.columns)
       },
       signs = {
@@ -595,7 +601,7 @@ now(function()
       end
       vim.diagnostic.open_float(nil, {
         scope = 'line',
-        border = 'single',
+        border = border_style,
         width = math.floor(0.25 * vim.o.columns),
         focusable = false,
         close_events = {
@@ -652,14 +658,14 @@ now(function()
     local function bordered_hover(_opts)
       _opts = _opts or {}
       return vim.lsp.buf.hover(vim.tbl_deep_extend('force', _opts, {
-        border = 'single'
+        border = border_style
       }))
     end
 
     local function bordered_signature_help(_opts)
       _opts = _opts or {}
       return vim.lsp.buf.signature_help(vim.tbl_deep_extend('force', _opts, {
-        border = 'single'
+        border = border_style
       }))
     end
 
