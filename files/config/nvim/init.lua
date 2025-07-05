@@ -445,6 +445,7 @@ now(function()
       vim.notify('Building blink.cmp done', vim.log.levels.INFO)
     else
       vim.notify('Building blink.cmp failed', vim.log.levels.ERROR)
+      vim.system({ 'cargo', 'clean' }, { cwd = params.path }):wait()
     end
   end
 
