@@ -153,6 +153,7 @@ now(function()
 
   -- clear search highlight
   keymap('n', '<C-L>', '<cmd>noh<CR>', { noremap = true, silent = true })
+  -- toggle spell checker
   keymap('n', '<leader>sc', function()
     vim.opt.spell = not (vim.opt.spell:get())
   end)
@@ -199,10 +200,6 @@ now(function()
   add({
     source = 'nvim-treesitter/nvim-treesitter-context',
   })
-  -- TODO: this is not working with TS from main
-  -- add({
-  --   source = 'nvim-treesitter/nvim-treesitter-refactor',
-  -- })
 
   local treesitter = require('nvim-treesitter')
   local ts_config = require('nvim-treesitter.config')
@@ -831,7 +828,7 @@ now(function()
   vim.api.nvim_create_user_command('DiffToggle', DiffToggle, {})
 
   -- Create a normal-mode mapping for <Leader>df to call DiffToggle
-  vim.keymap.set('n', '<Leader>df', DiffToggle, { silent = true })
+  keymap('n', '<Leader>df', DiffToggle, { silent = true })
 end)
 
 now(function()
@@ -1244,23 +1241,6 @@ later(function()
   -- require('render-markdown').setup({})
 end)
 
--- Indentation marks and scope
--- later(function() require('mini.indentscope').setup() end)
-
--- later(function()
---   add({
---     source = 'lukas-reineke/indent-blankline.nvim',
---   })
---
---   require("ibl").setup {
---     scope = { enabled = false },
---     indent = {
---       char = "▎",
---       tab_char = "▎",
---     },
---   }
--- end)
-
 -- Buffer and window management
 
 later(function() require('mini.bufremove').setup() end)
@@ -1340,62 +1320,6 @@ later(function()
       go = true,
     }
   })
+
   keymap({ "n", "x" }, "gx", "<cmd>Browse<cr>", {})
 end)
-
--- later(function()
---   local miniclue = require('mini.clue')
---   miniclue.setup({
---     triggers = {
---       -- Leader triggers
---       { mode = 'n', keys = '<Leader>' },
---       { mode = 'x', keys = '<Leader>' },
---
---       -- Built-in completion
---       { mode = 'i', keys = '<C-x>' },
---
---       -- `g` key
---       { mode = 'n', keys = 'g' },
---       { mode = 'x', keys = 'g' },
---
---       -- Marks
---       { mode = 'n', keys = "'" },
---       { mode = 'n', keys = '`' },
---       { mode = 'x', keys = "'" },
---       { mode = 'x', keys = '`' },
---
---       -- Registers
---       { mode = 'n', keys = '"' },
---       { mode = 'x', keys = '"' },
---       { mode = 'i', keys = '<C-r>' },
---       { mode = 'c', keys = '<C-r>' },
---
---       -- Window commands
---       { mode = 'n', keys = '<C-w>' },
---
---       -- `z` key
---       { mode = 'n', keys = 'z' },
---       { mode = 'x', keys = 'z' },
---     },
---
---     clues = {
---       -- Enhance this by adding descriptions for <Leader> mapping groups
---       miniclue.gen_clues.builtin_completion(),
---       miniclue.gen_clues.g(),
---       miniclue.gen_clues.marks(),
---       miniclue.gen_clues.registers(),
---       miniclue.gen_clues.windows({
---         submode_move = true,
---         submode_navigate = true,
---         submode_resize = true,
---       }),
---       miniclue.gen_clues.z(),
---     },
---
---     window = {
---       config = {
---         width = 'auto',
---       },
---     },
---   })
--- end)
