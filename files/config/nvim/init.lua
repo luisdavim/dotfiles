@@ -90,6 +90,15 @@ now(function()
     group = automkdirGroup
   })
 
+  --- Automatically save when leaving insert mode
+  -- vim.o.autowriteall = true
+  -- vim.api.nvim_create_autocmd({ 'InsertLeavePre', 'TextChanged', 'TextChangedP' }, {
+  --   pattern = '*',
+  --   callback = function()
+  --     vim.cmd('silent! write')
+  --   end
+  -- })
+
   -- Automatically Split help Buffers to the left
   vim.api.nvim_create_autocmd("FileType", {
     pattern = "help",
