@@ -3,7 +3,7 @@
 
 function git-main_branch() {
   if [ ! -f ".git/refs/remotes/origin/HEAD" ]; then
-    git remote set-head origin --auto &>/dev/null
+    git remote set-head origin --auto &> /dev/null
   fi
   git branch -rl "*/HEAD" | rev | cut -d/ -f1 | rev
 }
@@ -39,7 +39,7 @@ function git-branch-status() {
   git for-each-ref --format="%(refname:short) %(upstream:short)" refs/heads |
     while read -r local remote; do
       [ -z "$remote" ] && continue
-      git rev-list --left-right "${local}...${remote}" -- 2>/dev/null >/tmp/git_upstream_status_delta || continue
+      git rev-list --left-right "${local}...${remote}" -- 2> /dev/null > /tmp/git_upstream_status_delta || continue
       LEFT_AHEAD=$(grep -c '^<' /tmp/git_upstream_status_delta)
       RIGHT_AHEAD=$(grep -c '^>' /tmp/git_upstream_status_delta)
       echo "$local (ahead $LEFT_AHEAD) | (behind $RIGHT_AHEAD) $remote"
@@ -82,6 +82,7 @@ alias gdms='git diff $(git-main_branch) --stat'
 alias grbm='git rebase $(git-main_branch)'
 alias grbr='git rebase --root'
 alias gaf='git amend . && git force'
+alias gfp='git push --force-with-lease'
 alias gtn='git tag $(svu next)'
 alias gpnt='git tag $(svu next) && git push --tags'
 alias gcpt='git cherry-pick --strategy-option=theirs'
