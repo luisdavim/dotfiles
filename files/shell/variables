@@ -9,6 +9,11 @@ export TERM="xterm-256color"
 
 if [ -n "${GHOSTTY_RESOURCES_DIR}" ]; then
   TERM='xterm-ghostty'
+  if [ -z "${GHOSTTY_SHELL_FEATURES}" ]; then
+    GHOSTTY_SHELL_FEATURES="cursor,title,ssh-env"
+  else
+    GHOSTTY_SHELL_FEATURES="${GHOSTTY_SHELL_FEATURES},ssh-env"
+  fi
 fi
 
 export NVIM_TUI_ENABLE_TRUE_COLOR=1
@@ -65,9 +70,9 @@ export GROFF_NO_SGR=1
 
 export LESSCOLOR="true"
 
-if type highlight >/dev/null 2>&1; then
+if type highlight > /dev/null 2>&1; then
   export LESSCOLORIZER="highlight --out-format=xterm256 --input"
-elif type pygmentize >/dev/null 2>&1; then
+elif type pygmentize > /dev/null 2>&1; then
   export LESSCOLORIZER='pygmentize'
 fi
 

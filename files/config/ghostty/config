@@ -10,6 +10,8 @@ font-thicken = true
 adjust-underline-position = 4
 adjust-cursor-thickness = 1
 
+# scrollback-limit = 1000000
+
 # Sell
 shell-integration = zsh
 
