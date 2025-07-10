@@ -42,6 +42,7 @@ end
 --   table.insert(event_callback_queues[event], callback)
 -- end
 
+-- Global settings
 local keymap = vim.keymap.set
 local border_style = 'rounded'
 
@@ -125,13 +126,16 @@ now(function()
     pattern = {
       ['.*/etc/nginx/.*'] = { 'nginx', { priority = 10 } },
       ['.*/usr/local/nginx/conf/.*'] = { 'nginx', { priority = 10 } },
-      [".*/%.kube/config"] = "yaml",
-      [".*/%.kube/config%.d/.*"] = "yaml",
+      [".*/%.kube/config"] = 'yaml',
+      ['.*/%.kube/config%.d/.*'] = 'yaml',
       ['.*/charts?/.*/templates/.*%.ya?ml'] = 'helm',
       ['.*/templates/.*%.ya?ml'] = 'helm',
       ['.*/templates/.*%.tpl'] = 'helm',
       ['.*/templates/.*%.txt'] = 'helm',
-      ['*/helmfile.*%.ya?ml'] = 'helm'
+      ['.*/helmfile.*%.ya?ml'] = 'helm',
+      ['.*%.dockerfile'] = 'dockerfile',
+      ['.*%.Tiltfile'] = 'tiltfile',
+      ['.*%.tiltfile'] = 'tiltfile',
     },
   })
 
