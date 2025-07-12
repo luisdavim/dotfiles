@@ -2,14 +2,12 @@
 
 set -xeuo pipefail
 
-pkg install patchelf which time ldd tree
-
-pkg -y glibc-runner --assume-installed bash,patchelf,resolv-conf
+pkg install -y glibc-repo
+pkg install -y patchelf which time ldd tree glibc-runner
 
 grun --help
 
 curl -fsSL https://deno.land/install.sh | time sh
-
 curl -fsSL https://bun.sh/install | time bash
 
 INSTALL_PATH="${HOME}/.local"
@@ -18,15 +16,11 @@ export BUN_INSTALL="${INSTALL_PATH}/.bun"
 export PATH="${PATH}:${DENO_INSTALL}/bin:${BUN_INSTALL}/bin"
 
 patchelf --print-interpreter --print-needed "$(which deno)"
-
 patchelf --print-interpreter --print-needed "$(which bun)"
-
 patchelf --set-rpath "${PREFIX}/glibc/lib" --set-interpreter "${PREFIX}/glibc/lib/ld-linux-aarch64.so.1" "$(which deno)"
-
 patchelf --set-rpath "${PREFIX}/glibc/lib" --set-interpreter "${PREFIX}/glibc/lib/ld-linux-aarch64.so.1" "$(which bun)"
 
 ldd "$(which deno)"
-
 ldd "$(which bun)"
 
 for i in deno bun; do
@@ -52,19 +46,14 @@ EOF
 done
 
 deno.glibc.sh --version
-
 bun.glibc.sh --version
 
 tree -a "${DENO_INSTALL}/" "${BUN_INSTALL}/"
-
 cat -n "${DENO_INSTALL}/bin/deno.glibc.sh"
-
 cat -n "${BUN_INSTALL}/bin/bun.glibc.sh"
 
 deno <<< "console.log('Hello world')"
 
 file="$(mktemp -p ~/.cache --suffix .js hello-XXX)"
-
 echo "console.log('Hello world')" > "${file}"
-
 bun run "${file}"
