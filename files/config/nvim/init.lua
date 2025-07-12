@@ -1257,12 +1257,14 @@ later(function()
   --   source = "OXY2DEV/markview.nvim",
   -- })
 
+  -- add({
+  --   source = 'brianhuster/live-preview.nvim',
+  -- })
+
   add({
-    source = 'brianhuster/live-preview.nvim',
-    depends = {
-      'echasnovski/mini.pick',
-    },
+    source = "wallpants/github-preview.nvim"
   })
+  require("github-preview").setup({})
 
   -- local function build_peek(params)
   --   vim.notify('Building peek.nvim', vim.log.levels.INFO)

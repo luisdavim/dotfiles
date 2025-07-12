@@ -39,7 +39,6 @@ bandwhich
 bash
 bash-completion@2
 bash-language-server
-shfmt
 bat
 bat-extras
 bats-core
@@ -54,6 +53,7 @@ brew-pip
 broot
 browsh
 btop
+bun
 ca-certificates
 calicoctl
 cask
@@ -300,6 +300,7 @@ sampler
 scrcpy
 sd
 shellcheck
+shfmt
 siege
 sipcalc
 skaffold
