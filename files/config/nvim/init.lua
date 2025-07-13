@@ -136,6 +136,8 @@ now(function()
       ['.*%.dockerfile'] = 'dockerfile',
       ['.*%.Tiltfile'] = 'tiltfile',
       ['.*%.tiltfile'] = 'tiltfile',
+      ['.*%.variables.*'] = 'sh',
+      ['.*%.env'] = 'sh',
     },
   })
 
