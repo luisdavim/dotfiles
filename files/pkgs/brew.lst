@@ -145,6 +145,8 @@ gnu-tar
 gnu-time
 go-boring
 go-jira
+gofumpt
+goimports
 golang
 golangci-lint
 golangci-lint-langserver
