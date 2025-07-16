@@ -22,6 +22,7 @@
 ack
 age
 ansible
+ansible-language-server
 ansible-lint
 archivemount
 asciidoctor
@@ -97,6 +98,7 @@ docker-compose
 docker-credential-helper
 docker-ls
 docker-slim
+dockerfile-language-server
 dog
 dos2unix
 dust
@@ -146,6 +148,7 @@ go-jira
 golang
 golangci-lint
 golangci-lint-langserver
+gopls
 goreleaser
 gotags
 govc
@@ -225,6 +228,7 @@ libsecret
 lima
 llvm
 lsd
+lua-language-server
 make
 markdownlint-cli
 mas
@@ -311,6 +315,7 @@ sops
 source-highlight
 speedtest-cli
 sq
+sql-language-server
 starship
 stern
 sunbeam
@@ -366,6 +371,7 @@ whois
 xh
 xhyve
 yabai
+yaml-language-server
 yamllint
 yarn
 yarn-completion
