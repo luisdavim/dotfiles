@@ -225,8 +225,11 @@ now(function()
   require('nvim-treesitter-textobjects').setup()
   require('treesitter-context').setup()
 
-  local ensure_installed = { 'comment', 'lua', 'go', 'bash', 'yaml', 'json', 'python', 'markdown', 'markdown_inline',
-    'diff', 'starlark' }
+  local ensure_installed = {
+    'comment', 'lua', 'luadoc', 'go', 'bash', 'yaml',
+    'json', 'python', 'markdown', 'markdown_inline',
+    'diff', 'starlark', 'gitcommit', 'vimdoc',
+  }
   local syntax_map = {
     ['tiltfile'] = 'starlark',
   }
