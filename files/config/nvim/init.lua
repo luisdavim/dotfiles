@@ -1253,46 +1253,19 @@ later(function()
   })
 end)
 
+-- Markdown rendering
 later(function()
   add({
     source = 'MeanderingProgrammer/render-markdown.nvim',
   })
   require('render-markdown').setup({})
 
-  -- add({
-  --   source = "OXY2DEV/markview.nvim",
-  -- })
-
-  -- add({
-  --   source = 'brianhuster/live-preview.nvim',
-  -- })
-
   add({
     source = "wallpants/github-preview.nvim"
   })
-  require("github-preview").setup({})
-
-  -- local function build_peek(params)
-  --   vim.notify('Building peek.nvim', vim.log.levels.INFO)
-  --   local obj = vim.system({ 'deno', 'task', '--quiet', 'build:fast' }, { cwd = params.path }):wait()
-  --   if obj.code == 0 then
-  --     vim.notify('Building peek.nvim done', vim.log.levels.INFO)
-  --   else
-  --     vim.notify('Building peek.nvim failed', vim.log.levels.ERROR)
-  --   end
-  -- end
-  --
-  -- add({
-  --   source = "toppair/peek.nvim",
-  --   hooks = {
-  --     post_install = build_peek,
-  --     post_checkout = build_peek,
-  --   },
-  -- })
-  --
-  -- require("peek").setup()
-  -- vim.api.nvim_create_user_command("PeekOpen", require("peek").open, {})
-  -- vim.api.nvim_create_user_command("PeekClose", require("peek").close, {})
+  require("github-preview").setup({
+    single_file = true,
+  })
 end)
 
 -- Buffer and window management
