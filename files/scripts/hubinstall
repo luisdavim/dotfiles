@@ -88,6 +88,7 @@ function installFromGithub() {
   mkdir -p "${install_to}"
   filter="select(.name | test(\"${os}\";\"i\") and test(\"${arch}\";\"i\") and (test(\"sha[0-9]+\";\"i\")|not))"
   releases_url="https://api.github.com/repos/${project}/releases/latest"
+  [[ ${DEBUG} == "true" ]] && echo -e "Releases URL: \n${releases_url}"
 
   url=$(curl ${CURL_FLAGS} "${releases_url}" "${AUTH_HEADER[@]}" | jq -r ".assets[]? | ${filter} | .browser_download_url?" | grep -Ev '(md5|sha[0-9]+)$')
   [[ ${DEBUG} == "true" ]] && echo -e "URL: \n${url}"

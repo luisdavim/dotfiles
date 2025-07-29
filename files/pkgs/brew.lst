@@ -330,7 +330,8 @@ tcptraceroute
 tealdeer
 telepresence
 terrafile
-terraform
+tfswitch
+# terraform # can't be installed allong with tfswitch
 terraform-docs
 terraform-inventory
 terraform-ls
