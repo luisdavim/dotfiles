@@ -102,8 +102,11 @@ export GOPROXY="https://proxy.golang.org,direct"
 export GO111MODULE=on
 export GOVIM_GOPLS_FLAGS=-remote=auto
 
-if [ -z "${GITHUB_TOKEN}" ] && [ -f "${HOME}/.config/gh/hosts.yml" ]; then
-  GITHUB_TOKEN=$(yq '."github.com".oauth_token' ~/.config/gh/hosts.yml | tr -d '[:blank:]')
+if [[ "${GITHUB_TOKEN}" == "null" ]]; then
+  unset GITHUB_TOKEN
+fi
+if [ -z "${GITHUB_TOKEN:-}" ] && [ -f "${HOME}/.config/gh/hosts.yml" ]; then
+  GITHUB_TOKEN="$(yq '."github.com".oauth_token' ~/.config/gh/hosts.yml | tr -d '[:blank:]')"
   if [[ "${GITHUB_TOKEN}" == "null" ]]; then
     GITHUB_TOKEN=$(gh auth token | tr -d '[:blank:]')
   fi
