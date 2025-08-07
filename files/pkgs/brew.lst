@@ -153,6 +153,7 @@ golangci-lint-langserver
 gopls
 goreleaser
 gotags
+gomplate
 govc
 gpatch
 graphicsmagick
@@ -257,6 +258,7 @@ openssl
 operator-sdk
 oras
 orbstack
+oslo
 p7zip
 packer
 pam-reattach
