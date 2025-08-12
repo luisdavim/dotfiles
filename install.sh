@@ -586,7 +586,9 @@ installDotFiles() {
   fi
 
   if [ -x "$(command -v mdatp)" ]; then
-    for F in $(cat files/mdatp.lst | envsubst); do mdatp exclusion folder add --path "${F}"; done
+    while IFS= read -r F; do
+      mdatp exclusion folder add --path "${F}"
+    done < <(cat files/mdatp.lst | envsubst)
   fi
 }
 

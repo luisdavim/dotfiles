@@ -1,13 +1,19 @@
 ${HOME}/Library/Caches
 ${HOME}/Library/Containers/com.docker.docker
 ${HOME}/Library/Containers/com.docker.helper
+${HOME}/Library/Group Containers/HUAQ24HBR6.dev.orbstack
 ${HOME}/Library/Logs
 ${HOME}/go
 ${HOME}/node_modules
 ${HOME}/workingCopies
+${HOME}/.cache/bazel_disk_cache
+${HOME}/.orbstack
+${HOME}/OrbStack
 /Library/Caches
 /Library/Logs
 /Library/Updates
 /System/Library/Caches
+/Library/Backblaze.bzpkg/bztransmit
 /private/var/log
+/private/var/tmp/_bazel_${USER}
 /var/log
