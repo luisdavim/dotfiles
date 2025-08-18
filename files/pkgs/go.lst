@@ -2,6 +2,7 @@
 # github.com/gardener/gardenctl
 # github.com/git-hooks/git-hooks
 # github.com/hashicorp/terraform
+# github.com/ostafen/proq
 # github.com/testfabric/ypath
 # k8s.io/helm/cmd/helm
 # k8s.io/kubernetes/cmd/kubectl
@@ -31,7 +32,6 @@ github.com/m-zajac/json2go/cmd/json2go
 github.com/mrjosh/helm-ls
 github.com/nametake/golangci-lint-langserver
 github.com/oligot/go-mod-upgrade
-github.com/ostafen/proq
 github.com/pbnj/ephor
 github.com/pkg/errors
 github.com/posener/goreadme/cmd/goreadme

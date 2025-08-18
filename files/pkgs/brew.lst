@@ -14,6 +14,7 @@
 # macvim
 # rust
 # telnet
+# terraform # can't be installed allong with tfswitch
 # tldr
 # uutils-coreutils
 # godep
@@ -151,10 +152,10 @@ goimports
 golang
 golangci-lint
 golangci-lint-langserver
+gomplate
 gopls
 goreleaser
 gotags
-gomplate
 govc
 gpatch
 graphicsmagick
@@ -218,6 +219,7 @@ kubebuilder
 kubeconform
 kubectx
 kubepfm
+kubetail
 kubeval
 kustomize
 kwt
@@ -334,8 +336,6 @@ tcptraceroute
 tealdeer
 telepresence
 terrafile
-tfswitch
-# terraform # can't be installed allong with tfswitch
 terraform-docs
 terraform-inventory
 terraform-ls
@@ -346,6 +346,7 @@ terrascan
 tfk8s
 tflint
 tfsec
+tfswitch
 the_silver_searcher
 thefuck
 tig
