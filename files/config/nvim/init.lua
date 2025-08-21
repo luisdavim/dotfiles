@@ -329,7 +329,7 @@ now(function()
   MiniMisc.setup_restore_cursor()
   MiniMisc.setup_auto_root({
     'requirements.txt', 'setup.cfg', 'package.json', 'go.mod', 'Cargo.toml', '.projections.json',
-    'PROJECT', 'Makefile', '.root', '.repo', '.git', '.hg', '.bzr', '.svn',
+    'PROJECT', 'Makefile', 'pom.xml', '.root', '.repo', '.git', '.hg', '.bzr', '.svn',
   })
 end)
 
