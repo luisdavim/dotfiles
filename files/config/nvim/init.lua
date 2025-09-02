@@ -501,6 +501,24 @@ now(function()
         auto_show = true,
         draw = {
           treesitter = { 'lsp' },
+          components = {
+            kind_icon = {
+              text = function(ctx)
+                local kind_icon, _, _ = MiniIcons.get('lsp', ctx.kind)
+                return kind_icon
+              end,
+              highlight = function(ctx)
+                local _, hl, _ = MiniIcons.get('lsp', ctx.kind)
+                return hl
+              end,
+            },
+            kind = {
+              highlight = function(ctx)
+                local _, hl, _ = MiniIcons.get('lsp', ctx.kind)
+                return hl
+              end,
+            }
+          },
           columns = { { 'label', 'label_description', gap = 1 }, { 'kind_icon' }, { "kind" } },
         },
       },
