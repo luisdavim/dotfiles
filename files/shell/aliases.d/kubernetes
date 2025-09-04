@@ -24,12 +24,12 @@ function kctl() {
     return $?
   fi
   COLOR="command"
-  if [ -x "$(command -v grc)" ]  && [[ ',modify-secret,edit,exec,ssh,access-matrix,shell,remote_shell,debug,ephemeral,' != *",${CMD},"* ]]; then
+  if [ -x "$(command -v grc)" ] && [[ ',modify-secret,edit,exec,ssh,access-matrix,shell,remote_shell,debug,ephemeral,' != *",${CMD},"* ]]; then
     COLOR="grc -es --colour=auto"
   fi
   local args=("${COLOR}" kubectl "${CMD}")
   for arg in "${@}"; do
-    args+=( "$(printf '%q' "$arg")" )
+    args+=("$(printf '%q' "$arg")")
   done
   eval "${args[*]}"
 }
@@ -59,18 +59,18 @@ alias kindenv='export KUBECONFIG=~/.kube/kind-config'
 if [ -d ~/.kube/config.d ]; then
   find ~/.kube/config.d/ -type f -printf "%f\0" |
     while IFS= read -r -d '' CTX; do
-      cmd="alias k8s-${CTX/#${USER}-}='kubectl --kubeconfig ${HOME}/.kube/config.d/${CTX}'"
+      cmd="alias k8s-${CTX/#${USER}-/}='kubectl --kubeconfig ${HOME}/.kube/config.d/${CTX}'"
       eval "${cmd}"
-      cmd="alias helm-${CTX/#${USER}-}='helm --kubeconfig ${HOME}/.kube/config.d/${CTX}'"
+      cmd="alias helm-${CTX/#${USER}-/}='helm --kubeconfig ${HOME}/.kube/config.d/${CTX}'"
       eval "${cmd}"
     done
 fi
 
 if [ -f ~/.kube/config ]; then
   for CTX in $(\kubectl config get-contexts -o name); do
-    cmd="alias k8s-${CTX/#${USER}-}='kubectl --kubeconfig ${HOME}/.kube/config --context ${CTX}'"
+    cmd="alias k8s-${CTX/#${USER}-/}='kubectl --kubeconfig ${HOME}/.kube/config --context ${CTX}'"
     eval "${cmd}"
-    cmd="alias helm-${CTX/#${USER}-}='helm --kubeconfig ${HOME}/.kube/config --context ${CTX}'"
+    cmd="alias helm-${CTX/#${USER}-/}='helm --kubeconfig ${HOME}/.kube/config --context ${CTX}'"
     eval "${cmd}"
   done
 fi
@@ -94,7 +94,7 @@ function kubectl-diff() {
 }
 alias kdiff='kubectl-diff'
 
-function kubectl-getNotReady(){
+function kubectl-getNotReady() {
   local filter='.items[]| select(.status != null)|select(.status.conditions[] != null)|select([.status.conditions[]|select(.type == "Ready" and .status == "False")]|length == 1)'
   local table="([\"NAMESPACE\",\"NAME\"] | (., map(length*\"-\"))),(${filter} | [.metadata.namespace, .metadata.name]) | @tsv"
   \kubectl get "${@}" -o json | jq -r "${table}"
@@ -120,11 +120,11 @@ function kubectl-missing-ds-pods() {
 alias kgmdsp='kubectl-missing-ds-pods'
 
 function kubectl-get-all() {
-  local args=( "$@" )
+  local args=("$@")
   local namespaced='true'
   if [ $# -eq 0 ]; then
     namespaced='false'
-    args+=( '-A' )
+    args+=('-A')
   fi
   \kubectl api-resources --verbs=list --namespaced="${namespaced}" -o name | xargs -n 1 kubectl get --show-kind --ignore-not-found "${args[@]}"
 }
@@ -149,23 +149,23 @@ function kubectl-parallel() {
     key="$1"
 
     case $key in
-    -f | --follow)
-      follow="true"
-      shift
-      ;;
-    -c | --command)
-      cmd="$2"
-      shift 2
-      ;;
-    --)
-      shift
-      args+=("${@}")
-      break
-      ;;
-    *)
-      args+=("$1")
-      shift
-      ;;
+      -f | --follow)
+        follow="true"
+        shift
+        ;;
+      -c | --command)
+        cmd="$2"
+        shift 2
+        ;;
+      --)
+        shift
+        args+=("${@}")
+        break
+        ;;
+      *)
+        args+=("$1")
+        shift
+        ;;
     esac
   done
 
@@ -180,7 +180,10 @@ function kubectl-parallel() {
   fi
   echo ""
 
-  suffix="$(tr -dc A-Za-z0-9 </dev/urandom | head -c 13 ; echo '')"
+  suffix="$(
+    tr -dc A-Za-z0-9 < /dev/urandom | head -c 13
+    echo ''
+  )"
   if [[ "${follow}" == "true" ]] && [ -x "$(command -v multitail)" ] && [ -n "$TMUX" ]; then
     echo "${ctxs}" | xargs -P 10 -I {} touch "/tmp/{}-${suffix}.kout"
     tmux split-window "multitail -f /tmp/*-${suffix}.kout"
@@ -220,7 +223,7 @@ function kubectl-get-ctx() {
     shift
     \kubectl config get-contexts -o name | fzf --filter="${1}"
   else
-    re=$(sed 's/[.$]/[&]/g; s/?/./g; s/\*/.*/g; s/\^/\\^/g' <<<"$1")
+    re=$(sed 's/[.$]/[&]/g; s/?/./g; s/\*/.*/g; s/\^/\\^/g' <<< "$1")
     \kubectl config get-contexts -o name | grep "${re}"
   fi
 }
@@ -255,7 +258,7 @@ function kubectl-ctx() {
   fi
   KFG_DIR=${KFG_DIR:-~/.kube/config.d}
 
-  if [ -d "${KFG_DIR}" ] && ( ! is_default_kubeconfig || [ -z "${KUBECONFIG}" ] ) && [ -z "$(find "${KFG_DIR}" -maxdepth 0 -empty)" ]; then
+  if [ -d "${KFG_DIR}" ] && (! is_default_kubeconfig || [ -z "${KUBECONFIG}" ]) && [ -z "$(find "${KFG_DIR}" -maxdepth 0 -empty)" ]; then
     if [ -n "$1" ] && [ -f "${KFG_DIR}/${1}" ]; then
       export KUBECONFIG="${KFG_DIR}/${1}"
       return
@@ -271,7 +274,7 @@ function kubectl-ctx() {
       export KUBECONFIG="${KFG_DIR}/${files}"
       return
     fi
-    CTX=$(echo -n "${files}"| fzf)
+    CTX=$(echo -n "${files}" | fzf)
     if [ ! -f "${KFG_DIR}/${CTX}" ]; then
       echo "no matching context found"
       return
@@ -323,6 +326,11 @@ function kubectl-cfg() {
 }
 alias kcfg='kubectl-cfg'
 
+function kubectl-capi-kubeconfig() {
+  KFG_DIR=${KFG_DIR:-~/.kube/config.d}
+  \kubectl view-secret "${1}-kubeconfig" > "${KFG_DIR}/${1}-admin"
+}
+
 # used to set the Prometheus host for kptop
 function kpctx() {
   export KPTOP_PROMETHEUS_SERVER="https://$(\kubectl get ingress -A | awk '/prom|thanos/ { if ($4 ~ "prom|thanos") print $4}' | fzf --filter="${1}" | fzf)"
@@ -333,10 +341,20 @@ function kubectl-enter() {
 }
 alias kctl-enter='kubectl-enter'
 
-function kexec(){ pod=$1; shift; \kubectl exec -it "${pod}" -- "${@}"; }
+function kexec() {
+  pod=$1
+  shift
+  \kubectl exec -it "${pod}" -- "${@}"
+}
 alias kctl-exec='kexec'
 
-function krun() { name=$1; shift; image=$1; shift; \kubectl run -it --generator=run-pod/v1 --image "${image}" "${name}" -- "${@}"; }
+function krun() {
+  name=$1
+  shift
+  image=$1
+  shift
+  \kubectl run -it --generator=run-pod/v1 --image "${image}" "${name}" -- "${@}"
+}
 alias kctl-run='krun'
 
 function kubectl-remote_shell() {
@@ -367,8 +385,8 @@ function kubectl-purge_crd() {
     echo 'please provide a CRD name'
     return
   fi
-  \kubectl get "${1}" --all-namespaces --no-headers | awk '{print $2 " -n " $1}' | xargs -L1 -r kubectl patch -p '{"metadata":{"finalizers": []}}' --type=merge "${1}";
-  \kubectl get "${1}" --all-namespaces --no-headers | awk '{print $2 " -n " $1}' | xargs -L1 -r kubectl delete "${1}";
+  \kubectl get "${1}" --all-namespaces --no-headers | awk '{print $2 " -n " $1}' | xargs -L1 -r kubectl patch -p '{"metadata":{"finalizers": []}}' --type=merge "${1}"
+  \kubectl get "${1}" --all-namespaces --no-headers | awk '{print $2 " -n " $1}' | xargs -L1 -r kubectl delete "${1}"
   \kubectl api-resources -o name | grep "${1}" | awk '{print $1}' | xargs -r kubectl delete crd
 }
 alias kctl-clean_crd='kubectl-purge_crd'
@@ -456,6 +474,7 @@ function mk() {
       ;;
     *)
       minikube "${@}"
+      ;;
   esac
 }
 
@@ -496,7 +515,7 @@ function shoot() {
   fi
   gardenctl target garden ${1} > /dev/null
   case ${2} in
-    "ls") gardenctl ls shoots;;
+    "ls") gardenctl ls shoots ;;
     *)
       export $(gardenctl target shoot ${2})
       echo "KUBECONFIG=${KUBECONFIG}"
@@ -515,7 +534,7 @@ function seed() {
   fi
   gardenctl target garden ${1} > /dev/null
   case ${2} in
-    "ls") gardenctl ls seeds;;
+    "ls") gardenctl ls seeds ;;
     *)
       export $(gardenctl target seed ${2})
       echo "KUBECONFIG=${KUBECONFIG}"
@@ -525,7 +544,7 @@ function seed() {
 
 function garden() {
   case ${1} in
-    "ls") gardenctl ls gardens;;
+    "ls") gardenctl ls gardens ;;
     *)
       export $(gardenctl target garden ${1})
       echo "KUBECONFIG=${KUBECONFIG}"
