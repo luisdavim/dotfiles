@@ -315,7 +315,7 @@ end)
 
 now(function()
   require('mini.notify').setup()
-  vim.notify = require('mini.notify').make_notify()
+  vim.notify = MiniNotify.make_notify()
 end)
 
 now(function() require('mini.icons').setup() end)
