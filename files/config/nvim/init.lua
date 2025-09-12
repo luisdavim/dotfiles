@@ -716,6 +716,7 @@ now(function()
       { silent = true }
     )
     keymap('n', '<leader>ca', function() vim.lsp.buf.code_action() end, { buffer = buffnr, desc = "Code actions" })
+    keymap('v', '<leader>ca', function() vim.lsp.buf.code_action() end, { buffer = buffnr, desc = "Code actions" })
     -- keymap('n', '<leader>ld', MiniExtra.pickers.diagnostic, { buffer = buffnr, desc = "Diagnostics" })
     keymap('n', '<leader>ld', Snacks.picker.diagnostics, { buffer = buffnr, desc = "Diagnostics" })
 
@@ -756,6 +757,7 @@ now(function()
     keymap({ 'n', 'x' }, '<F3>', function() vim.lsp.buf.format({ async = true }) end,
       { buffer = buffnr, desc = "format file" })
     keymap('n', '<F4>', vim.lsp.buf.code_action, { buffer = buffnr, desc = "code actions" })
+    keymap('v', '<F4>', vim.lsp.buf.code_action, { buffer = buffnr, desc = "code actions" })
     keymap('n', '<F2>', vim.lsp.buf.rename, { buffer = buffnr, desc = "rename symbol" })
     keymap('n', 'K', bordered_hover, { buffer = buffnr, desc = "show help" })
   end
