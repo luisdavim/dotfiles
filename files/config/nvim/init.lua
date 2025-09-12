@@ -672,10 +672,21 @@ now(function()
     require('glance').setup()
 
     -- Format on save
+    local format_on_save = true
+    local function toggle_format_on_save()
+      format_on_save = not format_on_save
+    end
+
+    -- Create a command :ToggleFormatOnSave that calls the function
+    vim.api.nvim_create_user_command('ToggleFormatOnSave', toggle_format_on_save, {})
+
     vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
       -- buffer = 0, -- if 0 doesn't work do vim.api.nvim_get_current_buf()
       -- pattern = { "*.yaml", "*.yml", "*.go", "*.ts", "*.tf", "*.sh" },
       callback = function(_)
+        if not format_on_save then
+          return
+        end
         vim.lsp.buf.format({ async = false })
         -- vim.lsp.buf.code_action is async and may not resolve before the buffer is closed
         -- vim.lsp.buf.code_action { context = { only = { 'source.organizeImports' } }, apply = true }
