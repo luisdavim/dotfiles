@@ -158,6 +158,10 @@ now(function()
   keymap('n', '<S-Tab>', '<<_', {})
   keymap('i', '<S-Tab>', '<C-D>', {})
 
+  -- folds
+  keymap('v', "<space>", ":fold<CR>", { silent = true })
+  keymap('n', "<space>", "za", { silent = true })
+
   -- Make <Tab> work for snippets
   keymap({ 'i', 's' }, '<Tab>', function()
     if vim.snippet.active({ direction = 1 }) then
@@ -667,6 +671,13 @@ now(function()
       vim.api.nvim_create_user_command('LspToggleHints', function()
         vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled(), { buffnr })
       end, {})
+    end
+
+    -- Folds
+    if client ~= nil and client.supports_method('textDocument/foldingRange', buffnr) then
+      local win = vim.api.nvim_get_current_win()
+      vim.wo[win][0].foldexpr = "v:lua.vim.lsp.foldexpr()"
+      vim.wo[win][0].foldtext = "v:lua.vim.lsp.foldtext()"
     end
 
     require('glance').setup()
