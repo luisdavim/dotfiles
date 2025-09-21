@@ -461,6 +461,18 @@ end)
 --   MiniSnippets.start_lsp_server()
 -- end)
 
+-- AI
+
+-- later_on('InsertEnter', function()
+--   add({
+--     source = 'zbirenbaum/copilot.lua',
+--   })
+--   require('copilot').setup({
+--     suggestion = { enabled = false },
+--     panel = { enabled = false },
+--   })
+-- end)
+
 -- Completion Menu
 
 -- Using blink.cmp
@@ -478,6 +490,9 @@ now(function()
 
   add({
     source = 'Saghen/blink.cmp',
+    -- depends = {
+    --   'fang2hou/blink-copilot',
+    -- },
     hooks = {
       post_install = build_blink,
       post_checkout = build_blink,
@@ -492,6 +507,17 @@ now(function()
     keymap = {
       preset = 'enter',
     },
+    -- sources = {
+    --   default = { 'lsp', 'buffer', 'snippets', 'path', 'copilot' },
+    --   providers = {
+    --     copilot = {
+    --       name = "copilot",
+    --       module = "blink-copilot",
+    --       score_offset = 100,
+    --       async = true,
+    --     },
+    --   },
+    -- },
     completion = {
       accept = { auto_brackets = { enabled = true } },
       documentation = {
@@ -738,7 +764,8 @@ now(function()
       { silent = true }
     )
     keymap({ 'n', 'v' }, '<leader>ca', function() vim.lsp.buf.code_action() end,
-      { buffer = buffnr, desc = "Code actions" })
+      { buffer = buffnr, desc = "Code actions" }
+    )
     -- keymap('n', '<leader>ld', MiniExtra.pickers.diagnostic, { buffer = buffnr, desc = "Diagnostics" })
     keymap('n', '<leader>ld', Snacks.picker.diagnostics, { buffer = buffnr, desc = "Diagnostics" })
 
