@@ -38,7 +38,7 @@ installUdocker() {
   # udocker install
   udockervenv/bin/udocker install
   popd
-  if [[ $OSTYPE != *"android"* ]]; then
+  if [[ "${OSTYPE}" != *"android"* ]]; then
     # https://github.com/indigo-dc/udocker/issues/424
     # Force use Termux provided proot
     mkdir -p "${HOME}/.udocker/lib"
@@ -59,7 +59,7 @@ installFastPath() {
   mkdir -p ~/.local/bin/
   version='linux'
   arch='-amb64'
-  if [[ $OSTYPE == "darwin"* ]]; then
+  if [[ "${OSTYPE}" == "darwin"* ]]; then
     version='osx'
     arch=''
   fi
@@ -72,7 +72,7 @@ installFission() {
   # http://fission.io/
   mkdir -p ~/.local/bin/
   version='linux'
-  if [[ $OSTYPE == "darwin"* ]]; then
+  if [[ "${OSTYPE}" == "darwin"* ]]; then
     version='mac'
   fi
   curl http://fission.io/$version/fission > fission && chmod +x fission && mv fission ~/.local/bin/
@@ -172,7 +172,7 @@ installCargo() {
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
     [ -f "${HOME}/.cargo/env" ] && source "${HOME}/.cargo/env"
     rustup component add rls rust-analysis rust-src
-    # if [[ $OSTYPE == *"android"* ]]; then
+    # if [[ "${OSTYPE}" == *"android"* ]]; then
     #   rustup target add aarch64-linux-android
     # fi
   fi
@@ -219,7 +219,7 @@ cleanGoPkgs() {
 
 installHelmPlugins() {
   if ! [ -x "$(command -v helm)" ]; then
-    if [[ $OSTYPE == *"android"* ]]; then
+    if [[ "${OSTYPE}" == *"android"* ]]; then
       cd "${INSTALLDIR}" || exit
       cleanGoPkgs
       echo ">>> helm"
@@ -230,7 +230,7 @@ installHelmPlugins() {
       echo ">>> Cleanup go sources"
       cd "${INSTALLDIR}" || exit
       cleanGoPkgs
-    elif [[ $OSTYPE != "darwin"* ]]; then
+    elif [[ "${OSTYPE}" != "darwin"* ]]; then
       sudo apt-get install helm
     else
       brew install kubernetes-helm
@@ -267,14 +267,14 @@ installScripts() {
   # installFromRawGithub 'mykeels/slack-theme-cli' 'slack-theme'
   # installFromRawGithub 'smitt04/slack-dark-theme' 'darkSlack.sh'
   installFromGithub 'dotenv-linter/dotenv-linter'
-  # if [[ $OSTYPE == *"android"* ]]; then
+  # if [[ "${OSTYPE}" == *"android"* ]]; then
   #   termux-fix-shebang "${HOME}/.local/bin/"*
   # fi
   installTestssl
   git_clone_or_update https://github.com/wookayin/kitty-tmux.git "${HOME}/.kitty-tmux"
 
-  if [[ $OSTYPE != *"android"* ]]; then
-    if [[ $OSTYPE == "darwin"* ]]; then
+  if [[ "${OSTYPE}" != *"android"* ]]; then
+    if [[ "${OSTYPE}" == "darwin"* ]]; then
       installKubeScripts 'darwin' '64'
     else
       installKubeScripts 'linux' '64'
@@ -299,7 +299,7 @@ installAtomPackages() {
 
 installVscodeConfig() {
   settings="$HOME/.config/Code/User"
-  if [[ $OSTYPE == "darwin"* ]]; then
+  if [[ "${OSTYPE}" == "darwin"* ]]; then
     settings="$HOME/Library/Application Support/Code/User"
   fi
   mkdir -p "$settings"
@@ -335,7 +335,7 @@ installVimPlugins() {
     pip install -U neovim # --break-system-packages
   fi
 
-  if [[ $OSTYPE == *"android"* ]]; then
+  if [[ "${OSTYPE}" == *"android"* ]]; then
     curl -o "${HOME}/.local/bin/install-in-mason" "https://raw.githubusercontent.com/Amirulmuuminin/setup-mason-for-termux/main/install-in-mason"
     chmod +x "${HOME}/.local/bin/install-in-mason"
     termux-fix-shebang "${HOME}"/.local/share/nvim/mason/bin/*
@@ -393,7 +393,7 @@ installKakPlugins() {
   cp -r files/kak/snippets "${HOME}/.config/kak/"
   cp files/kak/kak-lsp.toml "${HOME}/.config/kak-lsp/kak-lsp.toml"
 
-  if [[ $OSTYPE == "darwin"* ]]; then
+  if [[ "${OSTYPE}" == "darwin"* ]]; then
     if [ ! -s "${HOME}/Library/Preferences/kak-lsp" ]; then
       ln -s "${HOME}/.config/kak-lsp" "${HOME}/Library/Preferences/kak-lsp"
     fi
@@ -471,7 +471,7 @@ installBashConf() {
 }
 
 installFishConf() {
-  if [[ $OSTYPE != "darwin"* ]]; then
+  if [[ "${OSTYPE}" != "darwin"* ]]; then
     sudo apt-add-repository ppa:fish-shell/release-2
     sudo apt-get update
     sudo apt-get install fish
@@ -615,9 +615,9 @@ installPackages() {
 }
 
 installOSSpecific() {
-  if [[ $OSTYPE == "darwin"* ]]; then
+  if [[ "${OSTYPE}" == "darwin"* ]]; then
     ./osx.sh "${@}"
-  elif [[ $OSTYPE == *"android"* ]]; then
+  elif [[ "${OSTYPE}" == *"android"* ]]; then
     ./android.sh "${@}"
   else
     ./linux.sh "${@}"
@@ -625,7 +625,7 @@ installOSSpecific() {
 }
 
 installAll() {
-  if [[ $OSTYPE != *"android"* ]]; then
+  if [[ "${OSTYPE}" != *"android"* ]]; then
     installPackages
   fi
   # installWebApps
