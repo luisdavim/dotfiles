@@ -20,10 +20,10 @@ fi
 
 # If not running interactively, don't do anything
 case $- in
-*i*)
-  [ -x "$(command -v tmux)" ] && [[ ! $TERM =~ screen ]] && [ -z "$TMUX" ] && [ -z "$VIMRUNTIME" ] && exec tmux
-  ;;
-*) return ;;
+  *i*)
+    [ -x "$(command -v tmux)" ] && [[ ! $TERM =~ screen ]] && [ -z "$TMUX" ] && [ -z "$VIMRUNTIME" ] && exec tmux
+    ;;
+  *) return ;;
 esac
 
 export TERM='xterm-256color'
@@ -144,7 +144,7 @@ fi
 
 # set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
-xterm-color | *-256color) color_prompt=yes ;;
+  xterm-color | *-256color) color_prompt=yes ;;
 esac
 
 # uncomment for a colored prompt, if the terminal has the capability; turned
@@ -172,10 +172,10 @@ unset color_prompt force_color_prompt
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
-xterm* | rxvt*)
-  PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-  ;;
-*) ;;
+  xterm* | rxvt*)
+    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+    ;;
+  *) ;;
 
 esac
 
@@ -187,7 +187,10 @@ bind Space:magic-space
 
 if [ -x "$(command -v brew)" ]; then
   # Ubuntu’s command-not-found equivalent for Homebrew on OSX
-  eval "$(brew command-not-found-init)"
+  HOMEBREW_COMMAND_NOT_FOUND_HANDLER="$(brew --repository)/Library/Homebrew/command-not-found/handler.sh"
+  if [ -f "${HOMEBREW_COMMAND_NOT_FOUND_HANDLER}" ]; then
+    source "${HOMEBREW_COMMAND_NOT_FOUND_HANDLER}"
+  fi
 
   # export RBENV_ROOT="$(brew --prefix rbenv)"
   # export GEM_HOME="$(brew --prefix)/opt/gems"
@@ -195,6 +198,7 @@ if [ -x "$(command -v brew)" ]; then
   if [ -z "${HOMEBREW_PREFIX}" ]; then
     export HOMEBREW_PREFIX="$(brew --prefix)"
   fi
+
 fi
 
 # Alias definitions.
