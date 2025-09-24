@@ -187,10 +187,7 @@ bind Space:magic-space
 
 if [ -x "$(command -v brew)" ]; then
   # Ubuntu’s command-not-found equivalent for Homebrew on OSX
-  HOMEBREW_COMMAND_NOT_FOUND_HANDLER="$(brew --repository)/Library/Homebrew/command-not-found/handler.sh"
-  if [ -f "${HOMEBREW_COMMAND_NOT_FOUND_HANDLER}" ]; then
-    source "${HOMEBREW_COMMAND_NOT_FOUND_HANDLER}"
-  fi
+  eval "$(brew command-not-found-init)"
 
   # export RBENV_ROOT="$(brew --prefix rbenv)"
   # export GEM_HOME="$(brew --prefix)/opt/gems"
