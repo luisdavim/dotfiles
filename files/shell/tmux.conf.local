@@ -423,6 +423,9 @@ bind m run "cut -c3- '#{TMUX_CONF}' | sh -s _toggle_mouse" \; display 'mouse #{?
 # move status line to top
 #set -g status-position top
 
+# renumber windows
+set-option -g renumber-windows on
+
 # -- custom bindings ----------------------------------------------------------
 
 set -gw xterm-keys on
@@ -448,6 +451,10 @@ bind -r PPage previous-window # select previous window
 bind -r NPage next-window     # select next window
 
 bind-key C-b set-window-option synchronize-panes
+
+bind R                                      \
+    move-window -r\;                        \
+    display-message "Windows reordered..."
 
 set -g @yank_selection 'primary'
 
