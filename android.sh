@@ -13,7 +13,13 @@ fi
 
 INSTALLDIR=$(pwd)
 
+installGYP() {
+  mkdir ~/.gyp && echo "{'variables':{'android_ndk_path':''}}" > ~/.gyp/include.gypi
+}
+
 installPackages() {
+  installGYP
+
   apt update && apt upgrade
   grep -Ev '\s*#' files/pkgs/pkg.lst | tr '\n' ' ' | xargs apt install -y
 

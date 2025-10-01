@@ -1,3 +1,4 @@
+# lesspipe
 abseil-cpp
 ack-grep
 amber
@@ -133,7 +134,6 @@ kubelogin
 lazygit
 ldns
 less
-# lesspipe
 lhasa
 libandroid-execinfo
 libandroid-glob
@@ -207,6 +207,7 @@ libprotobuf
 librav1e
 libresolv-wrapper
 libsasl
+libsecret
 libsixel
 libslirp
 libsmartcols

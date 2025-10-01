@@ -463,15 +463,70 @@ end)
 
 -- AI
 
--- later_on('InsertEnter', function()
---   add({
---     source = 'zbirenbaum/copilot.lua',
---   })
---   require('copilot').setup({
---     suggestion = { enabled = false },
---     panel = { enabled = false },
---   })
--- end)
+later_on('InsertEnter', function()
+  add({
+    source = 'zbirenbaum/copilot.lua',
+  })
+  require('copilot').setup({
+    suggestion = { enabled = false },
+    panel = { enabled = false },
+  })
+end)
+
+later(function()
+  add({
+    source = "folke/sidekick.nvim",
+  })
+  require('sidekick').setup({
+    -- add any options here
+    cli = {
+      mux = {
+        backend = "tmux",
+        enabled = true,
+      },
+    },
+  })
+
+  keymap('n', "<tab>",
+    function()
+      -- if there is a next edit, jump to it, otherwise apply it if any
+      if not require("sidekick").nes_jump_or_apply() then
+        return "<Tab>" -- fallback to normal tab
+      end
+    end,
+    { desc = "Goto/Apply Next Edit Suggestion" }
+  )
+  keymap({ "n", "x", "i", "t" }, "<c-.>",
+    function()
+      require("sidekick.cli").focus()
+    end,
+    { desc = "Sidekick Switch Focus" }
+  )
+  keymap({ "n", "v" }, "<leader>aa",
+    function()
+      require("sidekick.cli").toggle({ focus = true })
+    end,
+    { desc = "Sidekick Toggle CLI" }
+  )
+  keymap({ "n", "v" }, "<leader>ac",
+    function()
+      require("sidekick.cli").toggle({ name = "claude", focus = true })
+    end,
+    { desc = "Sidekick Claude Toggle" }
+  )
+  keymap({ "n", "v" }, "<leader>ag",
+    function()
+      require("sidekick.cli").toggle({ name = "grok", focus = true })
+    end,
+    { desc = "Sidekick Grok Toggle" }
+  )
+  keymap({ "n", "v" }, "<leader>ap",
+    function()
+      require("sidekick.cli").select_prompt()
+    end,
+    { desc = "Sidekick Ask Prompt" }
+  )
+end)
 
 -- Completion Menu
 
@@ -490,9 +545,9 @@ now(function()
 
   add({
     source = 'Saghen/blink.cmp',
-    -- depends = {
-    --   'fang2hou/blink-copilot',
-    -- },
+    depends = {
+      'fang2hou/blink-copilot',
+    },
     hooks = {
       post_install = build_blink,
       post_checkout = build_blink,
@@ -506,18 +561,28 @@ now(function()
     },
     keymap = {
       preset = 'enter',
+      ["<Tab>"] = {
+        "snippet_forward",
+        function() -- sidekick next edit suggestion
+          return require("sidekick").nes_jump_or_apply()
+        end,
+        function() -- if you are using Neovim's native inline completions
+          return vim.lsp.inline_completion.get()
+        end,
+        "fallback",
+      },
     },
-    -- sources = {
-    --   default = { 'lsp', 'buffer', 'snippets', 'path', 'copilot' },
-    --   providers = {
-    --     copilot = {
-    --       name = "copilot",
-    --       module = "blink-copilot",
-    --       score_offset = 100,
-    --       async = true,
-    --     },
-    --   },
-    -- },
+    sources = {
+      default = { 'lsp', 'buffer', 'snippets', 'path', 'copilot' },
+      providers = {
+        copilot = {
+          name = "copilot",
+          module = "blink-copilot",
+          score_offset = 100,
+          async = true,
+        },
+      },
+    },
     completion = {
       accept = { auto_brackets = { enabled = true } },
       documentation = {
