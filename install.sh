@@ -190,7 +190,7 @@ installChefGems() {
 }
 
 installPips() {
-  installPkgList "pip install -U" files/pkgs/pip.lst
+  installPkgList "python -m pip install -U" files/pkgs/pip.lst
 }
 
 installNpms() {

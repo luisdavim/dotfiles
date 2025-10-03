@@ -169,8 +169,10 @@ installPackages() {
   brew update
 
   # Install brew pkgs
-  # installPkgList "brew_install_or_upgrade" files/pkgs/brew.lst
-  grep -Ev '\s*#' files/pkgs/brew.lst | tr '\n' '\0' | xargs -0 -n1 brew install
+  for file in files/pkgs/brew*.lst; do
+    # installPkgList "brew_install_or_upgrade" "${file}"
+    grep -Ev '\s*#' "${file}" | tr '\n' '\0' | xargs -0 -n1 brew install
+  done
 
   # Install cask pkgs
   brew_install_or_upgrade cask

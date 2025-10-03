@@ -1,63 +1,16 @@
-# awless
-# bats
-# bosh-cli
-# bosh-init
-# chunkwm
-# chunkwm-blur
-# colima
-# docker-completion
-# docker-compose-completion
-# gotty
-# grv
-# helm
-# kubernetes-cli
-# macvim
-# rust
-# telnet
-# terraform # can't be installed allong with tfswitch
-# tldr
-# uutils-coreutils
-# godep
-1password
-1password-cli
-ack
-age
-ansible
-ansible-language-server
-ansible-lint
-archivemount
-asciidoctor
-asciinema
 asdf
 autopep8
 avfs
-aws-iam-authenticator
-aws-session-manager-plugin
-aws-shell
-awscli
-awsume
-azure-cli
-bandwhich
-bash
-bash-completion@2
-bash-language-server
-bat
-bat-extras
-bats-core
 bazel
 bbl
 bfg
-binutils
 blackbox
 bottom
-brew-cask-completion
-brew-pip
 broot
 browsh
 btop
 buildozer
 bun
-ca-certificates
 calicoctl
 cask
 catimg
@@ -71,85 +24,45 @@ checkov
 chpharos
 chrome-cli
 clusterctl
-cmake
 coffeescript
 colordiff
 commitizen
 consul-template
 cookiecutter
-coreutils
 crane
 credhub-cli
 cruft
 csvkit
 ctags
-curl
 dagger
 dark-mode
-dateutils
 datree
 dep
-devspace
 direnv
 displayplacer
-dive
-dnscrypt-proxy
-docker
-docker-buildx
-docker-compose
-docker-credential-helper
-docker-ls
-docker-slim
-dockerfile-language-server
-dog
-dos2unix
-dust
-ec2-ami-tools
-ec2-api-tools
-ec2-instance-selector
-ec2-metadata-mock
-eget
-egison
-eksctl
-elktail
 entr
 exif
 exiftool
-eza
 faq
 fd
 fff
 ffmpegthumbnailer
 figlet
-findutils
 fluxctl
 font-symbols-only-nerd-font
 fq
 fx
-fzf
 gardenctl
 gawk
 gcal
 gh
 gifsicle
-git
-git-chglog
-git-delta
-git-extras
-git-quick-stats
-git-secret
-git-secrets
 glab
 glow
-gnu-getopt
-gnu-sed
-gnu-tar
-gnu-time
 go-boring
 go-jira
 gofumpt
 goimports
-golang
 golangci-lint
 golangci-lint-langserver
 gomplate
@@ -169,7 +82,6 @@ gum
 hab
 hadolint
 helix
-helix
 helm-docs
 helm-ls
 helmenv
@@ -187,7 +99,6 @@ hyperkit
 iam-policy-json-to-terraform
 imagemagick
 imgpkg
-inetutils
 inframap
 inlets
 ipcalc
@@ -195,33 +106,12 @@ iproute2mac
 jc
 jid
 jj
-jq
 jql
 jruby
 jsmin
 jsonnet
 jsonnet-bundler
 jwt-cli
-k3d
-k6
-k9s
-kakoune
-kapp
-kbenv
-kbld
-kdash
-kind
-kompose
-kops
-krr
-kube-aws
-kubebuilder
-kubeconform
-kubectx
-kubepfm
-kubetail
-kubeval
-kustomize
 kwt
 lab
 lazydocker
@@ -237,7 +127,6 @@ llvm
 lsd
 lua-language-server
 maccy
-make
 markdownlint-cli
 mas
 mercurial
@@ -246,13 +135,11 @@ minikube
 mix-completion
 mockery
 monolith
-moreutils
 mtr
 multitail
 ncdu
 neardrop
 neofetch
-neovim
 ngrep
 nmap
 node
@@ -263,10 +150,8 @@ operator-sdk
 oras
 orbstack
 oslo
-p7zip
 packer
 pam-reattach
-patchutils
 pdsh
 peco
 pet
@@ -286,21 +171,11 @@ pstree
 pt
 pulumi
 pv
-pyenv
-pyenv-virtualenv
-python
-python-lsp-server
-python-setuptools
 rake-completion
-rancher-cli
-ranger
-rbac-lookup
 rbenv
-readline
 reattach-to-user-namespace
 remarshal
 rename
-ripgrep
 ripsecrets
 rke
 rm-improved
@@ -352,9 +227,6 @@ the_silver_searcher
 thefuck
 tig
 tilt
-tmux
-tmux-xpanes
-tmuxinator
 toast
 toilet
 tokei
@@ -376,19 +248,12 @@ viu
 w3m
 watch
 wdiff
-wget
-whois
 xh
 xhyve
 yabai
 yaml-language-server
 yamllint
-yarn
-yarn-completion
 yazi
 ydiff
-yq
 ytt
 zoxide
-zsh
-zsh-completions
