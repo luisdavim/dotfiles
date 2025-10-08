@@ -337,38 +337,6 @@ now(function()
   })
 end)
 
--- later(function()
---   -- local ui_select_orig = vim.ui.select
---   require('mini.pick').setup()
---   -- vim.ui.select = ui_select_orig
---
---   -- MiniPick.ui_select but opens at the cursor position
---   vim.ui.select = function(items, opts, on_choice)
---     local function get_cursor_anchor() return vim.fn.screenrow() < 0.5 * vim.o.lines and "NW" or "SW" end
---     local num_items = #items
---     local max_height = math.floor(0.45 * vim.o.columns)
---     local height = math.min(math.max(num_items, 1), max_height)
---     local start_opts = {
---       options = { content_from_bottom = get_cursor_anchor() == "SW" },
---       window = {
---         config = {
---           relative = "cursor",
---           anchor = get_cursor_anchor(),
---           row = get_cursor_anchor() == "NW" and 1 or 0,
---           col = 0,
---           width = math.floor(0.45 * vim.o.columns),
---           height = height,
---         },
---       },
---     }
---     return MiniPick.ui_select(items, opts, on_choice, start_opts)
---   end
---
---   -- keymap('n', '<C-p>', '<cmd>Pick files<cr>', {})
---   -- keymap('n', '<C-f>', '<cmd>Pick grep_live<cr>', {})
---   -- keymap('n', '<C-_>', '<cmd>Pick explorer<cr>', {})
--- end)
-
 -- Snacks
 now(function()
   add({
@@ -481,6 +449,38 @@ now(function()
     end
   })
 end)
+
+-- later(function()
+--   -- local ui_select_orig = vim.ui.select
+--   require('mini.pick').setup()
+--   -- vim.ui.select = ui_select_orig
+--
+--   -- MiniPick.ui_select but opens at the cursor position
+--   vim.ui.select = function(items, opts, on_choice)
+--     local function get_cursor_anchor() return vim.fn.screenrow() < 0.5 * vim.o.lines and "NW" or "SW" end
+--     local num_items = #items
+--     local max_height = math.floor(0.45 * vim.o.columns)
+--     local height = math.min(math.max(num_items, 1), max_height)
+--     local start_opts = {
+--       options = { content_from_bottom = get_cursor_anchor() == "SW" },
+--       window = {
+--         config = {
+--           relative = "cursor",
+--           anchor = get_cursor_anchor(),
+--           row = get_cursor_anchor() == "NW" and 1 or 0,
+--           col = 0,
+--           width = math.floor(0.45 * vim.o.columns),
+--           height = height,
+--         },
+--       },
+--     }
+--     return MiniPick.ui_select(items, opts, on_choice, start_opts)
+--   end
+--
+--   -- keymap('n', '<C-p>', '<cmd>Pick files<cr>', {})
+--   -- keymap('n', '<C-f>', '<cmd>Pick grep_live<cr>', {})
+--   -- keymap('n', '<C-_>', '<cmd>Pick explorer<cr>', {})
+-- end)
 
 -- Auto-completion
 
