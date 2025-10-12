@@ -1,6 +1,38 @@
-asdf
+# awless
+# bosh-cli
+# bosh-init
+# chunkwm
+# chunkwm-blur
+# colima
+# docker-completion
+# docker-compose-completion
+# gotty
+# grv
+# helm
+# kubernetes-cli
+# macvim
+# terraform # can't be installed allong with tfswitch
+# tldr
+# godep
+1password
+1password-cli
+ack
+age
+ansible
+ansible-language-server
+ansible-lint
+archivemount
+asciidoctor
+asciinema
 autopep8
 avfs
+aws-iam-authenticator
+aws-session-manager-plugin
+aws-shell
+awscli
+awsume
+azure-cli
+bandwhich
 bazel
 bbl
 bfg
@@ -25,7 +57,6 @@ chpharos
 chrome-cli
 clusterctl
 coffeescript
-colordiff
 commitizen
 consul-template
 cookiecutter
@@ -33,18 +64,36 @@ crane
 credhub-cli
 cruft
 csvkit
-ctags
 dagger
 dark-mode
 datree
 dep
+devspace
 direnv
 displayplacer
+dive
+dnscrypt-proxy
+docker
+docker-buildx
+docker-compose
+docker-credential-helper
+docker-ls
+docker-slim
+dockerfile-language-server
+dog
+dust
+ec2-ami-tools
+ec2-api-tools
+ec2-instance-selector
+ec2-metadata-mock
+eget
+egison
+eksctl
+elktail
 entr
 exif
 exiftool
 faq
-fd
 fff
 ffmpegthumbnailer
 figlet
@@ -53,7 +102,6 @@ font-symbols-only-nerd-font
 fq
 fx
 gardenctl
-gawk
 gcal
 gh
 gifsicle
@@ -97,7 +145,6 @@ hub
 hyperfine
 hyperkit
 iam-policy-json-to-terraform
-imagemagick
 imgpkg
 inframap
 inlets
@@ -112,18 +159,33 @@ jsmin
 jsonnet
 jsonnet-bundler
 jwt-cli
+k3d
+k6
+k9s
+kakoune
+kapp
+kbenv
+kbld
+kdash
+kind
+kompose
+kops
+krr
+kube-aws
+kubebuilder
+kubeconform
+kubectx
+kubepfm
+kubetail
+kubeval
+kustomize
 kwt
 lab
 lazydocker
 lazygit
 legit
-lesspipe
 lf
-libmagic
-libressl
-libsecret
 lima
-llvm
 lsd
 lua-language-server
 maccy
@@ -142,10 +204,8 @@ neardrop
 neofetch
 ngrep
 nmap
-node
 nushell
 openshift-cli
-openssl
 operator-sdk
 oras
 orbstack
@@ -172,6 +232,9 @@ pt
 pulumi
 pv
 rake-completion
+rancher-cli
+ranger
+rbac-lookup
 rbenv
 reattach-to-user-namespace
 remarshal
@@ -236,24 +299,19 @@ ttyd
 ttyplot
 tubekit
 ufraw
-unar
-unzip
 updatecli
 vagrant-completion
 vault
 vegeta
 vendir
-vim
 viu
 w3m
-watch
 wdiff
 xh
 xhyve
 yabai
 yaml-language-server
 yamllint
-yazi
 ydiff
 ytt
 zoxide

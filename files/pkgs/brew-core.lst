@@ -2,6 +2,7 @@
 # rust
 # telnet
 # uutils-coreutils
+asdf
 bash
 bash-completion@2
 bash-language-server
@@ -13,13 +14,17 @@ brew-cask-completion
 brew-pip
 ca-certificates
 cmake
+colordiff
 coreutils
+ctags
 curl
 dateutils
 dos2unix
 eza
+fd
 findutils
 fzf
+gawk
 git
 git-chglog
 git-delta
@@ -32,12 +37,19 @@ gnu-sed
 gnu-tar
 gnu-time
 golang
-golang
+imagemagick
 inetutils
 jq
+lesspipe
+libmagic
+libressl
+libsecret
+llvm
 make
 moreutils
 neovim
+node
+openssl
 p7zip
 patchutils
 pyenv
@@ -50,10 +62,15 @@ ripgrep
 tmux
 tmux-xpanes
 tmuxinator
+unar
+unzip
+vim
+watch
 wget
 whois
 yarn
 yarn-completion
+yazi
 yq
 zsh
 zsh-completions
