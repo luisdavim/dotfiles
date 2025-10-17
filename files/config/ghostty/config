@@ -31,6 +31,7 @@ mouse-hide-while-typing = true
 window-padding-y = 2,0
 window-padding-balance = true
 # window-decoration = false
+scrollbar = never
 
 # gtk-single-instance = true
 # gtk-tabs-location = bottom
