@@ -12,9 +12,7 @@ font-thicken = true
 adjust-underline-position = 4
 adjust-cursor-thickness = 1
 
-# scrollback-limit = 1000000
-
-# Sell
+# Shell
 shell-integration = zsh
 
 # Mouse
@@ -31,7 +29,9 @@ mouse-hide-while-typing = true
 window-padding-y = 2,0
 window-padding-balance = true
 # window-decoration = false
+
 scrollbar = never
+# scrollback-limit = 1000000
 
 # gtk-single-instance = true
 # gtk-tabs-location = bottom
@@ -40,6 +40,8 @@ scrollbar = never
 macos-titlebar-style = hidden
 
 # keybindings
+macos-option-as-alt = true
+
 # keybind = clear
 # keybind = ctrl+j=goto_split:bottom
 # keybind = super+shift+i=inspector:toggle
