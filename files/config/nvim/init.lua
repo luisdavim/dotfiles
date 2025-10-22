@@ -71,6 +71,7 @@ now(function()
   set.hlsearch = true
 
   vim.o.number = true
+  -- vim.o.pumborder = border_style
 
   -- Use rg
   vim.o.grepprg = [[rg --glob "!.git" --no-heading --vimgrep --follow $*]]
