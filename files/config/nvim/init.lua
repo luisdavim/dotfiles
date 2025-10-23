@@ -1081,6 +1081,13 @@ now(function()
   })
 end)
 
+later(function()
+  add({
+    source = "FabijanZulj/blame.nvim",
+  })
+  require('blame').setup({})
+end)
+
 later_on('VimEnter', function()
   add({
     source = 'tanvirtin/vgit.nvim',
