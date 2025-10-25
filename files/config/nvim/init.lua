@@ -1428,9 +1428,18 @@ later(function()
   })
 end)
 
+-- Language specific
+-- later(function ()
+--   add({
+--     source = "yanskun/gotests.nvim"
+--   })
+--   require('gotests').setup()
+-- end)
+
 -- Markdown rendering
 later(function()
   add({
+    -- source = "OXY2DEV/markview.nvim"
     source = 'MeanderingProgrammer/render-markdown.nvim',
   })
   require('render-markdown').setup({})
