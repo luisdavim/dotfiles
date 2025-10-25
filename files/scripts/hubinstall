@@ -13,6 +13,7 @@ install_to="${HOME}/.local/bin/"
 artifact_folder=artefacts
 tag="master"
 RAW=false
+PIPE_BASH=false
 DEBUG=false
 
 AUTH_HEADER=""
@@ -33,6 +34,7 @@ function usage {
   echo '  -h, --help                            display help'
   echo '  -d, --debug                           enable debug output'
   echo '  -r, --raw                             install raw script instead of from releases'
+  echo '  -p, --pipe-bash                       get raw script and pipe it to bash'
   echo "  -i, --install-to <installation path>  where to install; default: ${install_to}"
   echo "  -t, --tag <tag>                       version to fetch; default: ${tag}"
   echo ''
@@ -191,6 +193,10 @@ while true; do
       RAW=true
       shift
       ;;
+    -p | --pipe-bash)
+      PIPE_BASH=true
+      shift
+      ;;
     -i | --install-to)
       install_to="$2"
       shift 2
@@ -231,6 +237,9 @@ if [ "$0" = "${BASH_SOURCE[0]}" ]; then
   if [[ ${RAW} == "true" ]]; then
     name="${2:-$(basename "${project}")}"
     installFromRawGithub "${project}" "${name}" "${tag}"
+  elif [[ "${PIPE_BASH}" == "true" ]]; then
+    name="${2:-$(basename "${project}")}"
+    pipeBashFromRawGithub "${project}" "${name}" "${tag}"
   else
     os=${2:-$(uname -s | tr '[:upper:]' '[:lower:]')}
     arch="${3:-$(uname -m)}"
