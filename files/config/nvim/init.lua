@@ -843,7 +843,7 @@ now(function()
       format_on_save = not format_on_save
     end
 
-    -- Create a command :ToggleFormatOnSave that calls the function
+    -- Create a command :ToggleFormatOnSave that calls the toggle function
     vim.api.nvim_create_user_command('ToggleFormatOnSave', toggle_format_on_save, {})
 
     vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
@@ -861,6 +861,9 @@ now(function()
     })
     vim.api.nvim_create_user_command('Format', function()
       vim.lsp.buf.format({ async = false })
+    end, {})
+    vim.api.nvim_create_user_command('QuickFix', function()
+      vim.lsp.buf.code_action { context = { only = { 'source.fixAll' } }, apply = true }
     end, {})
 
     local cos = require('codeactions-on-save')
@@ -1418,10 +1421,21 @@ end)
 later(function()
   require('mini.trailspace').setup()
 
+  local trim_space_on_save = true
+  local function toggle_trim_space_on_save()
+    trim_space_on_save = not trim_space_on_save
+  end
+
+  -- Create a command :ToggleTrimSpaceOnSave that calls the toggle function
+  vim.api.nvim_create_user_command('ToggleTrimSpaceOnSave', toggle_trim_space_on_save, {})
+
   -- trim spaces on save
   vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
     -- buffer = 0, -- if 0 doesn't work do vim.api.nvim_get_current_buf()
     callback = function(_)
+      if not trim_space_on_save then
+        return
+      end
       MiniTrailspace.trim()
       MiniTrailspace.trim_last_lines()
     end
@@ -1429,6 +1443,8 @@ later(function()
 end)
 
 -- Language specific
+
+-- Golang
 -- later(function ()
 --   add({
 --     source = "yanskun/gotests.nvim"
