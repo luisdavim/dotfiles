@@ -712,7 +712,7 @@ now(function()
   local mason_lspconfig = require('mason-lspconfig')
   mason_lspconfig.setup({
     automatic_enable = true,
-    ensure_installed = { 'lua_ls', 'gopls', 'bashls', 'bzl', 'buf_ls', 'jsonls', 'yamlls' },
+    ensure_installed = { 'lua_ls', 'gopls', 'bashls', 'jsonls', 'yamlls' },
   })
   require('mason-tool-installer').setup({
     auto_update = false,
