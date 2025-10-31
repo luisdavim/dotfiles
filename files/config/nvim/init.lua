@@ -884,6 +884,52 @@ now(function()
       }))
     end
 
+    -- Toggle outline view
+    -- TODO: maybe use https://github.com/hedyhli/outline.nvim ?
+    local function toogle_outline(args)
+      local picker_source = "lsp_symbols"
+      if args.args == "workspace" then
+        picker_source = "lsp_workspace_symbols"
+      end
+      local symbols_pickers = Snacks.picker.get({ source = picker_source })
+      for _, v in pairs(symbols_pickers) do
+        if v:is_focused() then
+          v:close()
+        else
+          v:focus()
+        end
+      end
+      if #symbols_pickers ~= 0 then
+        return
+      end
+      local picker_opts = {
+        supports_live = true,
+        live = true,
+        auto_update = true,
+        auto_close = false,
+        focus = "list",
+        jump = { close = false },
+        layout = {
+          preset = "right",
+          preview = false,
+        }
+      }
+      if args.args == "workspace" then
+        Snacks.picker.lsp_workspace_symbols(picker_opts)
+      else
+        Snacks.picker.lsp_symbols(picker_opts)
+      end
+    end
+
+    vim.api.nvim_create_user_command('Outline', toogle_outline, {
+      nargs = "?",
+      complete = function() return { "buffer", "workspace" } end
+    })
+
+    keymap('n', '<leader>o', function()
+      toogle_outline({ args = "buffer" })
+    end)
+
     -- LSP keymaps
     keymap('n', '<leader>rn',
       function()
