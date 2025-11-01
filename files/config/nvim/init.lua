@@ -94,13 +94,24 @@ now(function()
   })
 
   --- Automatically save when leaving insert mode
-  -- vim.o.autowriteall = true
-  -- vim.api.nvim_create_autocmd({ 'InsertLeavePre', 'TextChanged', 'TextChangedP' }, {
-  --   pattern = '*',
-  --   callback = function()
-  --     vim.cmd('silent! write')
-  --   end
-  -- })
+  local auto_save = false
+  local function toggle_autosave()
+    auto_save = not auto_save
+    -- TODO: add extra toggle?
+    vim.o.autowriteall = auto_save
+  end
+
+  vim.api.nvim_create_user_command('ToggleAutroSave', toggle_autosave, {})
+
+  vim.api.nvim_create_autocmd({ 'InsertLeavePre', 'TextChanged', 'TextChangedP' }, {
+    pattern = '*',
+    callback = function()
+      if not auto_save then
+        return
+      end
+      vim.cmd('silent! write')
+    end
+  })
 
   -- Automatically Split help Buffers to the left
   vim.api.nvim_create_autocmd("FileType", {
@@ -1118,20 +1129,21 @@ end)
 now(function()
   require('mini.git').setup()
 
-  local function align_blame(au_data)
-    if au_data.data.git_subcommand ~= 'blame' then return end
+  vim.api.nvim_create_autocmd('User', {
+    pattern = 'MiniGitCommandSplit',
+    callback = function(au_data)
+      if au_data.data.git_subcommand ~= 'blame' then return end
 
-    -- Align blame output with source
-    local win_src = au_data.data.win_source
-    vim.wo.wrap = false
-    vim.fn.winrestview({ topline = vim.fn.line('w0', win_src) })
-    vim.api.nvim_win_set_cursor(0, { vim.fn.line('.', win_src), 0 })
+      -- Align blame output with source
+      local win_src = au_data.data.win_source
+      vim.wo.wrap = false
+      vim.fn.winrestview({ topline = vim.fn.line('w0', win_src) })
+      vim.api.nvim_win_set_cursor(0, { vim.fn.line('.', win_src), 0 })
 
-    -- Bind both windows so that they scroll together
-    vim.wo[win_src].scrollbind, vim.wo.scrollbind = true, true
-  end
-
-  vim.api.nvim_create_autocmd('User', { pattern = 'MiniGitCommandSplit', callback = align_blame })
+      -- Bind both windows so that they scroll together
+      vim.wo[win_src].scrollbind, vim.wo.scrollbind = true, true
+    end
+  })
   vim.api.nvim_create_user_command('Gblame', function()
     vim.cmd('vertical Git blame -- %')
   end, {})
