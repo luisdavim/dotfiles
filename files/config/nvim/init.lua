@@ -95,13 +95,11 @@ now(function()
 
   --- Automatically save when leaving insert mode
   local auto_save = false
-  local function toggle_autosave()
+  vim.api.nvim_create_user_command('ToggleAutroSave', function()
     auto_save = not auto_save
     -- TODO: add extra toggle?
     vim.o.autowriteall = auto_save
-  end
-
-  vim.api.nvim_create_user_command('ToggleAutroSave', toggle_autosave, {})
+  end, {})
 
   vim.api.nvim_create_autocmd({ 'InsertLeavePre', 'TextChanged', 'TextChangedP' }, {
     pattern = '*',
@@ -850,12 +848,11 @@ now(function()
 
     -- Format on save
     local format_on_save = true
-    local function toggle_format_on_save()
-      format_on_save = not format_on_save
-    end
 
     -- Create a command :ToggleFormatOnSave that calls the toggle function
-    vim.api.nvim_create_user_command('ToggleFormatOnSave', toggle_format_on_save, {})
+    vim.api.nvim_create_user_command('ToggleFormatOnSave', function()
+      format_on_save = not format_on_save
+    end, {})
 
     vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
       -- buffer = 0, -- if 0 doesn't work do vim.api.nvim_get_current_buf()
@@ -1497,12 +1494,11 @@ later(function()
   require('mini.trailspace').setup()
 
   local trim_space_on_save = true
-  local function toggle_trim_space_on_save()
-    trim_space_on_save = not trim_space_on_save
-  end
 
   -- Create a command :ToggleTrimSpaceOnSave that calls the toggle function
-  vim.api.nvim_create_user_command('ToggleTrimSpaceOnSave', toggle_trim_space_on_save, {})
+  vim.api.nvim_create_user_command('ToggleTrimSpaceOnSave', function()
+    trim_space_on_save = not trim_space_on_save
+  end, {})
 
   -- trim spaces on save
   vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
