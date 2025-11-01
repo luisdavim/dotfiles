@@ -921,6 +921,24 @@ now(function()
       end
     end
 
+    vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
+      callback = function(_)
+        if vim.bo.buftype ~= "" then
+          return
+        end
+        vim.schedule(function()
+          local symbols_pickers = Snacks.picker.get({ source = "lsp_symbols" })
+          for _, v in ipairs(symbols_pickers) do
+            if not v:is_focused() then
+              v._main:update()
+              v.input.filter = require("snacks.picker.core.filter").new(v)
+              v:find()
+            end
+          end
+        end)
+      end,
+    })
+
     vim.api.nvim_create_user_command('Outline', toogle_outline, {
       nargs = "?",
       complete = function() return { "buffer", "workspace" } end
@@ -1113,8 +1131,7 @@ now(function()
     vim.wo[win_src].scrollbind, vim.wo.scrollbind = true, true
   end
 
-  local au_opts = { pattern = 'MiniGitCommandSplit', callback = align_blame }
-  vim.api.nvim_create_autocmd('User', au_opts)
+  vim.api.nvim_create_autocmd('User', { pattern = 'MiniGitCommandSplit', callback = align_blame })
   vim.api.nvim_create_user_command('Gblame', function()
     vim.cmd('vertical Git blame -- %')
   end, {})
