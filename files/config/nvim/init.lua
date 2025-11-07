@@ -71,11 +71,12 @@ now(function()
   set.hlsearch = true
 
   vim.o.number = true
+  vim.o.autoindent = true
   -- vim.o.pumborder = border_style
 
   -- Use rg
   vim.o.grepprg = [[rg --glob "!.git" --no-heading --vimgrep --follow $*]]
-  vim.opt.grepformat = vim.opt.grepformat ^ { "%f:%l:%c:%m" }
+  set.grepformat = vim.opt.grepformat ^ { "%f:%l:%c:%m" }
 
   -- Automatically create parent directories
   local automkdirGroup = vim.api.nvim_create_augroup("automkdirGroup", { clear = true })
