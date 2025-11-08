@@ -895,7 +895,7 @@ now(function()
 
     -- Toggle outline view
     -- TODO: maybe use https://github.com/hedyhli/outline.nvim ?
-    local function toogle_outline(args)
+    local function toggle_outline(args)
       local picker_source = "lsp_symbols"
       if args.args == "workspace" then
         picker_source = "lsp_workspace_symbols"
@@ -912,8 +912,6 @@ now(function()
         return
       end
       local picker_opts = {
-        supports_live = true,
-        live = true,
         auto_update = true,
         auto_close = false,
         focus = "list",
@@ -930,17 +928,23 @@ now(function()
       end
     end
 
+    local curr_file = vim.api.nvim_buf_get_name(0)
     vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
       callback = function(_)
         if vim.bo.buftype ~= "" then
           return
         end
+        if vim.api.nvim_buf_get_name(0) == curr_file then
+          return
+        end
+        curr_file = vim.api.nvim_buf_get_name(0)
         vim.schedule(function()
           local symbols_pickers = Snacks.picker.get({ source = "lsp_symbols" })
           for _, v in ipairs(symbols_pickers) do
             if not v:is_focused() then
               v._main:update()
               v.input.filter = require("snacks.picker.core.filter").new(v)
+              v.input:set("", "")
               v:find()
             end
           end
@@ -948,13 +952,13 @@ now(function()
       end,
     })
 
-    vim.api.nvim_create_user_command('Outline', toogle_outline, {
+    vim.api.nvim_create_user_command('Outline', toggle_outline, {
       nargs = "?",
       complete = function() return { "buffer", "workspace" } end
     })
 
     keymap('n', '<leader>o', function()
-      toogle_outline({ args = "buffer" })
+      toggle_outline({ args = "buffer" })
     end)
 
     -- LSP keymaps
@@ -1105,7 +1109,7 @@ end)
 
 now(function()
   -- Define a function to toggle diff mode in all windows
-  function DiffToggle()
+  local function diffToggle()
     if vim.wo.diff then
       -- If already in diff mode, turn on cursorline and turn off diff in all windows
       vim.cmd('windo set cursorline')
@@ -1118,10 +1122,10 @@ now(function()
   end
 
   -- Create a command :DiffToggle that calls the function
-  vim.api.nvim_create_user_command('DiffToggle', DiffToggle, {})
+  vim.api.nvim_create_user_command('DiffToggle', diffToggle, {})
 
   -- Create a normal-mode mapping for <Leader>df to call DiffToggle
-  keymap('n', '<Leader>df', DiffToggle, { silent = true })
+  keymap('n', '<Leader>df', diffToggle, { silent = true })
 end)
 
 now(function()
