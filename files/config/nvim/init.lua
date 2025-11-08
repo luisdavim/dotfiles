@@ -242,10 +242,10 @@ now(function()
   require('treesitter-context').setup()
 
   local ensure_installed = {
-    'comment', 'lua', 'luadoc', 'go', 'c', 'bash', 'yaml',
-    'json', 'python', 'markdown', 'markdown_inline',
+    'comment', 'lua', 'luadoc', 'go', 'c', 'bash',
+    'json', 'yaml', 'python', 'promql', 'sql',
+    'html', 'markdown', 'markdown_inline', -- 'latex',
     'diff', 'starlark', 'gitcommit', 'vim', 'vimdoc', 'help',
-    'promql', 'sql',
   }
   local syntax_map = {
     ['tiltfile'] = 'starlark',
