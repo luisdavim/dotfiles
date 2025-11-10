@@ -244,7 +244,7 @@ now(function()
   local ensure_installed = {
     'comment', 'lua', 'luadoc', 'go', 'c', 'bash',
     'json', 'yaml', 'python', 'promql', 'sql',
-    'html', 'markdown', 'markdown_inline', -- 'latex',
+    'html', 'markdown', 'markdown_inline', 'typst', -- 'latex',
     'diff', 'starlark', 'gitcommit', 'vim', 'vimdoc', 'help',
   }
   local syntax_map = {
@@ -1534,6 +1534,7 @@ later(function()
     -- source = "OXY2DEV/markview.nvim"
     source = 'MeanderingProgrammer/render-markdown.nvim',
   })
+  -- require('markview').setup(require("markview.spec").default)
   require('render-markdown').setup({})
 
   add({
