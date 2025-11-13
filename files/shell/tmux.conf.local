@@ -393,6 +393,11 @@ tmux_conf_urlscan_options="--compact --dedupe"
 
 # this is the place to override or undo settings
 
+# TODO: workaround pasting issues, should be fixed in the next tmux release
+# - https://github.com/gpakosz/.tmux/issues/776
+# - https://github.com/ghostty-org/ghostty/discussions/5924
+set -s extended-keys off
+
 # faster key repetition
 set-option -s escape-time 10
 
