@@ -1,6 +1,10 @@
 # vim:set filetype=bash:
 # helix:set-language bash:
 
+if [[ "$CONFIGURED" == "true" ]]; then
+  return
+fi
+
 # helper function used in other aliases
 function _isFunction() {
   local check='declare -F --'

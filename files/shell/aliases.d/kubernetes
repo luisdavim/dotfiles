@@ -145,6 +145,8 @@ function kubectl-parallel() {
   local args=()
   local cmd="kubectl"
   local follow="false"
+  local workers=10
+  local ctxs=""
   while [[ $# -gt 0 ]]; do
     key="$1"
 
@@ -155,6 +157,10 @@ function kubectl-parallel() {
         ;;
       -c | --command)
         cmd="$2"
+        shift 2
+        ;;
+      -w | --workers)
+        workers="$2"
         shift 2
         ;;
       --)
@@ -189,7 +195,7 @@ function kubectl-parallel() {
     tmux split-window "multitail -f /tmp/*-${suffix}.kout"
   fi
 
-  echo "${ctxs}" | xargs -P 10 -I {} -r -- sh -c 'export KUBECONFIG=${1}/{}; out="/tmp/{}-${2}.kout"; shift 2; eval "( ${*} ) > ${out} 2>&1"' -- "${KFG_DIR}" "${suffix}" "${args[@]}"
+  echo "${ctxs}" | xargs -P ${workers} -I {} -r -- sh -c 'export KUBECONFIG=${1}/{}; out="/tmp/{}-${2}.kout"; shift 2; eval "( ${*} ) > ${out} 2>&1"' -- "${KFG_DIR}" "${suffix}" "${args[@]}"
 
   # if using gnu parallel, you can live tail the outputs with the following:
   # parallel --tagstring "{}:" --line-buffer tail -f {} ::: /tmp/*.kout

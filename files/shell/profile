@@ -16,15 +16,13 @@ if [[ -z "$USER" ]]; then
   USER="$(whoami)"
 fi
 
-[ -x "/opt/homebrew/bin/brew" ] && eval "$(/opt/homebrew/bin/brew shellenv)"
-
-[ -f "${HOME}/.variables" ] && source "${HOME}/.variables"
-
 # CDPATH
 CDPATH=".:${HOME}:${HOME}/workingCopies:${HOME}/workingCopies/src:$(ls -1d ${HOME}/workingCopies/src/*/ | tr '\n' ':')"
 
 # Brew paths
 if [ -x "$(command -v brew)" ]; then
+  eval "$(brew shellenv)"
+
   BREW_PREFIX=$(brew --prefix)
 
   if [ -d "${BREW_PREFIX}/sbin" ] ; then
@@ -287,4 +285,5 @@ if [ -n "$BASH_VERSION" ]; then
   fi
 fi
 
+[ -f "${HOME}/.variables" ] && source "${HOME}/.variables"
 [ -f "${HOME}/.variables.local" ] && source "${HOME}/.variables.local"
