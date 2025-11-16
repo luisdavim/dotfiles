@@ -257,7 +257,7 @@ function kubectl-parallel() {
 
   if is_default_kubeconfig; then
     for ((i = 1; i <= ${#args[@]}; i++)); do
-      args[$i]="$(sed 's/kubectl/kubectl --context=${KUBECTX}/g; s/helm/helm --kube-context=${KUBECTX}/g' <<< "$args[$i]")"
+      args[$i]="$(sed 's/kubectl/kubectl --context=${KUBECTX}/g; s/helm/helm --kube-context=${KUBECTX}/g' <<< "${args[$i]}")"
     done
     echo "${ctxs}" | xargs -P ${workers} -I {} -r -- sh -c 'export KUBECTX={}; out="${2}/{}-${1}.kout"; shift 2; eval "( ${*} ) > ${out} 2>&1"' -- "${suffix}" "${tmpd}" "${args[@]}"
   else
