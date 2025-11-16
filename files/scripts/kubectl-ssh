@@ -20,16 +20,17 @@ function usage {
     echo -e "${1}"
     echo ''
   fi
-  echo "Usage: $(basename "$0") [<flags>] <node> [<command>]"
-  echo ''
-  echo 'Flags:'
-  echo '  -h, --help                            display help'
-  echo '  -d, --debug                           enable debug output'
-  echo '  -e, --external-ip                     use the external IP'
-  echo '  --ec2                                 use AWS mssh to connect'
-  echo "  -u, --user <user>                     ssh user default: ${USER}"
-  echo "  -i, --indentity <file>                Path to the identity file"
-  echo ''
+  cat <<- EOF
+		Usage: $(basename $0) [<flags>] <node> [<command>]
+
+		Flags:
+		  -h, --help                            display help
+		  -d, --debug                           enable debug output
+		  -e, --external-ip                     use the external IP
+		  --ec2                                 use AWS mssh to connect
+		  -u, --user <user>                     ssh user default: ${USER}
+		  -i, --indentity <file>                Path to the identity file
+	EOF
   exit 1
 }
 

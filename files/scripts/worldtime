@@ -13,16 +13,17 @@ function usage {
     echo -e "${1}"
     echo ''
   fi
-  echo "Usage: $(basename "$0") <url> [<flags>]"
-  echo ''
-  echo 'Flags:'
-  echo '  -h, --help                    display help'
-  echo '  -d, --debug                   enable debug output'
-  echo '  -r, --reverse                 reverse the time translation'
-  echo '  -t, --timezone <timezone>     target time zone'
-  echo ''
-  echo "  timezone can also be a list of time zones default is '${TZONES}' (mind the quotes)"
-  echo ''
+  cat <<- EOF
+		Usage: $(basename $0) <url> [<flags>]
+
+		Flags:
+		  -h, --help                    display help
+		  -d, --debug                   enable debug output
+		  -r, --reverse                 reverse the time translation
+		  -t, --timezone <timezone>     target time zone
+
+		  timezone can also be a list of time zones default is "${TZONES}" (mind the quotes)
+	EOF
   exit 1
 }
 

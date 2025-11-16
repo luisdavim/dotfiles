@@ -7,14 +7,18 @@ HIDDEN=false
 POSITIONAL=()
 
 function _help() {
-  echo -e "Runs git commands recusively by looking for git repos under the current directory."
-  echo -e "  git recursive [CMD]."
-  echo -e "Available subcommands are: pull status clean reset"\\n
-  echo -e "Example: ${BOLD}git recursive pull ${NORM}"\\n
-  echo 'Flags:'
-  echo '  -h, --help                            display help'
-  echo '  -H, --hidden                          include hidden repos'
-  echo ''
+  cat <<- EOF
+		Usage: git recursive [CMD].
+
+		Runs git commands recusively by looking for git repos under the current directory.
+		Available subcommands are: pull status clean reset
+
+		Example: ${BOLD}git recursive pull ${NORM}
+
+		Flags:
+			-h, --help                            display help
+			-H, --hidden                          include hidden repos
+	EOF
   exit 1
 }
 

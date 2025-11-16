@@ -23,20 +23,21 @@ function usage {
     echo -e "${1}"
     echo ''
   fi
-  echo "Usage: $(basename "$0") [<flags>] <command>"
-  echo ''
-  echo 'Flags:'
-  echo '  -h, --help                            display help'
-  echo '  -d, --debug                           enable debug output'
-  echo '  -e, --external-ip                     use the external IP'
-  echo "  -f, --filter <all|healthy|unhealthy>  Filter nodes by their state default: ${NODES}"
-  echo '                                        You can also pass a partial node name.'
-  echo '  -l, --selector <label selector>       Filter nodes by labels'
-  echo "  -u, --user <user>                     ssh user default: ${USER}"
-  echo "  -t, --timeout <seconds>               kill ssh process after <seconds> default: ${TIMEOUT}"
-  echo "  -i, --indentity <file>                Path to the identity file"
-  echo '                                        setting timeout to 0 disables it'
-  echo ''
+  cat <<- EOF
+		Usage: $(basename $0) [<flags>] <command>
+
+		Flags:
+		  -h, --help                            display help
+		  -d, --debug                           enable debug output
+		  -e, --external-ip                     use the external IP
+		  -f, --filter <all|healthy|unhealthy>  Filter nodes by their state default: ${NODES}
+		                                        You can also pass a partial node name.
+		  -l, --selector <label selector>       Filter nodes by labels
+		  -u, --user <user>                     ssh user default: ${USER}
+		  -t, --timeout <seconds>               kill ssh process after <seconds> default: ${TIMEOUT}
+		  -i, --indentity <file>                Path to the identity file
+		                                        setting timeout to 0 disables it
+	EOF
   exit 1
 }
 

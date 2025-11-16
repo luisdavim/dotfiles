@@ -8,4 +8,5 @@ if [ -z "$1" ]; then
   dig --help
   exit 1
 fi
+
 dig $@ +noall +answer | awk '{if (NR>3){print}}' | tr '[:blank:]' ';' | tr -s ';' | jq -R 'split(";") |{Name:.[0],TTL:.[1],Type:.[3],Target:.[4]}' | jq --slurp 'flatten'

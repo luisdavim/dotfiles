@@ -10,17 +10,18 @@ function usage() {
     echo -e "${1}"
     echo ''
   fi
-  echo "Usage: $(basename "$0") [<flags>] <keyword>"
-  echo ''
-  echo 'Flags:'
-  echo '  -h, --help                            display help'
-  echo '  -d, --debug                           enable debug output'
-  echo '  -m, --etcd-manager                    use etcd-manager'
-  echo '  -n, --namespace <namespace>           kube-system is used by default'
-  echo '  -p, --pod <pod>                       specify the pod to use'
-  echo '  -c, --command <command>               endpoint command, defaults to etcdctl'
-  echo '  -s, --script <script>                 read the commands to run from a script file'
-  echo ''
+  cat <<- EOF
+		Usage: $(basename "$0") [<flags>] <keyword>
+
+		Flags:
+		  -h, --help                            display help
+		  -d, --debug                           enable debug output
+		  -m, --etcd-manager                    use etcd-manager
+		  -n, --namespace <namespace>           kube-system is used by default
+		  -p, --pod <pod>                       specify the pod to use
+		  -c, --command <command>               endpoint command, defaults to etcdctl
+		  -s, --script <script>                 read the commands to run from a script file
+	EOF
   exit 1
 }
 

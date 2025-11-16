@@ -17,17 +17,18 @@ function usage {
     echo -e "${1}"
     echo ''
   fi
-  echo "Usage: $(basename "$0") [lsit] [<product>] [<os>] [<arch>] [<flags>]"
-  echo ''
-  echo 'Flags:'
-  echo '  -h, --help                            display help'
-  echo '  -d, --debug                           enable debug output'
-  echo "  -i, --install-to <installation path>  where to install; default: ${install_to}"
-  echo "  -v, --version <version>               version to install; default: latest"
-  echo ''
-  echo 'Set --version to latest to automatically discover the latest build (default)'
-  echo "Use $(basename "$0") list to get a list os all available packages"
-  echo ''
+  cat <<- EOF
+		Usage: $(basename $0) [lsit] [<product>] [<os>] [<arch>] [<flags>]
+
+		Flags:
+		  -h, --help                            display help
+		  -d, --debug                           enable debug output
+		  -i, --install-to <installation path>  where to install; default: ${install_to}
+		  -v, --version <version>               version to install; default: latest
+
+		Set --version to latest to automatically discover the latest build (default)
+		Use $(basename $0) list to get a list os all available packages
+	EOF
   exit 1
 }
 

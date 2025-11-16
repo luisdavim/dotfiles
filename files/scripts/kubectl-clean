@@ -10,13 +10,15 @@ function usage() {
     echo -e "${1}"
     echo ''
   fi
-  echo "Usage: $(basename "$0") [<flags>]"
-  echo ''
-  echo 'Flags:'
-  echo '  -h, --help                            display help'
-  echo '  -d, --debug                           enable debug output'
-  echo '  -f, --force                           force delete pods'
-  echo '  -a, --all                             also clean stale docker layers and large log files from nodes'
+  cat <<- EOF
+		Usage: $(basename $0) [<flags>]
+
+		Flags:
+		  -h, --help                            display help
+		  -d, --debug                           enable debug output
+		  -f, --force                           force delete pods
+		  -a, --all                             also clean stale docker layers and large log files from nodes
+	EOF
   exit 1
 }
 
@@ -26,23 +28,23 @@ while [[ $# -gt 0 ]]; do
   key="$1"
 
   case $key in
-  -h | --help) usage "" ;;
-  -d | --debug)
-    DEBUG=true
-    shift
-    ;;
-  -f | --force)
-    FORCE=true
-    shift
-    ;;
-  -a | --all)
-    ALL=true
-    shift
-    ;;
-  *)
-    POSITIONAL+=("$1") # save it in an array for later
-    shift              # past argument
-    ;;
+    -h | --help) usage "" ;;
+    -d | --debug)
+      DEBUG=true
+      shift
+      ;;
+    -f | --force)
+      FORCE=true
+      shift
+      ;;
+    -a | --all)
+      ALL=true
+      shift
+      ;;
+    *)
+      POSITIONAL+=("$1") # save it in an array for later
+      shift              # past argument
+      ;;
   esac
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters

@@ -28,18 +28,19 @@ function usage {
     echo -e "${1}"
     echo ''
   fi
-  echo "Usage: $(basename "$0") <project> [<os>] [<arch>] [<binary>] [<flags>]"
-  echo ''
-  echo 'Flags:'
-  echo '  -h, --help                            display help'
-  echo '  -d, --debug                           enable debug output'
-  echo '  -r, --raw                             install raw script instead of from releases'
-  echo '  -p, --pipe-bash                       get raw script and pipe it to bash'
-  echo "  -i, --install-to <installation path>  where to install; default: ${install_to}"
-  echo "  -t, --tag <tag>                       version to fetch; default: ${tag}"
-  echo ''
-  echo 'Set --tag to latest to automatically discover the latest tag'
-  echo ''
+  cat <<- EOF
+		Usage: $(basename $0) <project> [<os>] [<arch>] [<binary>] [<flags>]
+
+		Flags:
+		  -h, --help                            display help
+		  -d, --debug                           enable debug output
+		  -r, --raw                             install raw script instead of from releases
+		  -p, --pipe-bash                       get raw script and pipe it to bash
+		  -i, --install-to <installation path>  where to install; default: ${install_to}
+		  -t, --tag <tag>                       version to fetch; default: ${tag}
+
+		  Set --tag to latest to automatically discover the latest tag
+	EOF
   exit 1
 }
 

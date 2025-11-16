@@ -11,15 +11,16 @@ function usage {
     echo -e "${1}"
     echo ''
   fi
-  echo "Usage: $(basename "$0") [<flags>] <node> [<command>]"
-  echo ''
-  echo 'Flags:'
-  echo '  -h, --help                            display help'
-  echo '  -d, --debug                           enable debug output'
-  echo '  -p, --pending                         retry pending releases'
-  echo '  -n, --namespace <name>                namespace name'
-  echo '  -r, --revision <number>               revision number'
-  echo ''
+  cat <<- EOF
+		Usage: $(basename $0) [<flags>] <node> [<command>]
+
+		Flags:
+		  -h, --help                            display help
+		  -d, --debug                           enable debug output
+		  -p, --pending                         retry pending releases
+		  -n, --namespace <name>                namespace name
+		  -r, --revision <number>               revision number
+	EOF
   exit 1
 }
 

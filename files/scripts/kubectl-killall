@@ -10,13 +10,15 @@ function usage() {
     echo -e "${1}"
     echo ''
   fi
-  echo "Usage: $(basename "$0") [<flags>] <keyword>"
-  echo ''
-  echo 'Flags:'
-  echo '  -h, --help                            display help'
-  echo '  -d, --debug                           enable debug output'
-  echo '  -f, --force                           force delete pods'
-  echo '  -n, --namespace <namespace>           on this namespace only'
+  cat <<- EOF
+		Usage: $(basename "$0") [<flags>] <keyword>
+
+		Flags:
+		  -h, --help                            display help
+		  -d, --debug                           enable debug output
+		  -f, --force                           force delete pods
+		  -n, --namespace <namespace>           on this namespace only
+	EOF
   exit 1
 }
 

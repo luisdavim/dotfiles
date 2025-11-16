@@ -10,14 +10,15 @@ function usage {
     echo -e "${1}"
     echo ''
   fi
-  echo "Usage: $(basename "$0") [<flags>] <node> [<command>]"
-  echo ''
-  echo 'Flags:'
-  echo '  -h, --help                            display help'
-  echo '  -d, --debug                           enable debug output'
-  echo '  -r, --rollback                        rollback failed helm releases'
-  echo '  -f, --force                           force reset helm state'
-  echo ''
+  cat <<- EOF
+		Usage: $(basename "$0") [<flags>] <node> [<command>]
+
+		Flags:'
+		  -h, --help                            display help
+		  -d, --debug                           enable debug output
+		  -r, --rollback                        rollback failed helm releases
+		  -f, --force                           force reset helm state
+	EOF
   exit 1
 }
 

@@ -16,18 +16,19 @@ function usage {
     echo -e "${1}"
     echo ''
   fi
-  echo "Usage: $(basename "$0") <url> [<flags>]"
-  echo ''
-  echo 'Flags:'
-  echo '  -h, --help                      display help'
-  echo '  -d, --debug                     enable debug output'
-  echo '  -u, --update                    update if it already exists'
-  echo '  -w, --workspace <workspace>     either a number or a valid go workspace path'
-  echo ''
-  echo 'If you pass a number for workspace a path will be fetched from $GOPATH'
-  echo 'where the number is the position of the workspace in the GOPATH environment varialbe'
-  echo 'by default the last workspace defined in the GOPATH environment varialbe will be used'
-  echo ''
+  cat <<- EOF
+		Usage: $(basename "$0") <url> [<flags>]
+
+		Flags:
+			-h, --help                      display help
+			-d, --debug                     enable debug output
+			-u, --update                    update if it already exists
+			-w, --workspace <workspace>     either a number or a valid go workspace path
+
+		If you pass a number for workspace a path will be fetched from \$GOPATH
+		where the number is the position of the workspace in the GOPATH environment varialbe
+		by default the last workspace defined in the GOPATH environment varialbe will be used
+	EOF
   exit 1
 }
 

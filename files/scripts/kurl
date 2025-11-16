@@ -27,15 +27,17 @@ function usage() {
     echo -e "${1}"
     echo ''
   fi
-  echo "Usage: $(basename "$0") [<flags>] <resource_uri> [<curl_opts>]"
-  echo ''
-  echo 'Flags:'
-  echo '  -h, --help         display help'
-  echo '  -d, --debug        enable debug output'
-  echo '  -S, --sa           Service account name'
-  echo '  -n, --namespace    Service account namespace'
-  echo '  -o, --output       Select output format, json, yaml or stats, default: json'
-  echo '  -f, --force        Force reauthentication'
+  cat <<- EOF
+		Usage: $(basename "$0") [<flags>] <resource_uri> [<curl_opts>]
+
+		Flags:
+		  -h, --help         display help
+		  -d, --debug        enable debug output
+		  -S, --sa           Service account name
+		  -n, --namespace    Service account namespace
+		  -o, --output       Select output format, json, yaml or stats, default: json
+		  -f, --force        Force reauthentication
+	EOF
   exit 1
 }
 

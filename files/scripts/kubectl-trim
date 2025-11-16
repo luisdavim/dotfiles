@@ -16,13 +16,15 @@ function usage() {
     echo -e "${1}"
     echo ''
   fi
-  echo "Usage: $(basename "$0") [<flags>] <resource>"
-  echo ''
-  echo 'Flags:'
-  echo '  -h, --help                            display help'
-  echo '  -d, --debug                           enable debug output'
-  echo '  -o, --output                          select output format, json or yaml, default: yaml'
-  echo '  -t, --trim                            comma separated list of fields to trim'
+  cat <<- EOF
+		Usage: $(basename "$0") [<flags>] <resource>
+
+		Flags:
+		  -h, --help                            display help
+		  -d, --debug                           enable debug output
+		  -o, --output                          select output format, json or yaml, default: yaml
+		  -t, --trim                            comma separated list of fields to trim
+	EOF
   exit 1
 }
 
@@ -55,37 +57,37 @@ while [[ $# -gt 0 ]]; do
   key="$1"
 
   case $key in
-  -h | --help) usage ;;
-  -d | --debug)
-    DEBUG=true
-    shift
-    ;;
-  -o | --output)
-    OUTPUT="$2"
-    shift 2
-    ;;
-  -t | --trim)
-    FIELDS=($(split_by ',' "$2"))
-    shift 2
-    ;;
-  *)
-    POSITIONAL+=("$1") # save it in an array for later
-    shift              # past argument
-    ;;
+    -h | --help) usage ;;
+    -d | --debug)
+      DEBUG=true
+      shift
+      ;;
+    -o | --output)
+      OUTPUT="$2"
+      shift 2
+      ;;
+    -t | --trim)
+      FIELDS=($(split_by ',' "$2"))
+      shift 2
+      ;;
+    *)
+      POSITIONAL+=("$1") # save it in an array for later
+      shift              # past argument
+      ;;
   esac
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters
 
 case $OUTPUT in
-json)
-  CONVERT=""
-  ;;
-yaml)
-  CONVERT="| yq e -P -"
-  ;;
-*)
-  usage "Invalid output format: ${OUTPUT} \n" >&2
-  ;;
+  json)
+    CONVERT=""
+    ;;
+  yaml)
+    CONVERT="| yq e -P -"
+    ;;
+  *)
+    usage "Invalid output format: ${OUTPUT} \n" >&2
+    ;;
 esac
 
 TRIM='walk(if type == "object" then del('$(join_by '?, ' "${FIELDS[@]}")') else . end)'
