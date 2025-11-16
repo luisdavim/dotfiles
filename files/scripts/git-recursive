@@ -7,6 +7,10 @@ HIDDEN=false
 POSITIONAL=()
 
 function _help() {
+  if [ -n "${1}" ]; then
+    echo -e "${1}"
+    echo ''
+  fi
   cat <<- EOF
 		Usage: git recursive [CMD].
 
@@ -19,7 +23,10 @@ function _help() {
 			-h, --help                            display help
 			-H, --hidden                          include hidden repos
 	EOF
-  exit 1
+  if [ -n "${1}" ]; then
+    exit 1
+  fi
+  exit 0
 }
 
 function recursive-cmd() {

@@ -38,7 +38,10 @@ function usage() {
 		  -o, --output       Select output format, json, yaml or stats, default: json
 		  -f, --force        Force reauthentication
 	EOF
-  exit 1
+  if [ -n "${1}" ]; then
+    exit 1
+  fi
+  exit 0
 }
 
 if ! [ -x "$(command -v jq)" ]; then

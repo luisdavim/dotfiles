@@ -31,7 +31,10 @@ function usage {
 		  -u, --user <user>                     ssh user default: ${USER}
 		  -i, --indentity <file>                Path to the identity file
 	EOF
-  exit 1
+  if [ -n "${1}" ]; then
+    exit 1
+  fi
+  exit 0
 }
 
 function nodeIP() {

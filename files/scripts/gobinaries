@@ -29,7 +29,10 @@ function usage {
 		  -i, --install-to <installation path>  where to install; default: ${install_to}
 		  -t, --tag <tag>                       version to fetch; default: ${tag}
 	EOF
-  exit 1
+  if [ -n "${1}" ]; then
+    exit 1
+  fi
+  exit 0
 }
 
 function goinstall() {

@@ -38,7 +38,10 @@ function usage {
 		  -i, --indentity <file>                Path to the identity file
 		                                        setting timeout to 0 disables it
 	EOF
-  exit 1
+  if [ -n "${1}" ]; then
+    exit 1
+  fi
+  exit 0
 }
 
 function inventory() {

@@ -41,7 +41,10 @@ function usage {
 
 		  Set --tag to latest to automatically discover the latest tag
 	EOF
-  exit 1
+  if [ -n "${1}" ]; then
+    exit 1
+  fi
+  exit 0
 }
 
 function install() {

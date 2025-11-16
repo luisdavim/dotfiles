@@ -22,7 +22,10 @@ function usage() {
 		  -e, --expiry-threshold                threshold for cert expiration
 		  -n, --namespace <namespace>           on this namespace only
 	EOF
-  exit 1
+  if [ -n "${1}" ]; then
+    exit 1
+  fi
+  exit 0
 }
 
 function is_int() { case ${1#[-+]} in '' | *[!0-9]*) return 1 ;; esac }

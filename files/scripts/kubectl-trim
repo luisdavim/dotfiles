@@ -25,7 +25,10 @@ function usage() {
 		  -o, --output                          select output format, json or yaml, default: yaml
 		  -t, --trim                            comma separated list of fields to trim
 	EOF
-  exit 1
+  if [ -n "${1}" ]; then
+    exit 1
+  fi
+  exit 0
 }
 
 function join_by() {

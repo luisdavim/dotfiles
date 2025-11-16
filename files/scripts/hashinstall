@@ -29,7 +29,10 @@ function usage {
 		Set --version to latest to automatically discover the latest build (default)
 		Use $(basename $0) list to get a list os all available packages
 	EOF
-  exit 1
+  if [ -n "${1}" ]; then
+    exit 1
+  fi
+  exit 0
 }
 
 function installVagrantPlugins() {

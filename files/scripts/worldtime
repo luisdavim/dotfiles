@@ -14,7 +14,7 @@ function usage {
     echo ''
   fi
   cat <<- EOF
-		Usage: $(basename $0) <url> [<flags>]
+		Usage: $(basename "$0") <url> [<flags>]
 
 		Flags:
 		  -h, --help                    display help
@@ -24,7 +24,10 @@ function usage {
 
 		  timezone can also be a list of time zones default is "${TZONES}" (mind the quotes)
 	EOF
-  exit 1
+  if [ -n "${1}" ]; then
+    exit 1
+  fi
+  exit 0
 }
 
 # Get local time zone from the OS

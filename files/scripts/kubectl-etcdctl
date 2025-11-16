@@ -22,7 +22,10 @@ function usage() {
 		  -c, --command <command>               endpoint command, defaults to etcdctl
 		  -s, --script <script>                 read the commands to run from a script file
 	EOF
-  exit 1
+  if [ -n "${1}" ]; then
+    exit 1
+  fi
+  exit 0
 }
 
 export NAMESPACE="kube-system"

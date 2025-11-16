@@ -29,7 +29,10 @@ function usage {
 		where the number is the position of the workspace in the GOPATH environment varialbe
 		by default the last workspace defined in the GOPATH environment varialbe will be used
 	EOF
-  exit 1
+  if [ -n "${1}" ]; then
+    exit 1
+  fi
+  exit 0
 }
 
 OPTS=$(getopt -o hduw: --long help,debug,workspace: -n "$(basename "$0")" -- "$@")

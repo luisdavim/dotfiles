@@ -19,7 +19,10 @@ function usage() {
 		  -f, --force                           force delete pods
 		  -a, --all                             also clean stale docker layers and large log files from nodes
 	EOF
-  exit 1
+  if [ -n "${1}" ]; then
+    exit 1
+  fi
+  exit 0
 }
 
 FORCE=""
