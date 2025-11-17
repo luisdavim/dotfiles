@@ -174,20 +174,27 @@ function kubectl-cfg() {
       fi
       ;;
     merge)
-      DST=${3:-~/.kube/config}
+      DST=${3:-$KUBECONFIG}
+      if [ -z "${DST}" ]; then
+        DST="~/.kube/config"
+      fi
       if [ -z "$2" ]; then
         echo 'Usage:'
         echo -e '\tkcfg merge <source_cfg> [<dest_cfg>]'
         echo -e '\tuse "all" as source_cfg to merge all configuration files'
         return 1
       fi
+      OLD_KUBECONFIG="${KUBECONFIG}"
+      tmp_cfg="$(mktemp -t "kubeconfig.XXXXXX")"
       if [[ "$2" == "all" ]]; then
         for CTX in $(ls -1 ${KFG_DIR}); do
-          KUBECONFIG="${DST}:${KFG_DIR}/${CTX}" \kubectl config view --flatten --raw >> "${DST}"
+          KUBECONFIG="${DST}:${KFG_DIR}/${CTX}" \kubectl config view --flatten --raw > "${tmp_cfg}"
         done
       else
-        KUBECONFIG="${DST}:${2}" \kubectl config view --flatten --raw >> "${DST}"
+        KUBECONFIG="${DST}:${2}" \kubectl config view --flatten --raw > "${tmp_cfg}"
       fi
+      mv "${tmp_cfg}" "${DST}"
+      KUBECONFIG="${OLD_KUBECONFIG}"
       ;;
     *)
       echo -e "Unknown command!\n  Available commands are:"
@@ -389,7 +396,7 @@ function kubectl-parallel() {
   fi
   echo ""
 
-  tmpd="$(mktemp -d)"
+  tmpd="$(mktemp -d -t "kparallel.XXXXXX")"
   suffix="$(
     tr -dc A-Za-z0-9 < /dev/urandom | head -c 13
     echo ''
