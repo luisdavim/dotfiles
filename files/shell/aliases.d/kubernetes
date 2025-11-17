@@ -198,89 +198,6 @@ function kubectl-cfg() {
 }
 alias kcfg='kubectl-cfg'
 
-function kubectl-parallel() {
-  KFG_DIR=${KFG_DIR:-~/.kube/config.d}
-
-  local args=()
-  local cmd="kubectl"
-  local follow="false"
-  local workers=10
-  local ctxs=""
-  while [[ $# -gt 0 ]]; do
-    key="$1"
-
-    case $key in
-      -f | --follow)
-        follow="true"
-        shift
-        ;;
-      -c | --command)
-        cmd="$2"
-        shift 2
-        ;;
-      -w | --workers)
-        workers="$2"
-        shift 2
-        ;;
-      --)
-        shift
-        args+=("${@}")
-        break
-        ;;
-      *)
-        args+=("$1")
-        shift
-        ;;
-    esac
-  done
-
-  ctxs=$(kubectl-get-ctx "${args[1]}")
-  args[1]="${cmd}"
-
-  echo -e "Running:\n\t${args[*]}\non:\n${ctxs}\n---"
-  echo -n "Are you sure? [y/N] "
-  read -r REPLY
-  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    return
-  fi
-  echo ""
-
-  tmpd="$(mktemp -d)"
-  suffix="$(
-    tr -dc A-Za-z0-9 < /dev/urandom | head -c 13
-    echo ''
-  )"
-  if [[ "${follow}" == "true" ]] && [ -x "$(command -v multitail)" ] && [ -n "$TMUX" ]; then
-    echo "${ctxs}" | xargs -P 10 -I {} touch "${tmpd}/{}-${suffix}.kout"
-    tmux split-window "multitail -f ${tmpd}/*-${suffix}.kout"
-  fi
-
-  if is_default_kubeconfig; then
-    for ((i = 1; i <= ${#args[@]}; i++)); do
-      args[$i]="$(sed 's/kubectl/kubectl --context=${KUBECTX}/g; s/helm/helm --kube-context=${KUBECTX}/g' <<< "${args[$i]}")"
-    done
-    echo "${ctxs}" | xargs -P ${workers} -I {} -r -- sh -c 'export KUBECTX={}; out="${2}/{}-${1}.kout"; shift 2; eval "( ${*} ) > ${out} 2>&1"' -- "${suffix}" "${tmpd}" "${args[@]}"
-  else
-    echo "${ctxs}" | xargs -P ${workers} -I {} -r -- sh -c 'export KUBECONFIG=${1}/{}; out="${3}/{}-${2}.kout"; shift 3; eval "( ${*} ) > ${out} 2>&1"' -- "${KFG_DIR}" "${suffix}" "${tmpd}" "${args[@]}"
-  fi
-
-  # if using gnu parallel, you can live tail the outputs with the following:
-  # parallel --tagstring "{}:" --line-buffer tail -f {} ::: ${tmpd}/*.kout
-  # or with multitail
-  # multitail -f ${tmpd}/*.kout
-
-  while read -r f; do
-    echo ">> $f"
-    cat "${tmpd}/${f}-${suffix}.kout"
-    echo "---"
-  done <<< "${ctxs}"
-
-  rm -f "${tmpd}/*-${suffix}.kout"
-  rm -rf "${tmpd}"
-}
-alias kparallel='kubectl-parallel'
-alias hparallel='kubectl-parallel -c helm'
-
 function kubectl-get-ctx() {
   KFG_DIR=${KFG_DIR:-~/.kube/config.d}
   local fuzzy="false"
@@ -301,7 +218,7 @@ function kubectl-get-ctx() {
   if [[ "${fuzzy}" == "true" ]]; then
     \kubectl config get-contexts -o name | fzf --filter="${1}"
   else
-    re=$(sed 's/[.$]/[&]/g; s/?/./g; s/\*/.*/g; s/\^/\\^/g' <<< "$1")
+    re=$(sed 's/[.$]/[&]/g; s/?/./g; s/\*/.*/g; s/\^/\\^/g; s/-/\\-/g' <<< "$1")
     \kubectl config get-contexts -o name | grep -E "${re}"
   fi
 }
@@ -424,6 +341,89 @@ function kubectl-delete-ns() {
   \kubectl get crds -oname | xargs -r -I {} kubectl delete {} -n "${1}" --all --ignore-not-found
   \kubectl delete ns "${1}"
 }
+
+function kubectl-parallel() {
+  KFG_DIR=${KFG_DIR:-~/.kube/config.d}
+
+  local args=()
+  local cmd="kubectl"
+  local follow="false"
+  local workers=10
+  local ctxs=""
+  while [[ $# -gt 0 ]]; do
+    key="$1"
+
+    case $key in
+      -f | --follow)
+        follow="true"
+        shift
+        ;;
+      -c | --command)
+        cmd="$2"
+        shift 2
+        ;;
+      -w | --workers)
+        workers="$2"
+        shift 2
+        ;;
+      --)
+        shift
+        args+=("${@}")
+        break
+        ;;
+      *)
+        args+=("$1")
+        shift
+        ;;
+    esac
+  done
+
+  ctxs=$(kubectl-get-ctx "${args[1]}")
+  args[1]="${cmd}"
+
+  echo -e "Running:\n\t${args[*]}\non:\n${ctxs}\n---"
+  echo -n "Are you sure? [y/N] "
+  read -r REPLY
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    return
+  fi
+  echo ""
+
+  tmpd="$(mktemp -d)"
+  suffix="$(
+    tr -dc A-Za-z0-9 < /dev/urandom | head -c 13
+    echo ''
+  )"
+  if [[ "${follow}" == "true" ]] && [ -x "$(command -v multitail)" ] && [ -n "$TMUX" ]; then
+    echo "${ctxs}" | xargs -P 10 -I {} touch "${tmpd}/{}-${suffix}.kout"
+    tmux split-window "multitail -f ${tmpd}/*-${suffix}.kout"
+  fi
+
+  if [ -d "${KFG_DIR}" ] && [ -z "$(find "${KFG_DIR}" -maxdepth 0 -empty)" ]; then
+    echo "${ctxs}" | xargs -P "${workers}" -I {} -r -- sh -c 'export KUBECONFIG=${1}/{}; out="${3}/{}-${2}.kout"; shift 3; eval "( ${*} ) > ${out} 2>&1"' -- "${KFG_DIR}" "${suffix}" "${tmpd}" "${args[@]}"
+  else
+    for ((i = 1; i <= ${#args[@]}; i++)); do
+      args[$i]="$(sed 's/kubectl/kubectl --context=${KUBECTX}/g; s/helm/helm --kube-context=${KUBECTX}/g' <<< "${args[$i]}")"
+    done
+    echo "${ctxs}" | xargs -P "${workers}" -I {} -r -- sh -c 'export KUBECTX={}; out="${2}/{}-${1}.kout"; shift 2; eval "( ${*} ) > ${out} 2>&1"' -- "${suffix}" "${tmpd}" "${args[@]}"
+  fi
+
+  # if using gnu parallel, you can live tail the outputs with the following:
+  # parallel --tagstring "{}:" --line-buffer tail -f {} ::: ${tmpd}/*.kout
+  # or with multitail
+  # multitail -f ${tmpd}/*.kout
+
+  while read -r f; do
+    echo ">> $f"
+    cat "${tmpd}/${f}-${suffix}.kout"
+    echo "---"
+  done <<< "${ctxs}"
+
+  rm -f "${tmpd}/*-${suffix}.kout"
+  rm -rf "${tmpd}"
+}
+alias kparallel='kubectl-parallel'
+alias hparallel='kubectl-parallel -c helm'
 
 alias kctl-list_images='kubectl get pods --all-namespaces -o jsonpath="{..image}" | tr -s "[[:space:]]" "\n" | sort | uniq -c'
 alias kctl-drain='kubectl drain --delete-local-data --ignore-daemonsets'
