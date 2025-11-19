@@ -213,7 +213,7 @@ function kubectl-get-ctx() {
     shift
   fi
 
-  if [ -d "${KFG_DIR}" ] && ! is_default_kubeconfig; then
+  if [ -d "${KFG_DIR}" ] && ! is_default_kubeconfig && [ -z "$(find "${KFG_DIR}" -maxdepth 0 -empty)" ]; then
     if [[ "${fuzzy}" == "true" ]]; then
       find "${KFG_DIR}/" -type f -printf "%f\n" | fzf --filter="${1}"
     else
@@ -243,31 +243,30 @@ function kubectl-ctx() {
 
   KFG_DIR=${KFG_DIR:-~/.kube/config.d}
   KUBECTX=""
+
+  local ctxs=""
+  local l=0
+  ctxs=$(kubectl-get-ctx "${1}")
+  l=$(echo -n "${ctxs}" | grep -c '^')
+  if [ "$l" -eq 0 ]; then
+    echo "no matching context found for: ${1}"
+    return
+  fi
+  if [ "$l" -eq 1 ]; then
+    KUBECTX="${ctxs}"
+  else
+    KUBECTX=$(echo -n "${ctxs}" | fzf)
+  fi
+
   if [ -d "${KFG_DIR}" ] && ! is_default_kubeconfig && [ -z "$(find "${KFG_DIR}" -maxdepth 0 -empty)" ]; then
-    if [ -n "${1}" ] && [ -f "${KFG_DIR}/${1}" ]; then
-      export KUBECONFIG="${KFG_DIR}/${1}"
-      return
-    fi
-    # files=$(find "${KFG_DIR}/" -type f -name "*${1}*" -printf "%f\n")
-    files=$(find "${KFG_DIR}" -type f -printf "%f\n" | fzf --filter="${1}")
-    l=$(echo -n "${files}" | grep -c '^')
-    if [ "$l" -eq 0 ]; then
-      echo "no matching context found"
-      return
-    fi
-    if [ "$l" -eq 1 ]; then
-      KUBECTX="${KFG_DIR}/${files}"
-    else
-      KUBECTX=$(echo -n "${files}" | fzf)
-    fi
     if [ ! -f "${KFG_DIR}/${KUBECTX}" ]; then
-      echo "no matching context found"
+      echo "no matching context found for: ${1}"
       return
     fi
     export KUBECONFIG="${KFG_DIR}/${KUBECTX}"
     return
   fi
-  kubectx "${@}"
+  \kubectl config use-context "${KUBECTX}"
 }
 alias kctx='kubectl-ctx'
 

@@ -111,7 +111,17 @@ alias colorcat='pygmentize -g'
 # alias PCat='source-highlight --out-format=esc -o STDOUT'
 if [ -x "$(command -v bat)" ]; then
   alias Cat="bat --theme ${BAT_THEME:-TwoDark}"
-  alias cat="bat --theme ${BAT_THEME:-TwoDark} --plain"
+  if [ -x "$(command -v glow)" ]; then
+    function cat() {
+      if [[ "${*}" == *".md"* ]]; then
+        PAGER='bat --plain' glow -w 0 -p "${@}"
+      else
+        bat --theme "${BAT_THEME:-TwoDark}" --plain "${@}"
+      fi
+    }
+  else
+    alias cat="bat --theme ${BAT_THEME:-TwoDark} --plain"
+  fi
 else
   alias Cat='colorcat'
 fi
