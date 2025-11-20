@@ -29,31 +29,10 @@ function kctl() {
   fi
   local args=("${COLOR}" kubectl "${CMD}")
   for arg in "${@}"; do
-    args+=("$(printf '%q' "$arg")")
+    args+=("$(printf '%q' "${arg}")")
   done
   eval "${args[*]}"
 }
-
-alias k='kctl'
-alias kga='kctl get -A'
-alias kd='kctl describe'
-alias kvs='kctl view-secret'
-alias keds='kctl modify-secret'
-alias kedst='kctl edit --subresource=status'
-alias ked='kctl edit'
-alias krr='kctl rollout restart'
-alias ktop='kctl top'
-alias kdrain='kctl drain --ignore-daemonsets --delete-emptydir-data'
-alias kubectl='kctl'
-
-alias kube='kubectl'
-alias kns='kubens'
-alias kc='kubectl'
-alias krew='kubectl krew'
-alias kindenv='export KUBECONFIG=~/.kube/kind-config'
-
-# alias k='kubectl "--context=${KUBECTL_CONTEXT:-$(kubectl config current-context)}" ${KUBECTL_NAMESPACE/[[:alnum:]-]*/--namespace=${KUBECTL_NAMESPACE}}'
-# alias kubectl="kubectl --context \${KUBE_CONTEXT:-\$(\kubectl config current-context)}"
 
 # generate aliases for each context
 if [ -d ~/.kube/config.d ]; then
@@ -231,13 +210,14 @@ function kubectl-get-ctx() {
 }
 
 function kubectl-ctx() {
-  if [[ "${1}" == "kind" ]]; then
-    export KUBECONFIG=~/.kube/kind-config
-    return
-  fi
   if [[ "${1}" == '-l' ]]; then
     shift
-    kubectl-get-ctx -z "${1}"
+    kubectl-get-ctx -z "${@}"
+    return
+  fi
+
+  if [[ "${1}" == "kind" ]] && [ -s ~/.kube/kind-config ]; then
+    export KUBECONFIG=~/.kube/kind-config
     return
   fi
 
@@ -246,7 +226,7 @@ function kubectl-ctx() {
 
   local ctxs=""
   local l=0
-  ctxs=$(kubectl-get-ctx "${1}")
+  ctxs=$(kubectl-get-ctx -z "${1}")
   l=$(echo -n "${ctxs}" | grep -c '^')
   if [ "$l" -eq 0 ]; then
     echo "no matching context found for: ${1}"
@@ -269,6 +249,17 @@ function kubectl-ctx() {
   \kubectl config use-context "${KUBECTX}"
 }
 alias kctx='kubectl-ctx'
+
+function kubectl-ns() {
+  KUBENS="${1:-}"
+
+  if [ -z "${KUBENS}" ]; then
+    KUBENS="$(\kubectl get ns --no-headers -o custom-columns='NAME:.metadata.name' | fzf)"
+  fi
+
+  \kubectl config set-context --current --namespace="${KUBENS}"
+}
+alias kns='kubectl-ns'
 
 function kubectl-capi-kubeconfig() {
   KFG_DIR=${KFG_DIR:-~/.kube/config.d}
@@ -434,6 +425,26 @@ alias hparallel='kubectl-parallel -c helm'
 alias kctl-list_images='kubectl get pods --all-namespaces -o jsonpath="{..image}" | tr -s "[[:space:]]" "\n" | sort | uniq -c'
 alias kctl-drain='kubectl drain --delete-local-data --ignore-daemonsets'
 alias kctl-httpie='kubectl run --restart=Never --rm -i --tty httpie-tmp --image=alpine/httpie'
+
+# alias k='kubectl "--context=${KUBECTL_CONTEXT:-$(kubectl config current-context)}" ${KUBECTL_NAMESPACE/[[:alnum:]-]*/--namespace=${KUBECTL_NAMESPACE}}'
+# alias kubectl="kubectl --context \${KUBE_CONTEXT:-\$(\kubectl config current-context)}"
+
+alias k='kctl'
+alias kga='kctl get -A'
+alias kd='kctl describe'
+alias kvs='kctl view-secret'
+alias keds='kctl modify-secret'
+alias kedst='kctl edit --subresource=status'
+alias ked='kctl edit'
+alias krr='kctl rollout restart'
+alias ktop='kctl top'
+alias kdrain='kctl drain --ignore-daemonsets --delete-emptydir-data'
+alias kubectl='kctl'
+
+alias kube='kubectl'
+alias kc='kubectl'
+alias krew='kubectl krew'
+alias kindenv='kubectl-ctx kind'
 
 # Helm aliases
 alias hup='helm upgrade --install --atomic --cleanup-on-fail'
