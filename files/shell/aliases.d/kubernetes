@@ -66,7 +66,7 @@ if [ -d ~/.kube/config.d ]; then
     done
 fi
 
-if [ -f ~/.kube/config ]; then
+if [ -s ~/.kube/config ]; then
   for CTX in $(\kubectl config get-contexts -o name); do
     cmd="alias k8s-${CTX/#${USER}-/}='kubectl --kubeconfig ${HOME}/.kube/config --context ${CTX}'"
     eval "${cmd}"
@@ -141,7 +141,7 @@ alias kgaa='kubectl-get-all'
 # alias kctl-events='kubectl-events'
 
 function is_default_kubeconfig() {
-  if [ ! -f ~/.kube/config ]; then
+  if [ ! -s ~/.kube/config ]; then
     return 1
   fi
   if [ -z "${KUBECONFIG}" ]; then
@@ -259,7 +259,7 @@ function kubectl-ctx() {
   fi
 
   if [ -d "${KFG_DIR}" ] && ! is_default_kubeconfig && [ -z "$(find "${KFG_DIR}" -maxdepth 0 -empty)" ]; then
-    if [ ! -f "${KFG_DIR}/${KUBECTX}" ]; then
+    if [ ! -s "${KFG_DIR}/${KUBECTX}" ]; then
       echo "no matching context found for: ${1}"
       return
     fi

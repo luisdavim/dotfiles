@@ -141,6 +141,7 @@ now(function()
       [".*/%.kube/config"] = 'yaml',
       ['.*/%.kube/config%.d/.*'] = 'yaml',
       ['.*/charts?/.*/templates/.*%.ya?ml'] = 'helm',
+      ['.*/charts?/.*/values.ya?ml'] = 'helm',
       ['.*/templates/.*%.ya?ml'] = 'helm',
       ['.*/templates/.*%.tpl'] = 'helm',
       ['.*/templates/.*%.txt'] = 'helm',
