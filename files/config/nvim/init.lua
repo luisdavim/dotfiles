@@ -9,6 +9,13 @@ if not vim.loop.fs_stat(mini_path) then
   vim.cmd('echo "Installed `mini.nvim`" | redraw')
 end
 
+local function is_andriod()
+  if vim.loop.os_uname().release:match(".*android.*") then
+    return true
+  end
+  return false
+end
+
 -- Set up 'mini.deps'
 require('mini.deps').setup({ path = { package = path_package } })
 
@@ -628,8 +635,12 @@ now(function()
     },
   })
 
+  local implementation = "prefer_rust"
+  if is_andriod() then
+    implementation = "lua"
+  end
   require('blink.cmp').setup({
-    fuzzy = { implementation = "prefer_rust" },
+    fuzzy = { implementation = implementation },
     appearance = {
       use_nvim_cmp_as_default = true,
     },
