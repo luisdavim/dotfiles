@@ -1,7 +1,7 @@
 -- Clone 'mini.nvim' manually in a way that it gets managed by 'mini.deps'
 local path_package = vim.fn.stdpath('data') .. '/site/'
 local mini_path = path_package .. 'pack/deps/start/mini.nvim'
-if not vim.loop.fs_stat(mini_path) then
+if not vim.uv.fs_stat(mini_path) then
   vim.cmd('echo "Installing `mini.nvim`" | redraw')
   local clone_cmd = { 'git', 'clone', '--filter=blob:none', 'https://github.com/nvim-mini/mini.nvim', mini_path }
   vim.fn.system(clone_cmd)
@@ -10,7 +10,7 @@ if not vim.loop.fs_stat(mini_path) then
 end
 
 local function is_andriod()
-  if vim.loop.os_uname().release:match(".*android.*") then
+  if vim.uv.os_uname().release:match(".*android.*") then
     return true
   end
   return false
@@ -90,11 +90,11 @@ now(function()
   vim.api.nvim_create_autocmd('BufWritePre', {
     -- Function gets a table that contains match key, which maps to `<amatch>` (a full filepath).
     callback = function(t)
-      local fname = vim.loop.fs_realpath(t.match) or t.match
+      local fname = vim.uv.fs_realpath(t.match) or t.match
       local dirname = vim.fs.dirname(fname)
-      if not vim.loop.fs_stat(dirname) then
+      if not vim.uv.fs_stat(dirname) then
         -- Use 755 permissions, which means rwxr.xr.x
-        -- vim.loop.fs_mkdir(dirname, tonumber("0755", 8))
+        -- vim.uv.fs_mkdir(dirname, tonumber("0755", 8))
         vim.fn.mkdir(dirname, 'p')
       end
     end,
@@ -194,8 +194,9 @@ now(function()
   keymap('n', '<C-L>', '<cmd>noh<CR>', { noremap = true, silent = true })
   -- toggle spell checker
   keymap('n', '<leader>sc', function()
-    vim.opt.spell = not (vim.opt.spell:get())
-  end)
+      vim.opt.spell = not (vim.opt.spell:get())
+    end,
+    { desc = 'Toggle spell checker' })
 end)
 
 now(function()
@@ -764,8 +765,6 @@ now(function()
   capabilities = vim.tbl_deep_extend('force', vim.lsp.protocol.make_client_capabilities(), capabilities)
 
   local function on_attach(client, buffnr)
-    MiniIcons.tweak_lsp_kind()
-
     -- highlight symbol under cursor
     if client ~= nil and client.supports_method('textDocument/documentHighlight', buffnr) then
       vim.b[buffnr].minicursorword_disable = true
@@ -788,55 +787,6 @@ now(function()
       })
     end
 
-    -- LSP UI settings
-    vim.diagnostic.config({
-      virtual_text = false,
-      float = {
-        border = border_style,
-        width = math.floor(0.25 * vim.o.columns)
-      },
-      signs = {
-        text = {
-          [vim.diagnostic.severity.ERROR] = '✘',
-          [vim.diagnostic.severity.WARN] = '▲',
-          [vim.diagnostic.severity.HINT] = '⚑',
-          [vim.diagnostic.severity.INFO] = '»',
-        },
-      },
-    })
-
-    -- Diagnostics
-    -- Function to check if a floating dialog exists and if not
-    -- then check for diagnostics under the cursor
-    local function openDiagnosticIfNoFloat()
-      for _, winid in pairs(vim.api.nvim_tabpage_list_wins(0)) do
-        if vim.api.nvim_win_get_config(winid).zindex then
-          return
-        end
-      end
-      vim.diagnostic.open_float(nil, {
-        scope = 'line',
-        border = border_style,
-        width = math.floor(0.25 * vim.o.columns),
-        focusable = false,
-        close_events = {
-          'CursorMoved',
-          'CursorMovedI',
-          'BufHidden',
-          'InsertCharPre',
-          'WinLeave',
-        },
-      })
-    end
-
-    -- Show diagnostics under the cursor when holding position
-    vim.api.nvim_create_augroup('lsp_diagnostics_hold', { clear = true })
-    vim.api.nvim_create_autocmd({ 'CursorHold' }, {
-      pattern = "*",
-      callback = openDiagnosticIfNoFloat,
-      group = 'lsp_diagnostics_hold',
-    })
-
     -- Inlay hints
     if client ~= nil and client.supports_method('textDocument/inlayHint', buffnr) then
       vim.lsp.inlay_hint.enable(true, { buffnr })
@@ -856,179 +806,6 @@ now(function()
       vim.wo[win][0].foldtext = "v:lua.vim.lsp.foldtext()"
       vim.wo[win][0].foldmethod = "expr"
     end
-
-    require('glance').setup()
-
-    -- Format on save
-    local format_on_save = true
-
-    -- Create a command :ToggleFormatOnSave that calls the toggle function
-    vim.api.nvim_create_user_command('ToggleFormatOnSave', function()
-      format_on_save = not format_on_save
-    end, {})
-
-    vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
-      -- buffer = 0, -- if 0 doesn't work do vim.api.nvim_get_current_buf()
-      -- pattern = { "*.yaml", "*.yml", "*.go", "*.ts", "*.tf", "*.sh" },
-      callback = function(_)
-        if not format_on_save then
-          return
-        end
-        vim.lsp.buf.format({ async = false })
-        -- vim.lsp.buf.code_action is async and may not resolve before the buffer is closed
-        -- vim.lsp.buf.code_action { context = { only = { 'source.organizeImports' } }, apply = true }
-        -- vim.lsp.buf.code_action { context = { only = { 'source.fixAll' } }, apply = true }
-      end
-    })
-    vim.api.nvim_create_user_command('Format', function()
-      vim.lsp.buf.format({ async = false })
-    end, {})
-    vim.api.nvim_create_user_command('QuickFix', function()
-      vim.lsp.buf.code_action { context = { only = { 'source.fixAll' } }, apply = true }
-    end, {})
-
-    local cos = require('codeactions-on-save')
-    cos.register({ '*.py', '*.go', '*.rb' }, { 'source.organizeImports' })
-    cos.register({ '*.ts', '*.tsx' }, { 'source.organizeImports.biome', 'source.fixAll' })
-
-    local function bordered_hover(_opts)
-      _opts = _opts or {}
-      return vim.lsp.buf.hover(vim.tbl_deep_extend('force', _opts, {
-        border = border_style
-      }))
-    end
-
-    local function bordered_signature_help(_opts)
-      _opts = _opts or {}
-      return vim.lsp.buf.signature_help(vim.tbl_deep_extend('force', _opts, {
-        border = border_style
-      }))
-    end
-
-    -- Toggle outline view
-    -- TODO: maybe use https://github.com/hedyhli/outline.nvim ?
-    local function toggle_outline(args)
-      local picker_source = "lsp_symbols"
-      if args.args == "workspace" then
-        picker_source = "lsp_workspace_symbols"
-      end
-      local symbols_pickers = Snacks.picker.get({ source = picker_source })
-      for _, v in pairs(symbols_pickers) do
-        if v:is_focused() then
-          v:close()
-        else
-          v:focus()
-        end
-      end
-      if #symbols_pickers ~= 0 then
-        return
-      end
-      local picker_opts = {
-        auto_update = true,
-        auto_close = false,
-        focus = "list",
-        jump = { close = false },
-        layout = {
-          preset = "right",
-          preview = false,
-        }
-      }
-      if args.args == "workspace" then
-        Snacks.picker.lsp_workspace_symbols(picker_opts)
-      else
-        Snacks.picker.lsp_symbols(picker_opts)
-      end
-    end
-
-    local curr_file = vim.api.nvim_buf_get_name(0)
-    vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
-      callback = function(_)
-        if vim.bo.buftype ~= "" then
-          return
-        end
-        if vim.api.nvim_buf_get_name(0) == curr_file then
-          return
-        end
-        curr_file = vim.api.nvim_buf_get_name(0)
-        vim.schedule(function()
-          local symbols_pickers = Snacks.picker.get({ source = "lsp_symbols" })
-          for _, v in ipairs(symbols_pickers) do
-            if not v:is_focused() then
-              v._main:update()
-              v.input.filter = require("snacks.picker.core.filter").new(v)
-              v.input:set("", "")
-              v:find()
-            end
-          end
-        end)
-      end,
-    })
-
-    vim.api.nvim_create_user_command('Outline', toggle_outline, {
-      nargs = "?",
-      complete = function() return { "buffer", "workspace" } end
-    })
-
-    keymap('n', '<leader>o', function()
-      toggle_outline({ args = "buffer" })
-    end)
-
-    -- LSP keymaps
-    keymap('n', '<leader>rn',
-      function()
-        local cword = vim.fn.expand('<cword>')
-        Snacks.input(
-          { prompt = 'Rename', default = cword, win = { relative = 'cursor', row = -3, col = -3 } },
-          vim.lsp.buf.rename
-        )
-      end,
-      { silent = true }
-    )
-    keymap({ 'n', 'v' }, '<leader>ca', function() vim.lsp.buf.code_action() end,
-      { buffer = buffnr, desc = "Code actions" }
-    )
-    -- keymap('n', '<leader>ld', MiniExtra.pickers.diagnostic, { buffer = buffnr, desc = "Diagnostics" })
-    keymap('n', '<leader>ld', Snacks.picker.diagnostics, { buffer = buffnr, desc = "Diagnostics" })
-
-    -- keymap('n', 'gd', function() vim.lsp.buf.definition() end, { buffer = buffnr, desc = "Go to definition" })
-    -- keymap('n', gd, function() require('glance').open("definitions") end, { buffer = buffnr, desc = "Go to definition" })
-    -- keymap('n', 'gd', function() MiniExtra.pickers.lsp({ scope = 'definition' }) end, { buffer = buffnr, desc = "Go to definition" })
-    keymap('n', 'gd', Snacks.picker.lsp_definitions, { buffer = buffnr, desc = "Go to definition" })
-
-    -- keymap('n', 'gD', function() vim.lsp.buf.declaration() end, { buffer = buffnr, desc = "go to declaration" })
-    -- keymap('n', 'gD', function() MiniExtra.pickers.lsp({ scope = 'declaration' }) end, { buffer = buffnr, desc = "go to declaration" })
-    keymap('n', 'gD', Snacks.picker.lsp_declarations, { buffer = buffnr, desc = "go to declaration" })
-
-    -- keymap('n', 'gi', function() vim.lsp.buf.implementation() end, { buffer = buffnr, desc = "go to implementation" })
-    -- keymap('n', 'gi', function() MiniExtra.pickers.lsp({ scope = 'implementation' }) end, { buffer = buffnr, desc = "go to implementation" })
-    keymap('n', 'gi', Snacks.picker.lsp_implementations, { buffer = buffnr, desc = "go to implementation" })
-
-    -- keymap('n', 'go', function() vim.lsp.buf.type_definition() end, { buffer = buffnr, desc = "go to type definition" })
-    -- keymap('n', 'go', function() MiniExtra.pickers.lsp({ scope = 'type_definition' }) end, { buffer = buffnr, desc = "go to type definition" })
-    keymap('n', 'go', Snacks.picker.lsp_type_definitions, { buffer = buffnr, desc = "go to type definition" })
-
-    -- keymap('n', 'gr', function() vim.lsp.buf.references() end, { buffer = buffnr, desc = "list references" })
-    -- keymap('n', 'gr', function() MiniExtra.pickers.lsp({ scope = 'references' }) end, { buffer = buffnr, desc = "list references" })
-    keymap('n', 'gr', Snacks.picker.lsp_references, { buffer = buffnr, desc = "list references" })
-
-    keymap('n', 'gs', bordered_signature_help, { buffer = buffnr, desc = "signature help" })
-
-    -- keymap('n', 'gS', function() MiniExtra.pickers.lsp({ scope = 'document_symbol' }) end, { buffer = buffnr, desc = "list symbols" })
-    keymap('n', 'gS', Snacks.picker.lsp_symbols, { buffer = buffnr, desc = "list symbols" })
-
-    -- keymap('n', 'gf', function() MiniExtra.pickers.lsp({ scope = 'workspace_symbol' }) end, { buffer = buffnr, desc = "list workspace symbols" })
-    keymap('n', 'gf', Snacks.picker.lsp_workspace_symbols, { buffer = buffnr, desc = "list workspace symbols" })
-
-    keymap('n', ']g', function() vim.diagnostic.jump({ count = 1, float = true }) end,
-      { buffer = buffnr, desc = "go to next diagnostic" })
-    keymap('n', '[g', function() vim.diagnostic.jump({ count = -1, float = true }) end,
-      { buffer = buffnr, desc = "go to previous diagnostic" })
-
-    keymap({ 'n', 'x' }, '<F3>', function() vim.lsp.buf.format({ async = true }) end,
-      { buffer = buffnr, desc = "format file" })
-    keymap({ 'n', 'v' }, '<F4>', vim.lsp.buf.code_action, { buffer = buffnr, desc = "code actions" })
-    keymap('n', '<F2>', vim.lsp.buf.rename, { buffer = buffnr, desc = "rename symbol" })
-    keymap('n', 'K', bordered_hover, { buffer = buffnr, desc = "show help" })
   end
 
   local custom_lspconfig = {
@@ -1114,6 +891,248 @@ now(function()
     end
   end
 
+  vim.api.nvim_create_augroup('lsp_config', { clear = true })
+  vim.api.nvim_create_autocmd('LspAttach', {
+    group = 'lsp_config',
+    callback = function(ev)
+      MiniIcons.tweak_lsp_kind()
+      require('glance').setup()
+
+      -- LSP UI settings
+      vim.diagnostic.config({
+        virtual_text = false,
+        float = {
+          border = border_style,
+          width = math.floor(0.25 * vim.o.columns)
+        },
+        signs = {
+          text = {
+            [vim.diagnostic.severity.ERROR] = '✘',
+            [vim.diagnostic.severity.WARN] = '▲',
+            [vim.diagnostic.severity.HINT] = '⚑',
+            [vim.diagnostic.severity.INFO] = '»',
+          },
+        },
+      })
+
+      -- Diagnostics
+      -- Function to check if a floating dialog exists and if not
+      -- then check for diagnostics under the cursor
+      local function openDiagnosticIfNoFloat()
+        for _, winid in pairs(vim.api.nvim_tabpage_list_wins(0)) do
+          if vim.api.nvim_win_get_config(winid).zindex then
+            return
+          end
+        end
+        vim.diagnostic.open_float(nil, {
+          scope = 'line',
+          border = border_style,
+          width = math.floor(0.25 * vim.o.columns),
+          focusable = false,
+          close_events = {
+            'CursorMoved',
+            'CursorMovedI',
+            'BufHidden',
+            'InsertCharPre',
+            'WinLeave',
+          },
+        })
+      end
+
+      vim.api.nvim_create_augroup('lsp_config_attach', { clear = true })
+      -- Show diagnostics under the cursor when holding position
+      vim.api.nvim_create_autocmd({ 'CursorHold' }, {
+        pattern = "*",
+        callback = openDiagnosticIfNoFloat,
+        group = 'lsp_config_attach',
+      })
+
+      -- Format on save
+      local format_on_save = true
+
+      -- Create a command :ToggleFormatOnSave that calls the toggle function
+      vim.api.nvim_create_user_command('ToggleFormatOnSave', function()
+        format_on_save = not format_on_save
+      end, {})
+
+      vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
+        group = 'lsp_config_attach',
+        -- buffer = 0, -- if 0 doesn't work do vim.api.nvim_get_current_buf()
+        -- pattern = { "*.yaml", "*.yml", "*.go", "*.ts", "*.tf", "*.sh" },
+        callback = function(_)
+          if not format_on_save then
+            return
+          end
+          vim.lsp.buf.format({ async = false })
+          -- vim.lsp.buf.code_action is async and may not resolve before the buffer is closed
+          -- vim.lsp.buf.code_action { context = { only = { 'source.organizeImports' } }, apply = true }
+          -- vim.lsp.buf.code_action { context = { only = { 'source.fixAll' } }, apply = true }
+        end
+      })
+      vim.api.nvim_create_user_command('Format', function()
+        vim.lsp.buf.format({ async = false })
+      end, {})
+      vim.api.nvim_create_user_command('QuickFix', function()
+        vim.lsp.buf.code_action { context = { only = { 'source.fixAll' } }, apply = true }
+      end, {})
+
+      local cos = require('codeactions-on-save')
+      cos.register({ '*.py', '*.go', '*.rb' }, { 'source.organizeImports' })
+      cos.register({ '*.ts', '*.tsx' }, { 'source.organizeImports.biome', 'source.fixAll' })
+
+      local function bordered_hover(_opts)
+        _opts = _opts or {}
+        return vim.lsp.buf.hover(vim.tbl_deep_extend('force', _opts, {
+          border = border_style
+        }))
+      end
+
+      local function bordered_signature_help(_opts)
+        _opts = _opts or {}
+        return vim.lsp.buf.signature_help(vim.tbl_deep_extend('force', _opts, {
+          border = border_style
+        }))
+      end
+
+      -- Toggle outline view
+      -- TODO: maybe use https://github.com/hedyhli/outline.nvim ?
+      local function toggle_outline(args)
+        local picker_source = "lsp_symbols"
+        if args.args == "workspace" then
+          picker_source = "lsp_workspace_symbols"
+        end
+        local symbols_pickers = Snacks.picker.get({ source = picker_source })
+        for _, v in pairs(symbols_pickers) do
+          if v:is_focused() then
+            v:close()
+          else
+            v:focus()
+          end
+        end
+        if #symbols_pickers ~= 0 then
+          return
+        end
+        local picker_opts = {
+          auto_update = true,
+          auto_close = false,
+          focus = "list",
+          jump = { close = false },
+          layout = {
+            preset = "right",
+            preview = false,
+          }
+        }
+        if args.args == "workspace" then
+          Snacks.picker.lsp_workspace_symbols(picker_opts)
+        else
+          Snacks.picker.lsp_symbols(picker_opts)
+        end
+      end
+
+      local curr_file = vim.api.nvim_buf_get_name(0)
+      vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
+        group = 'lsp_config_attach',
+        callback = function(_)
+          if vim.bo.buftype ~= "" then
+            return
+          end
+          if vim.api.nvim_buf_get_name(0) == curr_file then
+            return
+          end
+          curr_file = vim.api.nvim_buf_get_name(0)
+          vim.schedule(function()
+            local symbols_pickers = Snacks.picker.get({ source = "lsp_symbols" })
+            for _, v in ipairs(symbols_pickers) do
+              if not v:is_focused() then
+                v._main:update()
+                v.input.filter = require("snacks.picker.core.filter").new(v)
+                v.input:set("", "")
+                v:find()
+              end
+            end
+          end)
+        end,
+      })
+
+      vim.api.nvim_create_user_command('Outline', toggle_outline, {
+        nargs = "?",
+        complete = function() return { "buffer", "workspace" } end
+      })
+
+      keymap('n', '<leader>o', function()
+        toggle_outline({ args = "buffer" })
+      end, { desc = 'Toggle outline' })
+
+      -- LSP keymaps
+      keymap('n', '<leader>rn',
+        function()
+          local cword = vim.fn.expand('<cword>')
+          Snacks.input(
+            { prompt = 'Rename', default = cword, win = { relative = 'cursor', row = -3, col = -3 } },
+            vim.lsp.buf.rename
+          )
+        end,
+        { silent = true, desc = 'Rename' }
+      )
+      keymap({ 'n', 'v' }, '<leader>ca', function() vim.lsp.buf.code_action() end,
+        { buffer = ev.buf, desc = "Code actions" }
+      )
+      -- keymap('n', '<leader>ld', MiniExtra.pickers.diagnostic, { buffer = args.buf, desc = "Diagnostics" })
+      keymap('n', '<leader>ld', Snacks.picker.diagnostics, { buffer = ev.buf, desc = "Diagnostics" })
+
+      -- keymap('n', 'gd', function() vim.lsp.buf.definition() end, { buffer = args.buf, desc = "Go to definition" })
+      -- keymap('n', gd, function() require('glance').open("definitions") end, { buffer = args.buf, desc = "Go to definition" })
+      -- keymap('n', 'gd', function() MiniExtra.pickers.lsp({ scope = 'definition' }) end, { buffer = args.buf, desc = "Go to definition" })
+      keymap('n', 'gd', Snacks.picker.lsp_definitions, { buffer = ev.buf, desc = "Go to definition" })
+
+      -- keymap('n', 'gD', function() vim.lsp.buf.declaration() end, { buffer = args.buf, desc = "go to declaration" })
+      -- keymap('n', 'gD', function() MiniExtra.pickers.lsp({ scope = 'declaration' }) end, { buffer = args.buf, desc = "go to declaration" })
+      keymap('n', 'gD', Snacks.picker.lsp_declarations, { buffer = ev.buf, desc = "go to declaration" })
+
+      -- keymap('n', 'gi', function() vim.lsp.buf.implementation() end, { buffer = args.buf, desc = "go to implementation" })
+      -- keymap('n', 'gi', function() MiniExtra.pickers.lsp({ scope = 'implementation' }) end, { buffer = args.buf, desc = "go to implementation" })
+      keymap('n', 'gi', Snacks.picker.lsp_implementations, { buffer = ev.buf, desc = "go to implementation" })
+
+      -- keymap('n', 'go', function() vim.lsp.buf.type_definition() end, { buffer = args.buf, desc = "go to type definition" })
+      -- keymap('n', 'go', function() MiniExtra.pickers.lsp({ scope = 'type_definition' }) end, { buffer = args.buf, desc = "go to type definition" })
+      keymap('n', 'go', Snacks.picker.lsp_type_definitions, { buffer = ev.buf, desc = "go to type definition" })
+
+      -- keymap('n', 'gr', function() vim.lsp.buf.references() end, { buffer = args.buf, desc = "list references" })
+      -- keymap('n', 'gr', function() MiniExtra.pickers.lsp({ scope = 'references' }) end, { buffer = args.buf, desc = "list references" })
+      keymap('n', 'gr', Snacks.picker.lsp_references, { buffer = ev.buf, desc = "list references" })
+
+      keymap('n', 'gs', bordered_signature_help, { buffer = ev.buf, desc = "signature help" })
+
+      -- keymap('n', 'gS', function() MiniExtra.pickers.lsp({ scope = 'document_symbol' }) end, { buffer = args.buf, desc = "list symbols" })
+      keymap('n', 'gS', Snacks.picker.lsp_symbols, { buffer = ev.buf, desc = "list symbols" })
+
+      -- keymap('n', 'gf', function() MiniExtra.pickers.lsp({ scope = 'workspace_symbol' }) end, { buffer = args.buf, desc = "list workspace symbols" })
+      keymap('n', 'gf', Snacks.picker.lsp_workspace_symbols, { buffer = ev.buf, desc = "list workspace symbols" })
+
+      keymap('n', ']g', function() vim.diagnostic.jump({ count = 1, float = true }) end,
+        { buffer = ev.buf, desc = "go to next diagnostic" })
+      keymap('n', '[g', function() vim.diagnostic.jump({ count = -1, float = true }) end,
+        { buffer = ev.buf, desc = "go to previous diagnostic" })
+
+      keymap({ 'n', 'x' }, '<F3>', function() vim.lsp.buf.format({ async = true }) end,
+        { buffer = ev.buf, desc = "format file" })
+      keymap({ 'n', 'v' }, '<F4>', vim.lsp.buf.code_action, { buffer = ev.buf, desc = "code actions" })
+      keymap('n', '<F2>', vim.lsp.buf.rename, { buffer = ev.buf, desc = "rename symbol" })
+      keymap('n', 'K', bordered_hover, { buffer = ev.buf, desc = "show help" })
+    end
+  })
+
+  vim.api.nvim_create_autocmd('LspDetach', {
+    group = 'lsp_config',
+    callback = function(ev)
+      vim.api.nvim_clear_autocmds({
+        event = '*',
+        group = 'lsp_config_attach',
+        buffer = ev.buf,
+      })
+    end
+  })
+
   -- vim.lsp.config("*", base_lspconfig)
 end)
 
@@ -1137,7 +1156,7 @@ now(function()
   vim.api.nvim_create_user_command('DiffToggle', diffToggle, {})
 
   -- Create a normal-mode mapping for <Leader>df to call DiffToggle
-  keymap('n', '<Leader>df', diffToggle, { silent = true })
+  keymap('n', '<Leader>df', diffToggle, { silent = true, desc = 'Toggle diff' })
 end)
 
 now(function()
@@ -1365,14 +1384,15 @@ later(function()
   keymap('n', '<F11>', dap.step_into)
   keymap('n', '<F12>', dap.step_out)
 
-  keymap('n', '<leader>b', dap.toggle_breakpoint)
-  keymap('n', '<Leader>B', dap.set_breakpoint)
-  keymap('n', '<Leader>lp', function() dap.set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end)
-  keymap('n', '<Leader>dr', dap.repl.open)
-  keymap('n', '<Leader>dl', dap.run_last)
+  keymap('n', '<leader>b', dap.toggle_breakpoint, { desc = 'Toggle breakpoint' })
+  keymap('n', '<Leader>B', dap.set_breakpoint, { desc = 'Set breakpoint' })
+  keymap('n', '<Leader>lp', function() dap.set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end,
+    { desc = 'Set logpoint' })
+  keymap('n', '<Leader>dr', dap.repl.open, { desc = 'Open repl' })
+  keymap('n', '<Leader>dl', dap.run_last, { desc = 'Debug last' })
 
-  keymap('n', '<Leader>w', dapui.open)
-  keymap('n', '<Leader>W', dapui.close)
+  keymap('n', '<Leader>w', dapui.open, { desc = 'Open DAP UI' })
+  keymap('n', '<Leader>W', dapui.close, { desc = 'Close DAP UI' })
 end)
 
 later(function()
@@ -1609,28 +1629,28 @@ later(function()
 
   keymap("n", "<leader>wy", function()
     vim.g.yanked_buffer = vim.fn.bufnr('%')
-  end, { silent = true })
+  end, { silent = true, desc = 'Yank window' })
 
   keymap("n", "<leader>wd", function()
     vim.g.yanked_buffer = vim.fn.bufnr('%')
     vim.cmd("q")
-  end, { silent = true })
+  end, { silent = true, desc = 'Delete window' })
 
   keymap("n", "<leader>wp", function()
     pasteWindow('edit')
-  end, { silent = true })
+  end, { silent = true, desc = 'Paste window' })
 
   keymap("n", "<leader>ws", function()
     pasteWindow('split')
-  end, { silent = true })
+  end, { silent = true, desc = 'Paste window in split' })
 
   keymap("n", "<leader>wv", function()
     pasteWindow('vsplit')
-  end, { silent = true })
+  end, { silent = true, desc = 'Paste window in vertical split' })
 
   keymap("n", "<leader>wt", function()
     pasteWindow('tabnew')
-  end, { silent = true })
+  end, { silent = true, desc = 'Paste window in tab' })
 end)
 
 later(function()
@@ -1652,5 +1672,5 @@ later(function()
     }
   })
 
-  keymap({ "n", "x" }, "gx", "<cmd>Browse<cr>", {})
+  keymap({ "n", "x" }, "gx", "<cmd>Browse<cr>", { desc = 'Browse' })
 end)
