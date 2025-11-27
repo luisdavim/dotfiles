@@ -35,7 +35,7 @@ else
 fi
 
 alias lc='colorls'
-alias ll='ls -alF'
+alias ll='ls -alF auto'
 alias la='ls -A'
 alias l='ls -CF'
 

@@ -7,6 +7,8 @@ if [[ "${CONFIGURED}" == "true" ]]; then
   return
 fi
 
+NO_MULTIPLEXER="false"
+
 # Ghostty shell integration for Bash.
 if [ -n "${GHOSTTY_RESOURCES_DIR}" ]; then
   builtin source "${GHOSTTY_RESOURCES_DIR}/shell-integration/bash/ghostty.bash"
@@ -18,10 +20,16 @@ if [ -n "${KITTY_INSTALLATION_DIR}" ]; then
   source "${KITTY_INSTALLATION_DIR}/shell-integration/bash/kitty.bash"
 fi
 
+# vscode integration
+if [[ "$TERM_PROGRAM" == "vscode" ]]; then
+  source "$(code --locate-shell-integration-path bash)"
+  NO_MULTIPLEXER="true"
+fi
+
 # If not running interactively, don't do anything
 case $- in
   *i*)
-    [ -x "$(command -v tmux)" ] && [[ ! $TERM =~ screen ]] && [ -z "$TMUX" ] && [ -z "$VIMRUNTIME" ] && exec tmux
+    [ -x "$(command -v tmux)" ] && [[ ! $TERM =~ screen ]] && [ -z "$TMUX" ] && [ -z "$VIMRUNTIME" ] && [[ "${NO_MULTIPLEXER}" != "true" ]] && exec tmux
     ;;
   *) return ;;
 esac

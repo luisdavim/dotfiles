@@ -4,6 +4,8 @@ if [[ "${CONFIGURED}" == "true" ]]; then
   return
 fi
 
+NO_MULTIPLEXER="false"
+
 # Ghostty shell integration for Zsh.
 if [[ -n "${GHOSTTY_RESOURCES_DIR}" ]]; then
   autoload -Uz -- "${GHOSTTY_RESOURCES_DIR}"/shell-integration/zsh/ghostty-integration
@@ -23,6 +25,11 @@ if [[ -f ~/.profile ]]; then
   set -a
   source ~/.profile
   set +a
+fi
+
+# vscode integration
+if [[ "$TERM_PROGRAM" == "vscode" ]]; then
+  source "$(code --locate-shell-integration-path zsh)"
 fi
 
 # If you come from bash you might have to change your $PATH.
@@ -67,7 +74,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # DISABLE_LS_COLORS="true"
 
 # Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
+DISABLE_AUTO_TITLE="true"
 
 # Uncomment the following line to enable command auto-correction.
 # ENABLE_CORRECTION="true"
@@ -147,12 +154,12 @@ plugins=(
   # kube-ps1
 )
 
-if [[ -x "$(command -v zellij)" ]] && [[ "${ZELLIJ_AUTOSTART}" == "true" ]]; then
+if [[ -x "$(command -v zellij)" ]] && [[ "${ZELLIJ_AUTOSTART}" == "true" ]] && [[ "${NO_MULTIPLEXER}" != "true" ]]; then
   if [ -f "${HOME}/.config/zellij/config.kdl" ]; then
     export ZELLIJ_CONFIG_DIR="${HOME}/.config/zellij/config.kdl"
   fi
   eval "$(zellij setup --generate-auto-start zsh)"
-else
+elif [[ "${NO_MULTIPLEXER}" != "true" ]]; then
   # Tmux plugin config
   export ZSH_TMUX_AUTOSTART=true
   export ZSH_TMUX_AUTOSTART_ONCE=true
@@ -196,7 +203,6 @@ if [ -x "$(command -v brew)" ]; then
 fi
 
 autoload -Uz compinit
-compinit
 
 source $ZSH/oh-my-zsh.sh
 [[ ! -f "${HOME}/.zshrcHighlightStyle" ]] || source ${HOME}/.zshrcHighlightStyle
@@ -261,5 +267,7 @@ if [[ -n "${HOMEBREW_PREFIX}" ]]; then
 fi
 
 [[ ! -f ~/.zshrc.local ]] || source ~/.zshrc.local
+
+compinit
 
 export CONFIGURED="true"
