@@ -14,6 +14,10 @@ if [ -n "${GHOSTTY_RESOURCES_DIR}" ]; then
   builtin source "${GHOSTTY_RESOURCES_DIR}/shell-integration/bash/ghostty.bash"
 fi
 
+if [[ -n "${GHOSTTY_QUICK_TERMINAL}" ]]; then
+  NO_MULTIPLEXER="true"
+fi
+
 # Kitty shell integration
 if [ -n "${KITTY_INSTALLATION_DIR}" ]; then
   export KITTY_SHELL_INTEGRATION="enabled"

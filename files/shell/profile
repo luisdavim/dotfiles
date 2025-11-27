@@ -1,3 +1,6 @@
+# vim:set filetype=bash:
+# helix:set-language bash:
+
 # ~/.profile: executed by the command interpreter for login shells.
 # This file is not read by bash(1), if ~/.bash_profile or ~/.bash_login
 # exists.
@@ -21,11 +24,11 @@ CDPATH=".:${HOME}:${HOME}/workingCopies:${HOME}/workingCopies/src:$(ls -1d ${HOM
 
 # Brew paths
 if [ -x "/opt/homebrew/bin/brew" ]; then
-   eval "$(/opt/homebrew/bin/brew shellenv)"
+  eval "$(/opt/homebrew/bin/brew shellenv)"
 
   BREW_PREFIX=$(brew --prefix)
 
-  if [ -d "${BREW_PREFIX}/sbin" ] ; then
+  if [ -d "${BREW_PREFIX}/sbin" ]; then
     PATH="${BREW_PREFIX}/sbin:$PATH"
   fi
   if [ -d "${BREW_PREFIX}/opt/curl/bin" ]; then
@@ -70,7 +73,7 @@ if [ -x "/opt/homebrew/bin/brew" ]; then
   if [ -d "${BREW_PREFIX}/opt/coreutils/libexec/gnubin" ]; then
     PATH="${BREW_PREFIX}/opt/coreutils/libexec/gnubin:$PATH"
   fi
-  if [ -d "${BREW_PREFIX}/opt/make/libexec/gnubin" ];then
+  if [ -d "${BREW_PREFIX}/opt/make/libexec/gnubin" ]; then
     PATH="${BREW_PREFIX}/opt/make/libexec/gnubin:$PATH"
   fi
   if [ -d "${BREW_PREFIX}/opt/gnu-tar/libexec/gnubin" ]; then
@@ -232,7 +235,7 @@ PATH="${KREW_ROOT:-${HOME}/.krew}/bin:$PATH"
 
 # GOPATH
 GOPATH="${HOME}/go:${HOME}/workingCopies"
-GOBIN="${GOPATH/:*}/bin"
+GOBIN="${GOPATH/:*/}/bin"
 PATH="${PATH}:${GOBIN}"
 
 # Cargo bins
@@ -250,7 +253,7 @@ fi
 if [ -d "${HOME}/.local/bin" ]; then
   PATH="${HOME}/.local/bin:${PATH}"
 fi
-if [ -d "${HOME}/bin" ] ; then
+if [ -d "${HOME}/bin" ]; then
   PATH="${HOME}/bin:$PATH"
 fi
 
@@ -259,7 +262,7 @@ if [ -d "${HOME}/.theme.sh" ]; then
 fi
 
 if command -v theme.sh > /dev/null; then
-  [ -e ~/.theme_history ] && theme.sh "$(theme.sh -l|tail -n1)"
+  [ -e ~/.theme_history ] && theme.sh "$(theme.sh -l | tail -n1)"
 
   alias th='theme.sh -i'
 

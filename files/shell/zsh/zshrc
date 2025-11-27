@@ -4,6 +4,7 @@ if [[ "${CONFIGURED}" == "true" ]]; then
   return
 fi
 
+# Disable terminal multiplexers like tmux to zellij
 NO_MULTIPLEXER="false"
 
 # Ghostty shell integration for Zsh.
@@ -11,6 +12,10 @@ if [[ -n "${GHOSTTY_RESOURCES_DIR}" ]]; then
   autoload -Uz -- "${GHOSTTY_RESOURCES_DIR}"/shell-integration/zsh/ghostty-integration
   ghostty-integration
   unfunction ghostty-integration
+fi
+
+if [[ -n "${GHOSTTY_QUICK_TERMINAL}" ]]; then
+  NO_MULTIPLEXER="true"
 fi
 
 # Kitty shell integration
@@ -21,15 +26,15 @@ if [[ -n "${KITTY_INSTALLATION_DIR}" ]]; then
   unfunction kitty-integration
 fi
 
+# vscode integration
+if [[ "$TERM_PROGRAM" == "vscode" ]]; then
+  source "$(code --locate-shell-integration-path zsh)"
+fi
+
 if [[ -f ~/.profile ]]; then
   set -a
   source ~/.profile
   set +a
-fi
-
-# vscode integration
-if [[ "$TERM_PROGRAM" == "vscode" ]]; then
-  source "$(code --locate-shell-integration-path zsh)"
 fi
 
 # If you come from bash you might have to change your $PATH.
@@ -154,22 +159,24 @@ plugins=(
   # kube-ps1
 )
 
-if [[ -x "$(command -v zellij)" ]] && [[ "${ZELLIJ_AUTOSTART}" == "true" ]] && [[ "${NO_MULTIPLEXER}" != "true" ]]; then
-  if [ -f "${HOME}/.config/zellij/config.kdl" ]; then
-    export ZELLIJ_CONFIG_DIR="${HOME}/.config/zellij/config.kdl"
-  fi
-  eval "$(zellij setup --generate-auto-start zsh)"
-elif [[ "${NO_MULTIPLEXER}" != "true" ]]; then
-  # Tmux plugin config
-  export ZSH_TMUX_AUTOSTART=true
-  export ZSH_TMUX_AUTOSTART_ONCE=true
-  export ZSH_TMUX_AUTOQUIT=true
-  export ZSH_TMUX_AUTOCONNECT=false
+if [[ "${NO_MULTIPLEXER}" != "true" ]]; then
+  if [[ -x "$(command -v zellij)" ]] && [[ "${ZELLIJ_AUTOSTART}" == "true" ]]; then
+    if [ -f "${HOME}/.config/zellij/config.kdl" ]; then
+      export ZELLIJ_CONFIG_DIR="${HOME}/.config/zellij/config.kdl"
+    fi
+    eval "$(zellij setup --generate-auto-start zsh)"
+  else
+    # Tmux plugin config
+    export ZSH_TMUX_AUTOSTART=true
+    export ZSH_TMUX_AUTOSTART_ONCE=true
+    export ZSH_TMUX_AUTOQUIT=true
+    export ZSH_TMUX_AUTOCONNECT=false
 
-  plugins[1,0]=(tmux)
+    plugins[1,0]=(tmux)
+  fi
 fi
 
-if [[ $OSTYPE != *"android"* ]]; then
+if [[ ${OSTYPE} != *"android"* ]]; then
   plugins=(${plugins[@]} thefuck)
 fi
 
@@ -224,7 +231,7 @@ source $ZSH/oh-my-zsh.sh
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
-if [[ "$OSTYPE" == "darwin"* ]]; then
+if [[ "${OSTYPE}" == "darwin"* ]]; then
     MAX_MEMORY_UNITS=KB
 else
     MAX_MEMORY_UNITS=MB
