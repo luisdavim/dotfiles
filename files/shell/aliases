@@ -177,6 +177,8 @@ function ssh() {
   if [[ "$TERM" =~ "screen" ]] && [ -n "$TMUX" ]; then
     command ssh "$@"
     tmux set-window-option automatic-rename "on" 1> /dev/null
+  elif [[ -n "${KITTY_INSTALLATION_DIR}" ]]; then
+    kitten ssh "${@}"
   else
     command env TERM=xterm-256color ssh -o "SendEnv TERM" "$@"
   fi

@@ -28,7 +28,12 @@ fi
 
 # vscode integration
 if [[ "$TERM_PROGRAM" == "vscode" ]]; then
-  source "$(code --locate-shell-integration-path zsh)"
+  source "$(\code --locate-shell-integration-path zsh)"
+  NO_MULTIPLEXER="true"
+fi
+
+if [[ "${TERMINAL_EMULATOR}" == "JetBrains-JediTerm" ]]; then
+  NO_MULTIPLEXER="true"
 fi
 
 if [[ -f ~/.profile ]]; then

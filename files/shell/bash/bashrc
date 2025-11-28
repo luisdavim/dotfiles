@@ -26,7 +26,11 @@ fi
 
 # vscode integration
 if [[ "$TERM_PROGRAM" == "vscode" ]]; then
-  source "$(code --locate-shell-integration-path bash)"
+  source "$(\code --locate-shell-integration-path bash)"
+  NO_MULTIPLEXER="true"
+fi
+
+if [[ "${TERMINAL_EMULATOR}" == "JetBrains-JediTerm" ]]; then
   NO_MULTIPLEXER="true"
 fi
 
