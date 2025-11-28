@@ -166,13 +166,21 @@ function kubectl-cfg() {
       OLD_KUBECONFIG="${KUBECONFIG}"
       tmp_cfg="$(mktemp -t "kubeconfig.XXXXXX")"
       if [[ "$2" == "all" ]]; then
-        for CTX in $(ls -1 ${KFG_DIR}); do
-          KUBECONFIG="${DST}:${KFG_DIR}/${CTX}" \kubectl config view --flatten --raw > "${tmp_cfg}"
+        for CTX in "${KFG_DIR}/"*; do
+          KUBECONFIG="${DST}:${CTX}" \kubectl config view --flatten --raw > "${tmp_cfg}"
         done
       else
         KUBECONFIG="${DST}:${2}" \kubectl config view --flatten --raw > "${tmp_cfg}"
       fi
       mv "${tmp_cfg}" "${DST}"
+      KUBECONFIG="${OLD_KUBECONFIG}"
+      ;;
+    rename)
+      OLD_KUBECONFIG="${KUBECONFIG}"
+      for CTX in "${KFG_DIR}/"*; do
+        export KUBECONFIG="${CTX}"
+        kubectl config rename-context default "$(basename "${CTX}")"
+      done
       KUBECONFIG="${OLD_KUBECONFIG}"
       ;;
     *)
@@ -410,9 +418,9 @@ function kubectl-parallel() {
   # or with multitail
   # multitail -f ${tmpd}/*.kout
 
-  while read -r f; do
-    echo ">> $f"
-    cat "${tmpd}/${f}-${suffix}.kout"
+  while read -r CTX; do
+    echo ">> $CTX"
+    cat "${tmpd}/${CTX}-${suffix}.kout"
     echo "---"
   done <<< "${ctxs}"
 
