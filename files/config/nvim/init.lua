@@ -616,8 +616,8 @@ end)
 now(function()
   local function build_blink(params)
     vim.notify('Building blink.cmp', vim.log.levels.INFO)
-    local obj = vim.system({ 'cargo', 'build', '--release' }, { cwd = params.path }):wait()
-    if obj.code == 0 then
+    local res = vim.system({ 'cargo', 'build', '--release' }, { cwd = params.path }):wait()
+    if res.code == 0 then
       vim.notify('Building blink.cmp done', vim.log.levels.INFO)
     else
       vim.notify('Building blink.cmp failed', vim.log.levels.ERROR)
@@ -1138,7 +1138,7 @@ end)
 
 -- Git and diff
 
-now(function()
+later(function()
   -- Define a function to toggle diff mode in all windows
   local function diffToggle()
     if vim.wo.diff then
@@ -1550,6 +1550,28 @@ later(function()
   })
 end)
 
+later(function()
+  add({
+    source = 'chrishrb/gx.nvim',
+    depends = {
+      'nvim-lua/plenary.nvim',
+    }
+  })
+
+  require("gx").setup({
+    handlers = {
+      plugin = true,
+      github = true,
+      brewfile = true,
+      package_json = true,
+      search = true,
+      go = true,
+    }
+  })
+
+  keymap({ "n", "x" }, "gx", "<cmd>Browse<cr>", { desc = 'Browse' })
+end)
+
 -- Language specific
 
 -- Golang
@@ -1651,26 +1673,4 @@ later(function()
   keymap("n", "<leader>wt", function()
     pasteWindow('tabnew')
   end, { silent = true, desc = 'Paste window in tab' })
-end)
-
-later(function()
-  add({
-    source = 'chrishrb/gx.nvim',
-    depends = {
-      'nvim-lua/plenary.nvim',
-    }
-  })
-
-  require("gx").setup({
-    handlers = {
-      plugin = true,
-      github = true,
-      brewfile = true,
-      package_json = true,
-      search = true,
-      go = true,
-    }
-  })
-
-  keymap({ "n", "x" }, "gx", "<cmd>Browse<cr>", { desc = 'Browse' })
 end)

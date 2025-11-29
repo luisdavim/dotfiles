@@ -69,7 +69,11 @@ function hgrep() {
       grep --text "${@}" "${_eternal_history_histfile}"
     ) | column -ts $'\t'
   else
-    history
+    # history
+    (
+      echo -e '#ID\t#USER\t#SEQ\t#DATE\t#TIME\t#DURATION\t#COMMAND'
+      tail -n 100 "${_eternal_history_histfile}"
+    ) | column -ts $'\t'
   fi
 }
 
