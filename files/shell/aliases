@@ -62,10 +62,12 @@ function fawk() {
 }
 
 # History
+HISTHEADER="${HISTHEADER:-#ID\t#USER\t#SEQ\t#DATE\t#TIME\t#DURATION\t#COMMAND}"
+
 function hgrep() {
   if [ -n "$1" ]; then
     (
-      echo -e '#ID\t#USER\t#SEQ\t#DATE\t#TIME\t#DURATION\t#COMMAND'
+      echo -e "${HISTHEADER}"
       grep --text "${@}" "${_eternal_history_histfile}"
     ) | column -ts $'\t'
   else
@@ -84,7 +86,7 @@ function hbtween() {
   local start="$(echo "${1}" | tr -d '\- :')"
   local finish="$(echo "${2}" | tr -d '\- :')"
   (
-    echo -e '#ID\t#USER\t#SEQ\t#DATE\t#TIME\t#DURATION\t#COMMAND'
+    echo -e "${HISTHEADER}"
     gawk -v s="${start}" -v f="${finish}" 'match($4$5, "([0-9]+)-([0-9]+)-([0-9]+)\s?([0-9]+):([0-9]+)", ary) {D=ary[1] ary[2] ary[3] ary[4] ary[5]; if (D > s && D < f) print}' "${_eternal_history_histfile}" | grep "${3}"
   ) | column -ts $'\t'
 }

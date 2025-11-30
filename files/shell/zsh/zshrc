@@ -105,6 +105,9 @@ DISABLE_AUTO_TITLE="true"
 # see 'man strftime' for details.
 # HIST_STAMPS="mm/dd/yyyy"
 
+# Header to display on history commands
+HISTHEADER='#ID\t#USER\t#DATE\t#TIME\t#DURATION\t#COMMAND'
+
 setopt extended_history       # record timestamp of command in HISTFILE
 setopt hist_expire_dups_first # delete duplicates first when HISTFILE size exceeds HISTSIZE
 setopt hist_find_no_dups

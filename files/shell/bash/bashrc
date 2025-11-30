@@ -94,6 +94,9 @@ export HISTFILESIZE=200000
 # export HISTTIMEFORMAT="%F %T "
 export HISTTIMEFORMAT="%d-%m-%Y %H:%M:%S "
 
+# Header to display on history commands
+export HISTHEADER='#ID\t#DATE\t#TIME\t#COMMAND'
+
 __bash_history_sync() {
   builtin history -a
   builtin history -c
@@ -107,7 +110,7 @@ history() {
 
 _eternal_history_histfile=~/.bash_eternal_history
 
-export PROMPT_COMMAND='echo "$(history 1)" >> $_eternal_history_histfile'"; __bash_history_sync ${PROMPT_COMMAND}"
+export PROMPT_COMMAND='echo "$(history 1| sed "s/ /\t/;s/ /\t/;s/ /\t/;s/ /\t/" | tr -s "\t")" >> $_eternal_history_histfile'"; __bash_history_sync ${PROMPT_COMMAND}"
 
 # CTRL+R Alternatives
 
