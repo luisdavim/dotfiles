@@ -5,7 +5,7 @@ dotfiles_dir="$(dirname "$0")"
 # shellcheck source=./lib.sh
 source "${dotfiles_dir}/lib.sh"
 
-if [[ $OSTYPE != *"android"* ]]; then
+if [[ "${OSTYPE}" != *"android"* ]]; then
   echo 'Doesnt look like you are on Android'
   echo '  please try the install.sh script'
   exit 1

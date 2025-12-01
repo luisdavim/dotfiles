@@ -8,7 +8,7 @@ source "${dotfiles_dir}/lib.sh"
 export HOMEBREW_NO_AUTO_UPDATE=1
 export HOMEBREW_NO_INSTALL_CLEANUP=1
 
-if [[ $OSTYPE != "darwin"* ]]; then
+if [[ "${OSTYPE}" != "darwin"* ]]; then
   echo 'Doesnt look like you are on OS X'
   echo '  please try the install.sh script'
   exit 1
