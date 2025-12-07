@@ -1,68 +1,111 @@
 # Dotfiles
 
-## What's included
+Personal dotfiles and workstation bootstrap scripts.
 
-- a bash and zsh configuration
-- a set of shell aliases
-- some kubectl plugins
-- some useful scripts
-- installs https://github.com/magicmonty/bash-git-prompt.git
-- installs https://github.com/jonmosco/kube-ps1
-- a custom theme for bash-git-prompt that includes kube-ps1
-- installs https://github.com/gpakosz/.tmux
-- a custom theme for tmux
-- vim/neovim configuration
-- Atom configuration including list of installed packages
-- VSCode configuration including list of installed packages
-- i3 and compton configuration files
-- i3blocks scripts
-- iTerm profile
-- Hammerspoon configuration scripts
+This repository contains my personal shell, editor and window manager configuration, helper scripts and an installer that can bootstrap a macOS, Ubuntu (Linux) or Android (Termux) environment.
 
-## The install script
+If you're using this repository as a reference or to bootstrap a new machine, please read the Quick Start and the Safety & Customization sections before running any scripts.
 
-The install script supports macOS, Linux (Ubuntu) and Android ([Termux](https://termux.com)) and will install my custom dotfiles but also some extra packages and fonts, you can select what to install by passing an argument to the install script:
+## Highlights
 
-```sh
-./install all # to bootstrap a new workstation
-./install dotfiles # will install the dotfiles only (.vimrc .bashrc etc...)
-./install fonts # will install some powerline patched fonts
-./install vimplugins # will install the vim plugins from the vimrc
-./install atompackages # will install the atom plugins and configuration
-./install packages # will install the packages listed in files/pkgs/apt.lst (or brew.lst and cask.lst if running on macOS)
-./install i3 # will install and configure i3
-```
+This repo includes (but is not limited to):
 
-To install on android use:
+- Bash and Zsh configuration (aliases, prompts, environment)
+- Custom bash-git-prompt theme (includes kube-ps1 integration)
+- tmux configuration (gpakosz/.tmux + custom theme)
+- Vim / Neovim configuration and plugin install helpers
+- Atom and VSCode configuration + package lists
+- i3 and compton configuration and i3blocks scripts
+- Hammerspoon configuration
+- Useful scripts and kubectl plugins
+- Installer script to install dotfiles, packages and fonts
+- Backup script to export dotfiles, package lists and repos
+
+## Quick Start
+
+1. Clone the repo:
 
 ```sh
-termux-fix-shebang install.sh; ./install.sh
+git clone https://github.com/luisdavim/dotfiles.git
+cd dotfiles
 ```
 
-**NOTE:** Before running the install script you **should** take a **look at** the **config.sh** file and edit it to your preferences
+2. Inspect configuration before installing:
 
-## The backup script
+```sh
+less config.sh
+```
 
-The backup script can backup and restore your:
+3. Bootstrap a new workstation (interactive installer):
 
-- List of deb repos
+```sh
+./install.sh all
+```
+
+Or run a specific installer task:
+
+```sh
+./install.sh dotfiles      # install dotfiles only (.vimrc, .bashrc, etc.)
+./install.sh fonts         # install powerline-patched fonts
+./install.sh vimplugins    # install vim/neovim plugins
+./install.sh atompackages  # install Atom packages and config
+./install.sh packages      # install packages from files/pkgs/apt.lst (or brew/cask on macOS)
+./install.sh i3            # configure i3 (if applicable)
+```
+
+On Termux (Android):
+
+```sh
+termux-fix-shebang install.sh
+./install.sh
+```
+
+## Requirements
+
+- bash or zsh
+- git
+- For macOS: Homebrew (if using the brew/cask paths)
+- For Ubuntu: apt
+- For Termux: Termux environment
+
+The install script may require sudo for some package operations.
+
+## Safety & Customization (IMPORTANT)
+
+Before running the installer you should review and (if needed) edit config.sh to reflect your preferences and environment. The installer will create symlinks and may install packages on your system.
+
+- Open config.sh and change variables such as DOTFILES_DIR, INSTALL_PACKAGES and any username or platform-specific flags.
+- Back up any existing configuration files you care about (e.g., ~/.bashrc, ~/.vimrc) before installing.
+
+## Backup & Restore
+
+A backup script is included to export or restore:
+
+- List of apt or brew repositories
 - Installed packages
-- Atom packages
-- Dotfiles
+- Atom packages and configuration
+- Dotfiles managed by the installer
 
 Usage examples:
 
 ```sh
-./backup.sh dotfiles # Will backup your dotfiles, the ones managed by the install.sh script
-./backup.sh atom # Will backup your atom configuration files and installed package list
-./backup.sh repos # Will backup your deb package repos
+./backup.sh dotfiles   # backup dotfiles managed by install.sh
+./backup.sh atom       # backup atom configuration and package list
+./backup.sh repos      # backup deb package repos
 ```
 
-## For more information check out the other README files and the code
+Restore follows similar commands; read the backup.sh header for details.
 
-```console
+## Repository layout
+
+Top-level files:
+
+```
 .
 ├── README.md
+├── install.sh
+├── backup.sh
+├── config.sh
 └── files
     ├── bash
     │   └── README.md
@@ -71,3 +114,37 @@ Usage examples:
     └── i3
         └── README.md
 ```
+
+See the sub-README files under files/ for component-specific documentation.
+
+## Troubleshooting
+
+- If install.sh fails on package installation, re-run with logs enabled or run the failing command manually to inspect errors.
+- On macOS, ensure Homebrew is installed and up to date.
+- On Termux, use termux-fix-shebang before running the installer to correct script shebangs.
+- If a prompt or plugin installation doesn't behave as expected, check the corresponding dotfile (e.g., .vimrc, .tmux.conf) and the component README.
+
+## Contributing
+
+This repository is my personal configuration. If you want to adapt parts for your use, feel free to open issues or PRs suggesting improvements. If you submit a PR:
+
+- Keep changes focused and documented.
+- Explain why the change is useful and platform considerations.
+- Do not include credentials or machine-specific data.
+
+## License & Credits
+
+- See LICENSE (if included) for license details.
+- This setup installs and integrates several external projects:
+  - https://github.com/magicmonty/bash-git-prompt
+  - https://github.com/jonmosco/kube-ps1
+  - https://github.com/gpakosz/.tmux
+  - Other small scripts and plugins referenced in files/
+
+## Contact
+
+If you have questions about these dotfiles, you can open an issue on the repository.
+
+---
+
+Enjoy — and remember to review config.sh before running any automated scripts.
