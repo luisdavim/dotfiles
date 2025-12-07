@@ -76,15 +76,16 @@ now(function()
   set.updatetime = 300
   set.completeopt = 'menuone'
   set.hlsearch = true
+  set.winborder = border_style
 
-  vim.o.number = true
-  vim.o.autoindent = true
+  set.number = true
+  set.autoindent = true
   if vim.fn.has('nvim-0.12') == 1 then
-    vim.o.pumborder = border_style
+    set.pumborder = border_style
   end
 
   -- Use rg
-  vim.o.grepprg = [[rg --glob "!.git" --no-heading --vimgrep --follow $*]]
+  set.grepprg = [[rg --glob "!.git" --no-heading --vimgrep --follow $*]]
   set.grepformat = vim.opt.grepformat ^ { "%f:%l:%c:%m" }
 
   -- Automatically create parent directories
@@ -217,11 +218,6 @@ end)
 
 now(function() require('mini.extra').setup() end)
 
--- later(function() require('mini.animate').setup() end)
--- later(function() require('mini.base16').setup() end)
--- later(function() require('mini.colors').setup() end)
--- later(function() require('mini.hues').setup() end)
-
 later(function() require('mini.ai').setup() end)
 later(function() require('mini.align').setup() end)
 later(function() require('mini.comment').setup() end)
@@ -259,9 +255,9 @@ now(function()
   require('treesitter-context').setup()
 
   -- jump to context
-  -- vim.keymap.set("n", "[c", function()
-  --   require("treesitter-context").go_to_context(vim.v.count1)
-  -- end, { silent = true })
+  vim.keymap.set("n", "[p", function()
+    require("treesitter-context").go_to_context(vim.v.count1)
+  end, { silent = true })
 
   local ensure_installed = {
     'comment', 'lua', 'luadoc', 'go', 'c', 'bash',
@@ -269,6 +265,7 @@ now(function()
     'html', 'markdown', 'markdown_inline', 'typst', -- 'latex',
     'diff', 'starlark', 'gitcommit', 'vim', 'vimdoc', 'help',
   }
+  -- filetype overrides
   local syntax_map = {
     ['tiltfile'] = 'starlark',
   }
@@ -339,7 +336,13 @@ now(function()
   })
 end)
 
--- Theme setup
+-- Theme and UI setup
+
+-- later(function() require('mini.animate').setup() end)
+-- later(function() require('mini.base16').setup() end)
+-- later(function() require('mini.colors').setup() end)
+-- later(function() require('mini.hues').setup() end)
+
 now(function()
   add({
     source = 'projekt0n/github-nvim-theme',
@@ -360,15 +363,6 @@ now(function() require('mini.tabline').setup() end)
 now(function() require('mini.statusline').setup() end)
 
 now(function() require('mini.starter').setup() end)
-
-now(function()
-  require('mini.misc').setup({ make_global = { "put", "put_text" } })
-  MiniMisc.setup_restore_cursor()
-  MiniMisc.setup_auto_root({
-    'requirements.txt', 'setup.cfg', 'package.json', 'go.mod', 'Cargo.toml', '.projections.json',
-    'PROJECT', 'Makefile', 'pom.xml', '.root', '.repo', '.git', '.hg', '.bzr', '.svn',
-  })
-end)
 
 -- Snacks
 now(function()
@@ -483,6 +477,7 @@ now(function()
   })
 end)
 
+-- Use mini.pick as select UI
 -- later(function()
 --   -- local ui_select_orig = vim.ui.select
 --   require('mini.pick').setup()
@@ -651,6 +646,7 @@ now(function()
 
   local implementation = "prefer_rust"
   if is_andriod() then
+    -- requiers rs nightly, not available on android
     implementation = "lua"
   end
   require('blink.cmp').setup({
@@ -1540,6 +1536,15 @@ later(function()
   })
 end)
 
+now(function()
+  require('mini.misc').setup({ make_global = { "put", "put_text" } })
+  MiniMisc.setup_restore_cursor()
+  MiniMisc.setup_auto_root({
+    'requirements.txt', 'setup.cfg', 'package.json', 'go.mod', 'Cargo.toml', '.projections.json',
+    'PROJECT', 'Makefile', 'pom.xml', '.root', '.repo', '.git', '.hg', '.bzr', '.svn',
+  })
+end)
+
 later(function()
   require('mini.trailspace').setup()
 
@@ -1586,14 +1591,6 @@ later(function()
 end)
 
 -- Language specific
-
--- Golang
--- later(function ()
---   add({
---     source = "yanskun/gotests.nvim"
---   })
---   require('gotests').setup()
--- end)
 
 -- Markdown rendering
 later(function()
