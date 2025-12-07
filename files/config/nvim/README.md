@@ -36,7 +36,7 @@ Core options & behavior
 - Universal options: UTF-8 encoding, unnamedplus clipboard, tab width 2, expandtab, smart indent, completeopt set to menuone, hlsearch true, relative file formats = "unix,dos,mac", etc.
 - grepprg uses ripgrep: rg --glob "!.git" --no-heading --vimgrep --follow $*
 - Auto-create parent directories before write (BufWritePre autocommand).
-- Auto-write on InsertLeavePre/TextChanged if toggled on (see ToggleAutroSave).
+- Auto-write on InsertLeavePre/TextChanged if toggled on (see ToggleAutoSave).
 - Help buffers are automatically opened in leftmost window (wincmd H).
 - Filetype detection enhancements for various filenames and paths (Dockerfile, nginx.conf, Tiltfile, helm charts, .kube files, etc.)
 - Commentstring for helm filetype is set to "{{/* %s */}}".
@@ -50,91 +50,91 @@ Key mappings (high level)
 The config sets many keymaps. Below are the most used ones grouped:
 
 Basic editing & navigation
-- Visual indent: v: <Tab> -> >gv, <S-Tab> -> <gv
-- Normal: <Tab> and <S-Tab> for indent adjustments
-- Space toggles folding in visual mode; normal <space> toggles fold (za)
-- Snippet-friendly <Tab> in insert/select mode (uses vim.snippet.jump)
-- Clear search highlight: <C-L>
-- Toggle spell check: <leader>sc
+- Visual indent: v: `<Tab>` -> >gv, `<S-Tab>` -> <gv
+- Normal: `<Tab>` and `<S-Tab>` for indent adjustments
+- Space toggles folding in visual mode; normal `<space>` toggles fold (za)
+- Snippet-friendly `<Tab>` in insert/select mode (uses ``vim.snippet.jump``)
+- Clear search highlight: `<C-L>` (<kbd>Ctrl</kbd> + <kbd>l</kbd>)
+- Toggle spell check: `<leader>sc`
 
 MiniFiles / Explorer and Snacks pickers
-- Open MiniFiles: <C-o>
-- Snacks file picker: <C-p>
-- Snacks grep picker: <C-f>
-- Toggle explorer (snacks): <C-_> (this tries toggling an existing explorer picker or opens one)
+- Open MiniFiles: `<C-o>` (<kbd>Ctrl</kbd> + <kbd>o</kbd>)
+- Snacks file picker: `<C-p>` (<kbd>Ctrl</kbd> + <kbd>p</kbd>)
+- Snacks grep picker: `<CC-f>` (<kbd>Ctrl</kbd> + <kbd>f</kbd>)
+- Toggle explorer (snacks): `<C-_>` (this tries toggling an existing explorer picker or opens one -  (<kbd>Ctrl</kbd> + <kbd>/</kbd>))
 - Gitbrowse: :Gitbrowse
-- Outline (buffer/workspace): :Outline or <leader>o
+- Outline (buffer/workspace): `:Outline` or `<leader>o`
 
 Window & buffer helpers
-- Yank/paste window: <leader>wy (yank window), <leader>wp (paste as edit), <leader>ws (paste in split), <leader>wv (paste in vertical split), <leader>wt (paste as tab)
-- Diff toggle: <Leader>df or :DiffToggle
-- Gblame command for vertical Git blame: :Gblame
-- Flog command (gitgraph draw): :Flog
+- Yank/paste window: `<leader>wy` (yank window), `<leader>wp` (paste as edit), `<leader>ws` (paste in split), `<leader>wv` (paste in vertical split), `<leader>wt` (paste as tab)
+- Diff toggle: `<Leader>df` or `:DiffToggle`
+- Gblame command for vertical Git blame: `:Gblame`
+- Flog command (gitgraph draw): `:Flog`
 
 LSP-related
-- Rename: <leader>rn (uses Snacks.input prompt)
-- Code actions: <leader>ca (visual or normal)
-- Diagnostics picker: <leader>ld
-- Go to definition: gd
-- Declarations: gD
-- Implementations: gi
-- Type definitions: go
-- References: gr
-- Signature help: gs
-- Symbols: gS
-- Workspace symbols: gf
-- Next diagnostic: ]g ; previous: [g
-- Format file (async): <F3> ; Format command: :Format
-- Toggle inlay hints: <leader>H (buffer-local)
+- Rename: `<leader>rn` (uses Snacks.input prompt)
+- Code actions: `<leader>ca` (visual or normal)
+- Diagnostics picker: `<leader>ld`
+- Go to definition: `gd`
+- Declarations: `gD`
+- Implementations: `gi`
+- Type definitions: `go`
+- References: `gr`
+- Signature help: `gs`
+- Symbols: `gS`
+- Workspace symbols: `gf`
+- Next diagnostic: ]g ; previous: `[g`
+- Format file (async): `<F3>` ; Format command: `:Format`
+- Toggle inlay hints: `<leader>H` (buffer-local)
 
 DAP / Debugging
-- Start/continue: <F5>
-- Step over: <F10>
-- Step into: <F11>
-- Step out: <F12>
-- Toggle breakpoint: <leader>b
-- Set breakpoint: <Leader>B
-- Set logpoint: <Leader>lp
-- Open repl: <Leader>dr
-- Debug last: <Leader>dl
-- Open DAP UI: <Leader>w ; Close DAP UI: <Leader>W ; :DapCloseUI
+- Start/continue: `<F5>`
+- Step over: `<F10>`
+- Step into: `<F11>`
+- Step out: `<F12>`
+- Toggle breakpoint: `<leader>b`
+- Set breakpoint: `<Leader>B`
+- Set logpoint: `<Leader>lp`
+- Open repl: `<Leader>dr`
+- Debug last: `<Leader>dl`
+- Open DAP UI: `<Leader>w` ; Close DAP UI: `<Leader>W` ; `:DapCloseUI`
 
 User commands and toggles
 -------------------------
 A number of user commands are created for toggling behaviors or invoking features:
 
-- :ToggleAutroSave
-  - Toggles automatic saving behavior handled by the config (note: the command name in the config is spelled ToggleAutroSave).
-  - When enabled, autowriteall is toggled and buffers are saved on InsertLeavePre/TextChanged/TextChangedP.
+- `:ToggleAutoSave`
+  - Toggles automatic saving behavior handled by the config
+  - When enabled, `autowriteall` is toggled and buffers are saved on InsertLeavePre/TextChanged/TextChangedP.
 
-- :ToggleFormatOnSave
+- `:ToggleFormatOnSave`
   - Enabled by default. When enabled, BufWritePre triggers vim.lsp.buf.format to format the buffer before write.
 
-- :Format
+- `:Format`
   - Run vim.lsp.buf.format({ async = false })
 
-- :QuickFix
+- `:QuickFix`
   - Applies 'source.fixAll' code actions via vim.lsp.buf.code_action
 
-- :Outline [buffer|workspace]
+- `:Outline [buffer|workspace]`
   - Toggle an outline view (uses Snacks pickers for lsp_symbols or lsp_workspace_symbols)
 
-- :DiffToggle
+- `:DiffToggle`
   - Toggle diff mode for all windows (turns cursorline on/off appropriately)
 
-- :Gblame
+- `:Gblame`
   - Vertical Git blame for current file (uses Git blame -- %)
 
-- :Flog
+- `:Flog`
   - Draw a gitgraph (gitgraph.draw)
 
-- :DapCloseUI
+- `:DapCloseUI`
   - Closes the nvim-dap-ui
 
-- :ToggleTrimSpaceOnSave
+- `:ToggleTrimSpaceOnSave`
   - Toggle automatic trailing-space trimming on BufWritePre
 
-- :ToggleTrimSpaceOnSave and :ToggleAutroSave and :ToggleFormatOnSave are simple boolean toggles scoped to the running Neovim session.
+- `:ToggleTrimSpaceOnSave` and `:ToggleAutoSave` and `:ToggleFormatOnSave` are simple boolean toggles scoped to the running Neovim session.
 
 Treesitter
 ==========
@@ -177,11 +177,11 @@ Snacks (picker framework)
 - folke/snacks.nvim is added and configured as a comprehensive picker/utility framework.
 - Snacks replaces or enhances file picker, explorer, gitbrowse, and more.
 - Keybindings:
-  - Snacks.picker.files → <C-p>
-  - Snacks.picker.grep → <C-f>
-  - Snacks.picker.explorer toggle → <C-_>
+  - Snacks.picker.files → `<C-p>`
+  - Snacks.picker.grep → `<C-f>`
+  - Snacks.picker.explorer toggle → `<C-_>`
 - Snack pickers are used as LSP pickers (definitions, references, symbols, workspace symbols, diagnostics)
-- Snacks.gitbrowse has URL patterns and is wired with the :Gitbrowse command.
+- Snacks.gitbrowse has URL patterns and is wired with the `:Gitbrowse` command.
 
 Git / diff / blame integrations
 ===============================
@@ -189,7 +189,7 @@ Git / diff / blame integrations
 - blame.nvim (FabijanZulj/blame.nvim) added later and set up.
 - vgit.nvim is loaded on VimEnter via later_on('VimEnter') and configured to disable live_blame default.
 - isakbm/gitgraph.nvim + diffview.nvim are set up now (so gitgraph shell alias works). Hooks with DiffviewOpen integration are configured.
-- :Gblame and :Flog commands are available.
+- `:Gblame` and `:Flog` commands are available.
 
 DAP (debugging)
 ===============
@@ -250,37 +250,38 @@ Other notable plugins
 Frequently used commands & keymaps (quick reference)
 ===================================================
 User commands
-- :ToggleAutroSave — toggle automatic in-session auto-save (note spelling)
-- :ToggleFormatOnSave — toggle LSP format on save
-- :ToggleTrimSpaceOnSave — toggle trailing whitespace trimming on save
-- :Format — run LSP format for buffer
-- :QuickFix — apply source.fixAll
-- :Outline [buffer|workspace] — open outline picker
-- :DiffToggle — toggle diff mode in all windows
-- :Gblame — vertical Git blame for file
-- :Flog — open gitgraph with a large history
-- :DapCloseUI — close dap ui
+- `:ToggleAutoSave` — toggle automatic in-session auto-save (note spelling)
+- `:ToggleFormatOnSave` — toggle LSP format on save
+- `:ToggleTrimSpaceOnSave` — toggle trailing whitespace trimming on save
+- `:Format` — run LSP format for buffer
+- `:QuickFix` — apply source.fixAll
+- `:Outline` [buffer|workspace] — open outline picker
+- `:DiffToggle` — toggle diff mode in all windows
+- `:Gblame` — vertical Git blame for file
+- `:Flog` — open gitgraph with a large history
+- `:DapCloseUI` — close dap ui
 
 Keymaps
-- <C-p> → Snacks file picker
-- <C-f> → Snacks grep picker
-- <C-_> → Toggle snacks explorer
-- <C-o> → MiniFiles.open (explorer)
-- <leader>sc → toggle spell checking
-- <leader>o → outline toggle (buffer)
-- <leader>rn → rename (prompts via Snacks)
-- <leader>ca → code actions
-- <leader>ld → diagnostics picker
+- `<C-p>` → Snacks file picker
+- `<C-f>` → Snacks grep picker
+- `<C-_>` → Toggle snacks explorer
+- `<C-o>` → MiniFiles.open (explorer)
+-`<leader>sc` → toggle spell checking
+-`<leader>o` → outline toggle (buffer)
+-`<leader>rn` → rename (prompts via Snacks)
+-`<leader>ca` → code actions
+-`<leader>ld` → diagnostics picker
 - gd / gD / gi / go / gr / gS / gf → LSP navigation via Snacks pickers
-- <F3> → format file
-- <F5> / <F10> / <F11> / <F12> → dap controls
-- <leader>b, <Leader>B, <Leader>lp, <Leader>dr, <Leader>dl → dap breakpoints/repl/debug last
-- <leader>wy, <leader>wp, <leader>ws, <leader>wv, <leader>wt → yank/paste windows
+-`<F3>` → format file
+-`<F5>` /`<F10>` /`<F11>` /`<F12>` → dap controls
+- `<leader>b`, `<Leader>B`, `<Leader>lp`, `<Leader>dr`,`<Leader>dl` → dap breakpoints/repl/debug last
+- `<leader>wy`, `<leader>wp`, `<leader>ws`, `<leader>wv`,`<leader>wt` → yank/paste windows
 
 How to add or modify plugins
 ============================
 This setup uses MiniDeps.add to register plugins. Example pattern used in the config:
 
+```lua
 now(function()
   add({
     source = 'owner/repo',
@@ -289,6 +290,7 @@ now(function()
     checkout = 'main',
   })
 end)
+```
 
 Guidelines:
 - If you want a plugin to load immediately, register it inside a now(...) call.
@@ -312,10 +314,10 @@ Troubleshooting / Tips
 ======================
 - If a plugin fails to build (blink.cmp), check the build logs. The config uses vim.system and notifies on success/failure.
 - If Treesitter parser installation hangs or does not start — ensure git and network connectivity and that your Neovim's stdpath('data') folder is writable.
-- If LSP servers are not present, run :Mason to open mason UI and install servers; mason-lspconfig is configured to ensure several servers.
+- If LSP servers are not present, run `:Mason` to open mason UI and install servers; mason-lspconfig is configured to ensure several servers.
 - If LSP functionality isn't working for a server, check mason get_installed servers and logs to see if they've been configured. The config calls vim.lsp.config(server, config) for each installed server from mason-lspconfig.
 - The config uses many autocommands and buffer-local settings in on_attach; if a feature like inlay hints doesn't show up, make sure the server advertises textDocument/inlayHint capability.
-- Spelling: ToggleAutroSave is intentionally the command name in the config; if you prefer ToggleAutoSave you can rename it in the config and update usages.
+- Spelling: ToggleAutoSave is intentionally the command name in the config; if you prefer ToggleAutoSave you can rename it in the config and update usages.
 
 Extending / Personalizing
 =========================
@@ -331,96 +333,98 @@ Notes
 - Leader: \
 - Many LSP mappings are buffer-local (set on LspAttach).
 - Some mappings are created per-explorer buffer (MiniFiles) or per-snacks picker.
-- Command names reflect exact spelling in the config (e.g., ToggleAutroSave).
+- Command names reflect exact spelling in the config (e.g., ToggleAutoSave).
 
 User commands
-- :ToggleAutroSave — toggle automatic saving (autowriteall + save on InsertLeavePre/TextChanged)
-- :Gitbrowse — open Snacks gitbrowse
-- :DiffToggle — toggle diff mode in all windows
-- :Gblame — vertical Git blame for current file
-- :Flog — draw gitgraph (history)
-- :DapCloseUI — close nvim-dap-ui
-- :ToggleFormatOnSave — toggle format-on-save for LSP formatting
-- :Format — run LSP format for current buffer
-- :QuickFix — run source.fixAll code-action apply
-- :LspToggleHints — toggle inlay hints for current buffer
-- :Outline [buffer|workspace] — toggle outline view (buffer or workspace)
-- :ToggleTrimSpaceOnSave — toggle trimming trailing whitespace on save
+- `:ToggleAutoSave` — toggle automatic saving (autowriteall + save on InsertLeavePre/TextChanged)
+- `:Gitbrowse` — open Snacks gitbrowse
+- `:DiffToggle` — toggle diff mode in all windows
+- `:Gblame` — vertical Git blame for current file
+- `:Flog` — draw gitgraph (history)
+- `:DapCloseUI` — close nvim-dap-ui
+- `:ToggleFormatOnSave` — toggle format-on-save for LSP formatting
+- `:Format` — run LSP format for current buffer
+- `:QuickFix` — run source.fixAll code-action apply
+- `:LspToggleHints` — toggle inlay hints for current buffer
+- `:Outline` [buffer|workspace] — toggle outline view (buffer or workspace)
+- `:ToggleTrimSpaceOnSave` — toggle trimming trailing whitespace on save
+
+Note: `<C-_>` is <kbd>Ctrl</kbd> + <kbd>/</kbd>
 
 Global key mappings
-- <C-L> — clear search highlight (:noh)
-- <leader>sc — toggle spell checker (toggle vim.opt.spell)
+- `<C-L>` — clear search highlight (:noh)
+-`<leader>sc` — toggle spell checker (toggle vim.opt.spell)
 - Visual indent:
-  - v: <Tab> → indent (">gv")
-  - v: <S-Tab> → unindent ("<gv")
+  - v: `<Tab>` → indent (">gv")
+  - v: `<S-Tab>` → unindent ("<gv")
 - Normal indent:
-  - n: <Tab> → indent line (">>_")
-  - n: <S-Tab> → unindent line ("<<_")
+  - n: `<Tab>` → indent line (">>_")
+  - n: `<S-Tab>` → unindent line ("<<_")
 - Insert:
-  - i: <S-Tab> → <C-D> (shift-tab decreases indent)
+  - i: `<S-Tab>` → `<C-D>` (shift-tab decreases indent)
 - Folding:
-  - v: <Space> → :fold
-  - n: <Space> → za (toggle fold)
+  - v: `<Space>` → :fold
+  - n: `<Space>` → za (toggle fold)
 
 Snippet-friendly Tab
-- modes i,s: <Tab> — expression mapping:
-  - if vim.snippet.active({ direction = 1 }) then jump snippet forward
-  - else literal <Tab>
+- modes i,s: `<Tab>` — expression mapping:
+  - if `vim.snippet.active({ direction = 1 })` then jump snippet forward
+  - else literal `<Tab>`
   (fallback depends on your snippet engine being exposed as vim.snippet)
 
 Snacks (pickers) / file & grep
-- n: <C-p> → Snacks.picker.files (file picker)
-- n: <C-f> → Snacks.picker.grep (live grep)
-- n: <C-_> → toggle Snacks explorer (focus/close/open)
-- :Gitbrowse — open Snacks gitbrowse
+- n: `<C-p>` → Snacks.picker.files (file picker)
+- n: `<C-f>` → Snacks.picker.grep (live grep)
+- n: `<C-_>` → toggle Snacks explorer (focus/close/open)
+- `:Gitbrowse` — open Snacks gitbrowse
 - LSP pickers via Snacks (buffer-local in LspAttach):
-  - gd → definitions
-  - gD → declarations
-  - gi → implementations
-  - go → type definitions
-  - gr → references
-  - gS → document symbols
-  - gf → workspace symbols
-  - <leader>ld → diagnostics picker
-  - <leader>rn → rename (prompts via Snacks.input)
-  - <leader>ca → code actions (normal & visual)
-  - gs → signature help (buffer-local mapped to 'gs')
-  - ]g / [g → next/prev diagnostic (with float)
+  - `gd` → definitions
+  - `gD` → declarations
+  - `gi` → implementations
+  - `go` → type definitions
+  - `gr` → references
+  - `gS` → document symbols
+  - `gf` → workspace symbols
+  - `<leader>ld` → diagnostics picker
+  - `<leader>rn` → rename (prompts via Snacks.input)
+  - `<leader>ca` → code actions (normal & visual)
+  - `gs` → signature help (buffer-local mapped to 'gs')
+  - `]g` / `[g` → next/prev diagnostic (with float)
 
 MiniFiles / Explorer (global & per-explorer)
-- n: <C-o> → MiniFiles.open
+- n: `<C-o>` → MiniFiles.open
 - In explorer buffers:
-  - n: g. → toggle dotfiles in explorer
-  - n: <C-s> → open selected path in horizontal split (mapped per-explorer buffer)
-  - n: <C-v> → open selected path in vertical split (mapped per-explorer buffer)
+  - n: `g.` → toggle dotfiles in explorer
+  - n: `<C-s>` → open selected path in horizontal split (mapped per-explorer buffer)
+  - n: `<C-v>` → open selected path in vertical split (mapped per-explorer buffer)
 - MiniFiles explorer internal mappings configured (used inside explorer):
-  - close = <Esc>
-  - go_in = <Right>
-  - go_in_plus = L
-  - go_out = <Left>
-  - go_out_plus = H
-  - mark_goto = '
-  - mark_set = m
-  - reset = <BS>
-  - reveal_cwd = @
-  - show_help = g?
-  - synchronize = =
-  - trim_left = <
-  - trim_right = >
+  - close = `<Esc>`
+  - go_in = `<Right>`
+  - go_in_plus = `L`
+  - go_out = `<Left>`
+  - go_out_plus = `H`
+  - mark_goto = `'`
+  - mark_set = `m`
+  - reset = `<BS>`
+  - reveal_cwd = `@`
+  - show_help = `g?`
+  - synchronize = `=`
+  - trim_left = `<`
+  - trim_right = `>`
 
 Windows & buffer helpers
-- <leader>wy — yank current window (store buffer id)
-- <leader>wd — yank current window and close it (store buffer id then q)
-- <leader>wp — paste yanked window as edit (open buffer)
-- <leader>ws — paste yanked window in split
-- <leader>wv — paste yanked window in vertical split
-- <leader>wt — paste yanked window in new tab
+- `<leader>wy` — yank current window (store buffer id)
+- `<leader>wd` — yank current window and close it (store buffer id then q)
+- `<leader>wp` — paste yanked window as edit (open buffer)
+- `<leader>ws` — paste yanked window in split
+- `<leader>wv` — paste yanked window in vertical split
+- `<leader>wt` — paste yanked window in new tab
 
 Formatting & saving
-- <F3> (buffer-local in LspAttach) — format buffer (async)
-- <F4> (buffer-local) — show code actions
-- <F2> (buffer-local) — rename symbol
-- :Format — format via LSP (sync)
+- `<F3>` (buffer-local in LspAttach) — format buffer (async)
+- `<F4>` (buffer-local) — show code actions
+- `<F2>` (buffer-local) — rename symbol
+- `:Format` — format via LSP (sync)
 
 Mini.surround
 - Visual mode:
@@ -430,29 +434,29 @@ Trailing spaces
 - Trim on save (config default): enabled; toggle with :ToggleTrimSpaceOnSave
 
 Git & diff helpers
-- <Leader>df — toggle diff mode for all windows (same as :DiffToggle)
-- :Gblame — vertical Git blame
-- :Flog — open gitgraph draw
+- `<Leader>df` — toggle diff mode for all windows (same as :DiffToggle)
+- `:Gblame` — vertical Git blame
+- `:Flog` — open gitgraph draw
 
 nvim-dap (debugging)
-- n/v: <M-e> (Alt+e) — dapui.eval (evaluate expression)
-- n: <F5> — dap.continue (start/continue)
-- n: <F10> — dap.step_over
-- n: <F11> — dap.step_into
-- n: <F12> — dap.step_out
-- n: <leader>b — dap.toggle_breakpoint
-- n: <Leader>B — dap.set_breakpoint
-- n: <Leader>lp — set logpoint (prompts for message)
-- n: <Leader>dr — dap.repl.open
-- n: <Leader>dl — dap.run_last
-- n: <Leader>w — open DAP UI
-- n: <Leader>W — close DAP UI
-- :DapCloseUI — command to close dap UI
+- n/v: `<M-e>` (Alt+e) — dapui.eval (evaluate expression)
+- n: `<F5>` — dap.continue (start/continue)
+- n: `<F10>` — dap.step_over
+- n: `<F11>` — dap.step_into
+- n: `<F12>` — dap.step_out
+- n: `<leader>b` — dap.toggle_breakpoint
+- n: `<Leader>B` — dap.set_breakpoint
+- n: `<Leader>lp` — set logpoint (prompts for message)
+- n: `<Leader>dr` — dap.repl.open
+- n: `<Leader>dl` — dap.run_last
+- n: `<Leader>w` — open DAP UI
+- n: `<Leader>W` — close DAP UI
+- `:DapCloseUI` — command to close dap UI
 
 Inlay hints
 - Buffer-local mapping (set in on_attach if server supports inlayHint):
-  - n: <leader>H — toggle inlay hints for buffer
-  - :LspToggleHints — same toggle as a command
+  - n: `<leader>H` — toggle inlay hints for buffer
+  - `:LspToggleHints` — same toggle as a command
 
 Other plugin notes / useful mappings
 - Snacks.rename integration: MiniFiles rename action triggers Snacks.rename.on_rename_file
@@ -463,13 +467,8 @@ Other plugin notes / useful mappings
 - hipatterns highlighting: TODO/FIXME/HACK/NOTE highlighted (no keymap)
 
 Buffer-local LSP mappings summary (set on LspAttach)
-- <leader>rn, <leader>ca, <leader>ld, gd, gD, gi, go, gr, gs, gS, gf, ]g, [g, <F3>, <F4>, <F2>, K
+- `<leader>rn`, `<leader>ca`, `<leader>ld`, `gd`, `gD`, `gi`, `go`, `gr`, `gs`, `gS`, `gf`, `]g`, `[g`, `<F3>`, `<F4>`, `<F2>`, `K`
 
 Search tips
-- Grep uses ripgrep: grepprg = rg --glob "!.git" --no-heading --vimgrep --follow $*
+- Grep uses ripgrep: grepprg = `rg --glob "!.git" --no-heading --vimgrep --follow $*`
 - Grep output format is configured for quickfix
-
-If you want, I can:
-- generate a printable one-page cheatsheet (PDF/PNG) using this content,
-- export this as a compact cheatfile with only top-20 most-used commands,
-- or produce a Vimscript/which-key friendly mapping table. Which would you prefer?

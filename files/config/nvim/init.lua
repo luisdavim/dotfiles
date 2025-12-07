@@ -103,7 +103,7 @@ now(function()
 
   --- Automatically save when leaving insert mode
   local auto_save = false
-  vim.api.nvim_create_user_command('ToggleAutroSave', function()
+  vim.api.nvim_create_user_command('ToggleAutoSave', function()
     auto_save = not auto_save
     -- TODO: add extra toggle?
     vim.o.autowriteall = auto_save
