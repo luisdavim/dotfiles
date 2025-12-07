@@ -337,7 +337,7 @@ Notes
 
 User commands
 - `:ToggleAutoSave` — toggle automatic saving (autowriteall + save on InsertLeavePre/TextChanged)
-- `:Gitbrowse` — open Snacks gitbrowse
+- `:Gitbrowse` — open current line in browser, for example, on `github.com`.
 - `:DiffToggle` — toggle diff mode in all windows
 - `:Gblame` — vertical Git blame for current file
 - `:Flog` — draw gitgraph (history)
@@ -439,7 +439,7 @@ Git & diff helpers
 - `:Flog` — open gitgraph draw
 
 nvim-dap (debugging)
-- n/v: `<M-e>` (Alt+e) — dapui.eval (evaluate expression)
+- n/v: `<M-e>` (<kbd>Alt</kbd> + <kbd>e</kbd>) — dapui.eval (evaluate expression)
 - n: `<F5>` — dap.continue (start/continue)
 - n: `<F10>` — dap.step_over
 - n: `<F11>` — dap.step_into
