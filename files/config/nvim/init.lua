@@ -250,6 +250,11 @@ now(function()
   require('nvim-treesitter-textobjects').setup()
   require('treesitter-context').setup()
 
+  -- jump to context
+  -- vim.keymap.set("n", "[c", function()
+  --   require("treesitter-context").go_to_context(vim.v.count1)
+  -- end, { silent = true })
+
   local ensure_installed = {
     'comment', 'lua', 'luadoc', 'go', 'c', 'bash',
     'json', 'yaml', 'python', 'promql', 'sql',
