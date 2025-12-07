@@ -21,6 +21,8 @@ How plugins are managed
   - later_on(event, callback) — attach a single autocommand that will call MiniDeps.now(callback) once the specified event happens
 - Some plugins are added immediately (via now), others are added via later (lazy loaded).
 
+Use `:DepsUpdate` to update plugins from current session with new data from their sources.
+
 Lazy loading: now / later / later_on
 ===================================
 - now(function) — executes immediately during startup (used for critical modules).
@@ -161,6 +163,8 @@ LSP and Mason setup
   - Bordered hover and signature help wrappers
   - LSP keymaps bound to buffer
 
+This configuration uses `Mason` to manage the LSP tools, use `:LspInstall` to see what language servers are available for the current filetype.
+
 Completion (blink.cmp)
 ======================
 - blink.cmp is added and built using a custom build callback (build_blink) that runs `cargo build --release` in the plugin path.
@@ -235,7 +239,7 @@ Other notable plugins
 - nvim-treesitter-textobjects and nvim-treesitter-context
 - snacks.nvim (many pickers)
 - blink.cmp (completion engine)
-- lazydev.nvim (LSP utilities)
+- lazydev.nvim, nvim-lspconfig and mason.nvim (LSP utilities)
 - codeactions-on-save.nvim
 - glance.nvim
 - gx.nvim (gx browsing helpers)
@@ -260,6 +264,9 @@ User commands
 - `:Gblame` — vertical Git blame for file
 - `:Flog` — open gitgraph with a large history
 - `:DapCloseUI` — close dap ui
+- `:LspInstall` — install language servers for the current buffer's filetype
+- `:DepsUpdate` — update plugins
+- `:Mason` — Manage installed tools, like linters and LSPs
 
 Keymaps
 - `<C-p>` → Snacks file picker

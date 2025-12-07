@@ -79,7 +79,9 @@ now(function()
 
   vim.o.number = true
   vim.o.autoindent = true
-  -- vim.o.pumborder = border_style
+  if vim.fn.has('nvim-0.12') == 1 then
+    vim.o.pumborder = border_style
+  end
 
   -- Use rg
   vim.o.grepprg = [[rg --glob "!.git" --no-heading --vimgrep --follow $*]]
@@ -225,6 +227,12 @@ later(function() require('mini.align').setup() end)
 later(function() require('mini.comment').setup() end)
 later(function() require('mini.move').setup() end)
 later(function() require('mini.operators').setup() end)
+
+later(function()
+  require('mini.cmdline').setup({
+    autocomplete = { enable = false },
+  })
+end)
 
 -- Treesitter
 now(function()
