@@ -155,7 +155,8 @@ now(function()
       ['.*/templates/.*%.ya?ml'] = 'helm',
       ['.*/templates/.*%.tpl'] = 'helm',
       ['.*/templates/.*%.txt'] = 'helm',
-      ['.*/helmfile.*%.ya?ml'] = 'helm',
+      ['.*helmfile.*%.ya?ml'] = 'helm',
+      ['.*%.ya?ml%.tm?pl'] = 'gotmpl',
       ['.*%.dockerfile'] = 'dockerfile',
       ['.*%.Tiltfile'] = 'tiltfile',
       ['.*%.tiltfile'] = 'tiltfile',
@@ -260,7 +261,7 @@ now(function()
   end, { silent = true })
 
   local ensure_installed = {
-    'comment', 'lua', 'luadoc', 'go', 'c', 'bash',
+    'comment', 'lua', 'luadoc', 'go', 'gotmpl', 'c', 'bash',
     'json', 'yaml', 'python', 'promql', 'sql',
     'html', 'markdown', 'markdown_inline', 'typst', -- 'latex',
     'diff', 'starlark', 'gitcommit', 'vim', 'vimdoc', 'help',
@@ -268,6 +269,8 @@ now(function()
   -- filetype overrides
   local syntax_map = {
     ['tiltfile'] = 'starlark',
+    ['gotexttmpl'] = 'gotmpl',
+    ['gohtmltmpl'] = 'gotmpl',
   }
   local already_installed = ts_config.get_installed('parsers')
   local parsers_to_install = vim.iter(ensure_installed)
