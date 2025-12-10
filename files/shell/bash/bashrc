@@ -48,6 +48,10 @@ if [ -n "${GHOSTTY_RESOURCES_DIR}" ]; then
   TERM='xterm-ghostty'
 fi
 
+if [ -n "${KITTY_INSTALLATION_DIR}" ]; then
+  export TERM="xterm-kitty"
+fi
+
 if [[ $(tty) == "/dev/tty"* ]] && [[ $OSTYPE == "linux-gnu" ]]; then
   setfont ter-powerline-v16b.psf.gz
 fi

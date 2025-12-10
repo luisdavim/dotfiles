@@ -16,6 +16,10 @@ if [ -n "${GHOSTTY_RESOURCES_DIR}" ]; then
   fi
 fi
 
+if [ -n "${KITTY_INSTALLATION_DIR}" ]; then
+  export TERM="xterm-kitty"
+fi
+
 export NVIM_TUI_ENABLE_TRUE_COLOR=1
 
 # export EDITOR=vim
