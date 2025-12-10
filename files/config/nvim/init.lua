@@ -1211,7 +1211,8 @@ later(function()
   require('blame').setup({})
 end)
 
-later_on('VimEnter', function()
+-- later_on('VimEnter', function()
+now(function()
   add({
     source = 'tanvirtin/vgit.nvim',
     depends = {
