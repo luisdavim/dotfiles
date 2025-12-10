@@ -101,6 +101,9 @@ DAP / Debugging
 - Debug last: `<Leader>dl`
 - Open DAP UI: `<Leader>w` ; Close DAP UI: `<Leader>W` ; `:DapCloseUI`
 
+Treesitter
+- Jump to context `[p`
+
 User commands and toggles
 -------------------------
 A number of user commands are created for toggling behaviors or invoking features:
@@ -355,6 +358,7 @@ User commands
 - `:LspToggleHints` — toggle inlay hints for current buffer
 - `:Outline` [buffer|workspace] — toggle outline view (buffer or workspace)
 - `:ToggleTrimSpaceOnSave` — toggle trimming trailing whitespace on save
+- `:ToggleDiffOverlay` — toggle diff view overlay
 
 Note: `<C-_>` is <kbd>Ctrl</kbd> + <kbd>/</kbd>
 

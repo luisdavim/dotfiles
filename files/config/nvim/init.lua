@@ -1202,6 +1202,9 @@ now(function()
       style = 'number'
     },
   })
+
+  vim.api.nvim_create_user_command('ToggleDiffOverlay', function() diff.toggle_overlay(0) end, {})
+  keymap('n', '<Leader>do', function() diff.toggle_overlay(0) end, { silent = true, desc = 'Toggle diff' })
 end)
 
 later(function()
