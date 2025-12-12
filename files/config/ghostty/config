@@ -7,7 +7,7 @@ font-family-italic = "JetBrainsMono NFM Italic"
 font-family-bold-italic = "JetBrainsMono NFM Bold Italic"
 
 font-size = 14
-font-thicken = true
+font-thicken = false
 
 adjust-underline-position = 4
 adjust-cursor-thickness = 1
