@@ -347,6 +347,19 @@ function kubectl-delete-ns() {
   \kubectl delete ns "${1}"
 }
 
+# note: you may need to add --subresource=status when calling this on some resources
+function kubectl-reset-conds() {
+  \kubectl patch --type merge --patch '{"status":{"conditions":[]}}' "${@}"
+}
+alias kctl-reset-conds='kubectl-reset-conds'
+alias krc='kubectl-reset-conds'
+
+function kubectl-reset-finalizers() {
+  \kubectl patch -p '{"metadata":{"finalizers": []}}' --type=merge "${@}"
+}
+alias kctl-reset-finalizers='kubectl-reset-finalizers'
+alias krf='kubectl-reset-finalizers'
+
 function kubectl-parallel() {
   KFG_DIR=${KFG_DIR:-~/.kube/config.d}
 
