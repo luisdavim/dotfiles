@@ -1224,6 +1224,9 @@ now(function()
   })
   require("vgit").setup({
     settings = {
+      git = {
+        algorithm = 'histogram',
+      },
       live_blame = {
         enabled = false,
       },
