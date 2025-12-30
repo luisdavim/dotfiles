@@ -275,7 +275,7 @@ fi
 # gitprompt configuration
 
 # export KUBE_PS1_CLUSTER_FUNCTION=get_k8s_name
-export KUBE_PS1_NAMESPACE_FUNCTION=get_k8s_ns
+# export KUBE_PS1_NAMESPACE_FUNCTION=get_k8s_ns
 # bash-git-prompt configuration - https://github.com/magicmonty/bash-git-prompt:
 GIT_PROMPT_THEME=Custom # use custom .git-prompt-colors.sh
 [ ! -f "${HOME}/.bash/bash-git-prompt/gitprompt.sh" ] || source "${HOME}/.bash/bash-git-prompt/gitprompt.sh"
