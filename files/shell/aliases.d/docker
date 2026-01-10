@@ -1,32 +1,33 @@
 # vim:set filetype=bash:
 # helix:set-language bash:
 
+if [ -x "$(command -v docker)" ]; then
+  alias dkr='docker'
 
-alias dkr='docker'
+  # Docker aliases
+  alias docker-killall='docker ps -a -q | xargs -r docker kill'
+  alias docker-rm-all='docker ps -a -q | xargs -r docker rm'
+  alias docker-rm-volumes='docker volume prune'
+  alias docker-rmi-untagged='docker rmi $(docker images | awk '\''/^<none>/ {print $3}'\'')'
+  alias docker-rmi-all='docker images -q | xargs -r docker rmi'
+  alias docker-cleanup='docker-killall; docker-rm-all; docker-rmi-all'
+  alias docker-gc='docker rmi $(docker images -f "dangling=true" -q)'
+  alias docker-exec="docker exec -i -t"
+  alias docker-vm="screen $HOME/Library/Containers/com.docker.docker/Data/vms/0/tty"
 
-# Docker aliases
-alias docker-killall='docker ps -a -q | xargs -r docker kill'
-alias docker-rm-all='docker ps -a -q | xargs -r docker rm'
-alias docker-rm-volumes='docker volume prune'
-alias docker-rmi-untagged='docker rmi $(docker images | awk '\''/^<none>/ {print $3}'\'')'
-alias docker-rmi-all='docker images -q | xargs -r docker rmi'
-alias docker-cleanup='docker-killall; docker-rm-all; docker-rmi-all'
-alias docker-gc='docker rmi $(docker images -f "dangling=true" -q)'
-alias docker-exec="docker exec -i -t"
-alias docker-vm="screen $HOME/Library/Containers/com.docker.docker/Data/vms/0/tty"
+  function docker-retag() {
+    for image in $(docker images | grep "${1}" | awk '{print $1}'); do
+      image2=$(echo ${image} | sed -e "s/${1}/${2}/")
+      echo "Retagging ${image} as ${image2}"
+      docker tag ${image} ${image2}
+      docker push ${image2}
+    done
+  }
 
-function docker-retag() {
-  for image in $(docker images | grep "${1}" | awk '{print $1}'); do
-    image2=$(echo ${image} | sed -e "s/${1}/${2}/")
-    echo "Retagging ${image} as ${image2}"
-    docker tag ${image} ${image2}
-    docker push ${image2}
-  done
-}
-
-function docker-enter() {
-  docker exec -i -t $1 /bin/sh
-}
+  function docker-enter() {
+    docker exec -i -t $1 /bin/sh
+  }
+fi
 
 # Colima aliases
 if [ -x "$(command -v colima)" ]; then

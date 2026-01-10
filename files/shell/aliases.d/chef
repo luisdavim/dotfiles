@@ -3,20 +3,30 @@
 
 # Knife and chef aliases
 
-alias setChef='eval "$(chef shell-init bash)"'
-alias useChef='setChef'
+if [ -x "$(command -v chef)" ]; then
+  alias setChef='eval "$(chef shell-init bash)"'
+  alias useChef='setChef'
 
-function chef-env-list-versions() {
-  cdir=$(pwd)
-  cd chef/environments
-  grep -E '".*":\s*"= .*"' * | tr -s " " | tr -d ','| cut -d ':' -f2,3 | sort -u
-  cd $cdir
-}
+  function chef-env-list-versions() {
+    cdir=$(pwd)
+    cd chef/environments
+    grep -E '".*":\s*"= .*"' * | tr -s " " | tr -d ',' | cut -d ':' -f2,3 | sort -u
+    cd $cdir
+  }
+fi
+
+if ! [ -x "$(command -v knife)" ]; then
+  return
+fi
 
 function knife-env-list-versions() {
   cdir=$(pwd)
   cd chef/environments
-  for f in *.json; do echo ">>> $f"; jq '.cookbook_versions' $f; echo ''; done
+  for f in *.json; do
+    echo ">>> $f"
+    jq '.cookbook_versions' $f
+    echo ''
+  done
   cd $cdir
 }
 
@@ -63,7 +73,7 @@ function knife-promote-eq() {
 function knife-promote-lt() {
   cdir=$(pwd)
   cd chef/environments
-  for environment in $(grep -E '".*":\s*"= .*"' * | grep $1 | tr -d ' '| grep -v "$2"); do
+  for environment in $(grep -E '".*":\s*"= .*"' * | grep $1 | tr -d ' ' | grep -v "$2"); do
     version=$(echo $environment | cut -d \" -f4 | tr -d '=')
     environment=$(echo $environment | cut -d \. -f1)
     if [ "$version" = "$(echo -e "$version\n$2" | sort -V | head -n1)" ]; then
@@ -84,4 +94,3 @@ function knife-ciphertext() {
 function knife-delete-attr() {
   knife exec -E "nodes.transform(\"$1\") { |n| n.$2_attrs.delete(\"$3\"); n.save() }"
 }
-

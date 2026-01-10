@@ -1,6 +1,10 @@
 # vim:set filetype=bash:
 # helix:set-language bash:
 
+if ! [ -x "$(command -v sledge)" ]; then
+  return
+fi
+
 function slg-login() {
   if [ -z "$1" ]; then
     CTX=$(kubectl config current-context)

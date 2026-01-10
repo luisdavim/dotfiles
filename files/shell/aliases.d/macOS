@@ -1,45 +1,45 @@
 # vim:set filetype=bash:
 # helix:set-language bash:
 
-if [[ "$OSTYPE" == "darwin"* ]]; then
+if [[ "$OSTYPE" != "darwin"* ]]; then
+  return
+fi
 
-  proxyOFF() {
-    while read -r device; do
-      echo "Disabling proxies for '$device'"
-      sudo networksetup -setstreamingproxystate "$device" off
-      sudo networksetup -setsocksfirewallproxystate "$device" off
-      sudo networksetup -setwebproxystate "$device" off
-      sudo networksetup -setproxyautodiscovery "$device" off
+proxyOFF() {
+  while read -r device; do
+    echo "Disabling proxies for '$device'"
+    sudo networksetup -setstreamingproxystate "$device" off
+    sudo networksetup -setsocksfirewallproxystate "$device" off
+    sudo networksetup -setwebproxystate "$device" off
+    sudo networksetup -setproxyautodiscovery "$device" off
 
-      networksetup -getwebproxy "$device"
-    done < <(networksetup -listallnetworkservices | grep -v '*')
-  }
+    networksetup -getwebproxy "$device"
+  done < <(networksetup -listallnetworkservices | grep -v '*')
+}
 
-  yabai-reload() {
-    # stop, upgrade, start yabai
-    # brew services stop skhd
-    # brew services stop yabai
-    skhd --stop-service
-    yabai --stop-service
-    brew upgrade yabai
-    brew upgrade skhd
-    # brew services start yabai
-    # brew services start skhd
-    yabai --start-service
-    skhd --start-service
+yabai-reload() {
+  # stop, upgrade, start yabai
+  # brew services stop skhd
+  # brew services stop yabai
+  skhd --stop-service
+  yabai --stop-service
+  brew upgrade yabai
+  brew upgrade skhd
+  # brew services start yabai
+  # brew services start skhd
+  yabai --start-service
+  skhd --start-service
 
-    # reinstall the scripting addition
-    sudo yabai --uninstall-sa
-    sudo yabai --install-sa
+  # reinstall the scripting addition
+  sudo yabai --uninstall-sa
+  sudo yabai --install-sa
 
-    # load the scripting addition
-    killall Dock
-  }
+  # load the scripting addition
+  killall Dock
+}
 
-  # Rotate AOC usb-c screen (macOS)
-  if [ -x "$(command -v displayplacer)" ]; then
-    alias aoc_h='displayplacer "id:911709B0-AC89-44B4-22B8-B2DD16CE38C0 res:1920x1200 color_depth:4 scaling:on origin:(0,0) degree:0" "id:CBA6DBB6-02A8-41E2-7E75-791B87F0336D res:1920x1080 hz:60 color_depth:8 scaling:off origin:(1920,0) degree:0"'
-    alias aoc_v='displayplacer "id:911709B0-AC89-44B4-22B8-B2DD16CE38C0 res:1920x1200 color_depth:4 scaling:on origin:(0,0) degree:0" "id:CBA6DBB6-02A8-41E2-7E75-791B87F0336D res:1080x1920 hz:60 color_depth:8 scaling:off origin:(1920,-780) degree:90"'
-  fi
-
+# Rotate AOC usb-c screen (macOS)
+if [ -x "$(command -v displayplacer)" ]; then
+  alias aoc_h='displayplacer "id:911709B0-AC89-44B4-22B8-B2DD16CE38C0 res:1920x1200 color_depth:4 scaling:on origin:(0,0) degree:0" "id:CBA6DBB6-02A8-41E2-7E75-791B87F0336D res:1920x1080 hz:60 color_depth:8 scaling:off origin:(1920,0) degree:0"'
+  alias aoc_v='displayplacer "id:911709B0-AC89-44B4-22B8-B2DD16CE38C0 res:1920x1200 color_depth:4 scaling:on origin:(0,0) degree:0" "id:CBA6DBB6-02A8-41E2-7E75-791B87F0336D res:1080x1920 hz:60 color_depth:8 scaling:off origin:(1920,-780) degree:90"'
 fi

@@ -7,6 +7,10 @@
 #   alias aws='awsv2'
 # fi
 
+if ! [ -x "$(command -v aws)" ]; then
+  return
+fi
+
 function aws-assume-role() {
   local role="${1-}"
   local sessionName="${2-}"
