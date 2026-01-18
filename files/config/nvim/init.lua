@@ -135,6 +135,7 @@ now(function()
 	vim.filetype.add({
 		extension = {
 			dockerfile = "dockerfile",
+			tiltfile = "tiltfile",
 			nginx = "nginx",
 		},
 		filename = {
@@ -172,6 +173,13 @@ now(function()
 		pattern = "helm",
 		callback = function()
 			vim.opt_local.commentstring = "{{/* %s */}}"
+		end,
+	})
+
+	vim.api.nvim_create_autocmd("FileType", {
+		pattern = "tiltfile",
+		callback = function()
+			vim.opt_local.syntax = "starlark"
 		end,
 	})
 
@@ -288,6 +296,8 @@ now(function()
 	add({
 		source = "nvim-treesitter/nvim-treesitter-context",
 	})
+
+	vim.treesitter.language.register("starlark", { "bzl", "tiltfile" })
 
 	local treesitter = require("nvim-treesitter")
 	treesitter.setup({
