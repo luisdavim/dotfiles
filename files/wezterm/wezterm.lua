@@ -75,6 +75,9 @@ config.font = wezterm.font({
   weight = "Medium",
 })
 
+-- Theme
+config.color_scheme = 'GitHub Dark'
+
 -- Mouse
 config.hide_mouse_cursor_when_typing = true
 
