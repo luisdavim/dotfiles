@@ -320,6 +320,10 @@ installTmuxConf() {
   fi
 }
 
+installWeztermConfig() {
+  cp files/wezterm/wezterm.lua "${HOME}/.wezterm.lua"
+}
+
 installHelix() {
   if [ ! -x "$(command -v hx)" ]; then
     return
@@ -549,6 +553,8 @@ installDotFiles() {
   createSkeleton
   installShellConf
   installScripts
+
+  installWeztermConfig
 
   # Set alacritty themes with:
   # alacritty-colorscheme -C ~/.alacritty-theme/themes -a tomorrow_night_bright.yaml -V

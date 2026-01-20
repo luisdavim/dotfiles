@@ -20,6 +20,11 @@ if [ -n "${KITTY_INSTALLATION_DIR}" ]; then
   export TERM="xterm-kitty"
 fi
 
+if [ -n "${WEZTERM_CONFIG_FILE}" ]; then
+  [ -f "${HOME}/.local/bin/wezterm.sh" ] && source "${HOME}/.local/bin/wezterm.sh"
+  # export TERM='wezterm'
+fi
+
 export NVIM_TUI_ENABLE_TRUE_COLOR=1
 
 # export EDITOR=vim

@@ -44,6 +44,10 @@ esac
 
 export TERM='xterm-256color'
 
+if [[ $OSTYPE == "linux-gnu" ]]; then
+  export TERMINAL=/usr/bin/gnome-terminal
+fi
+
 if [ -n "${GHOSTTY_RESOURCES_DIR}" ]; then
   TERM='xterm-ghostty'
 fi
@@ -52,12 +56,12 @@ if [ -n "${KITTY_INSTALLATION_DIR}" ]; then
   export TERM="xterm-kitty"
 fi
 
+# if [ -n "${WEZTERM_CONFIG_FILE}" ]; then
+#   export TERM='wezterm'
+# fi
+
 if [[ $(tty) == "/dev/tty"* ]] && [[ $OSTYPE == "linux-gnu" ]]; then
   setfont ter-powerline-v16b.psf.gz
-fi
-
-if [[ $OSTYPE == "linux-gnu" ]]; then
-  export TERMINAL=/usr/bin/gnome-terminal
 fi
 
 # Check the window size after each command and, if necessary,
