@@ -73,6 +73,8 @@ tmux_conf_24b_colour=true
 
 # Undercurl
 if-shell '[[ "$(uname -o)" != "Android" ]]' {
+  set -sa terminal-features "xterm-256color:256:RGB:hyperlinks"
+  set -sa terminal-features "xterm-256color:usstyle:overline:sixel:sync"
   # set -g default-terminal tmux-256color
   set -g default-terminal "${TERM}"
   set -as terminal-overrides ',*256col*:RGB'

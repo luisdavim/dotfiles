@@ -4,34 +4,39 @@ local wezterm = require 'wezterm'
 -- This will hold the configuration.
 local config = wezterm.config_builder()
 
-local function getPah(str, sep)
+local function get_pah(str, sep)
   sep = sep or '/'
   return str:match("(.*" .. sep .. ")")
 end
 
+local function file_exists(name)
+  local f = io.open(name, "r")
+  if f ~= nil then
+    io.close(f)
+    return true
+  end
+  return false
+end
+
 local function download(url, file)
   -- Check if the file exists
-  local f = io.open(file, "r")
-  if f == nil then
-    -- File doesn't exist, let's download it
-    wezterm.log_info("Terminfo missing. Downloading to " .. file)
-
-    -- Ensure the directory exists
-    os.execute("mkdir -p " .. getPah(file))
-
-    -- Download the file using curl
-    local success = os.execute("curl -fsSL " .. url .. " -o " .. file)
-
-    if success then
-      wezterm.log_info("file downloaded successfully.")
-      return true
-    else
-      wezterm.log_error("Failed to download file.")
-      return false
-    end
-  else
-    f:close()
+  if file_exists(file) then
+    return false
   end
+
+  -- File doesn't exist, let's download it
+  wezterm.log_info("Terminfo missing. Downloading to " .. file)
+
+  -- Ensure the directory exists
+  os.execute("mkdir -p " .. get_pah(file))
+
+  -- Download the file using curl
+  if os.execute("curl -fsSL " .. url .. " -o " .. file) then
+    wezterm.log_info("file downloaded successfully.")
+    return true
+  end
+
+  wezterm.log_error("Failed to download file.")
   return false
 end
 
@@ -45,17 +50,22 @@ if download(integration_script_url, integration_script) then
 end
 
 -- Terminfo
--- local terminfo_dir = os.getenv("HOME") .. "/.local/share/terminfo/"
--- local terminfo_file = terminfo_dir .. "wezterm.terminfo"
--- local terminfo_url = "https://raw.githubusercontent.com/wezterm/wezterm/main/termwiz/data/wezterm.terminfo"
---
--- download(terminfo_url, terminfo_file)
---
--- config.set_environment_variables = {
---   TERMINFO_DIRS = terminfo_dir,
---   TERMINFO = terminfo_dir,
---   WSLENV = 'TERMINFO_DIRS',
--- }
+local terminfo_src_dir = os.getenv("HOME") .. "/.local/share/terminfo/"
+local terminfo_dir = os.getenv("HOME") .. "/.terminfo"
+local terminfo_file = terminfo_src_dir .. "wezterm.terminfo"
+local terminfo_url = "https://raw.githubusercontent.com/wezterm/wezterm/main/termwiz/data/wezterm.terminfo"
+
+if download(terminfo_url, terminfo_file) then
+  os.execute("tic -x -o " .. terminfo_dir .. " " .. terminfo_file)
+end
+
+terminfo_file = terminfo_src_dir .. "xterm-256color-italic.terminfo"
+terminfo_url = "https://raw.githubusercontent.com/wezterm/wezterm/main/termwiz/data/xterm-256color-italic.terminfo"
+
+if download(terminfo_url, terminfo_file) then
+  os.execute("tic -x -o " .. terminfo_dir .. " " .. terminfo_file)
+end
+
 config.term = 'wezterm'
 
 -- Font
