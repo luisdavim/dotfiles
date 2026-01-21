@@ -69,10 +69,14 @@ end
 config.term = 'wezterm'
 
 -- Font
+local font_weight = 'Medium'
+if wezterm.target_triple:find("darwin", 1, true) ~= nil then
+  font_weight = "Bold"
+end
 config.font_size = 14
 config.font = wezterm.font({
   family = 'JetBrainsMono Nerd Font Mono',
-  weight = "Medium",
+  weight = font_weight,
 })
 
 -- Theme
