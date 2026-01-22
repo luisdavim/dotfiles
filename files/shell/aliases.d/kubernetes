@@ -124,6 +124,7 @@ function is_default_kubeconfig() {
     return 1
   fi
   if [ "$(yq '.clusters|length' ~/.kube/config)" -eq 0 ]; then
+    rm ~/.kube/config
     return 1
   fi
   if [ -z "${KUBECONFIG}" ]; then
