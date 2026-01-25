@@ -31,6 +31,7 @@ pv-migrate
 rbac-lookup
 rbac-view
 resource-capacity
+rolesum
 score
 sniff
 status
