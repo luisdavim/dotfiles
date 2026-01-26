@@ -1153,13 +1153,28 @@ now(function()
 
 	vim.api.nvim_create_autocmd("LspDetach", {
 		group = "lsp_config",
-		callback = function(ev)
+		callback = vim.schedule_wrap(function(args)
+			-- Clear LSP autocmds
 			vim.api.nvim_clear_autocmds({
-				event = "*",
 				group = "lsp_config_attach",
-				buffer = ev.buf,
+				buffer = args.buf,
 			})
-		end,
+
+			local client = vim.lsp.get_client_by_id(args.data.client_id)
+			if not client or not client.attached_buffers then
+				return
+			end
+
+			-- Check if there are any other buffers attached to the client
+			for buf_id in pairs(client.attached_buffers) do
+				if buf_id ~= args.buf then
+					return
+				end
+			end
+
+			-- Stop the client if no other buffers are attached
+			client:stop()
+		end),
 	})
 
 	-- vim.lsp.config("*", base_lspconfig)
