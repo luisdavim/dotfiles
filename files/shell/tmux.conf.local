@@ -519,6 +519,8 @@ set -g allow-passthrough on
 set -ga update-environment TERM
 set -ga update-environment TERM_PROGRAM
 set-option -g set-clipboard on
+# word separators for automatic word selection
+setw -g word-separators ' @"=()[]:─'  # default => ‘ -_@’.
 
 # -- custom variables ----------------------------------------------------------
 

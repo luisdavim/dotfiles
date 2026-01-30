@@ -106,9 +106,9 @@ DISABLE_AUTO_TITLE="true"
 # HIST_STAMPS="mm/dd/yyyy"
 
 # Header to display on history commands
-if [[ ${OSTYPE} != *"android"* ]]; then
-  HISTHEADER='#ID\t#USER\t#DATE\t#TIME\t#DURATION\t#COMMAND'
-fi
+# if [[ ${OSTYPE} != *"android"* ]]; then
+#   HISTHEADER='#ID\t#USER\t#DATE\t#TIME\t#DURATION\t#COMMAND'
+# fi
 
 setopt extended_history       # record timestamp of command in HISTFILE
 setopt hist_expire_dups_first # delete duplicates first when HISTFILE size exceeds HISTSIZE

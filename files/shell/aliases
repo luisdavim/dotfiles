@@ -73,7 +73,7 @@ function hgrep() {
   else
     # history
     (
-      echo -e '#ID\t#USER\t#SEQ\t#DATE\t#TIME\t#DURATION\t#COMMAND'
+      echo -e "${HISTHEADER}"
       tail -n 100 "${_eternal_history_histfile}"
     ) | column -ts $'\t'
   fi
