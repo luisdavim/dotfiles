@@ -645,6 +645,10 @@ end)
 -- Using blink.cmp
 now(function()
 	local function build_blink(params)
+		if is_andriod() then
+			-- requiers rs nightly, not available on android
+			return
+		end
 		vim.notify("Building blink.cmp", vim.log.levels.INFO)
 		local res = vim.system({ "cargo", "build", "--release" }, { cwd = params.path }):wait()
 		if res.code == 0 then

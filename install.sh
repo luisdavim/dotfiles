@@ -402,7 +402,6 @@ installKakPlugins() {
       ln -s "${HOME}/.config/kak-lsp" "${HOME}/Library/Preferences/kak-lsp"
     fi
   fi
-
 }
 
 installGitConf() {
