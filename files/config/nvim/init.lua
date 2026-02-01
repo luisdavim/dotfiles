@@ -375,6 +375,7 @@ end)
 
 now(function()
 	require("mini.icons").setup()
+	MiniIcons.mock_nvim_web_devicons()
 end)
 now(function()
 	require("mini.tabline").setup()
@@ -469,8 +470,8 @@ now(function()
 		},
 	})
 
-	keymap("n", "<C-p>", Snacks.picker.files, {})
-	keymap("n", "<C-f>", Snacks.picker.grep, {})
+	keymap("n", "<C-p>", Snacks.picker.files, { desc = "Open file picker" })
+	keymap("n", "<C-f>", Snacks.picker.grep, { desc = "Search" })
 	-- keymap('n', '<C-_>', function() Snacks.explorer() end, {})
 	-- Toggle the explorer buffer
 	keymap("n", "<C-_>", function()
@@ -485,7 +486,7 @@ now(function()
 		if #explorer_pickers == 0 then
 			Snacks.picker.explorer()
 		end
-	end, {})
+	end, { desc = "Open file explorer" })
 
 	vim.api.nvim_create_user_command("Gitbrowse", Snacks.gitbrowse.open, {})
 
@@ -639,6 +640,17 @@ end)
 --     { desc = "Sidekick Grok Toggle" }
 --   )
 -- end)
+
+-- Dropbar
+now(function()
+	add({
+		source = "Bekaboo/dropbar.nvim",
+	})
+	local dropbar_api = require("dropbar.api")
+	keymap("n", "<Leader>;", dropbar_api.pick, { desc = "Pick symbols in winbar" })
+	keymap("n", "[;", dropbar_api.goto_context_start, { desc = "Go to start of current context" })
+	keymap("n", "];", dropbar_api.select_next_context, { desc = "Select next context" })
+end)
 
 -- Completion Menu
 
