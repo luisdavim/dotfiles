@@ -274,13 +274,34 @@ alias -s {yml,yaml,json}=$EDITOR
 
 [[ ! -f ~/.aliases ]] || source ~/.aliases
 [[ ! -f /etc/grc.zsh ]] || source /etc/grc.zsh
+[[ ! -f /etc/rgrc.zsh ]] || source /etc/rgrc.zsh
 [[ ! -f /usr/local/etc/grc.zsh ]] || source /usr/local/etc/grc.zsh
 [[ ! -f /usr/local/opt/fzf/shell/key-bindings.zsh ]] || source /usr/local/opt/fzf/shell/key-bindings.zsh
 
 if [[ -n "${HOMEBREW_PREFIX}" ]]; then
   [[ ! -f "${HOMEBREW_PREFIX}/etc/grc.zsh" ]] || source "${HOMEBREW_PREFIX}/etc/grc.zsh"
+  [[ ! -f "${HOMEBREW_PREFIX}/etc/rgrc.zsh" ]] || source "${HOMEBREW_PREFIX}/etc/rgrc.zsh"
   [[ ! -f "${HOMEBREW_PREFIX}/opt/fzf/shell/key-bindings.zsh" ]] || source "${HOMEBREW_PREFIX}/opt/fzf/shell/key-bindings.zsh"
   [[ ! -f "${HOMEBREW_PREFIX}/opt/asdf/asdf.sh" ]] || source "${HOMEBREW_PREFIX}/opt/asdf/asdf.sh"
+fi
+
+export GRC=""
+if [[ -x command -v grc ]]; then
+  GRC="grc"
+fi
+
+if [[ -x command -v grc-rs ]]; then
+  GRC="grc-rs"
+  alias grc=grc-rs
+  # eval "$(grc-rs --aliases --except=ls)"
+  eval "$(grc-rs --all-aliases --except=ls)"
+fi
+
+if [[ -x command -v rgrc ]]; then
+  GRC="rgrc"
+  alias grc=rgrc
+  # eval "$(rgrc --aliases --except=ls)"
+  eval "$(rgrc --all-aliases --except=ls)"
 fi
 
 [[ ! -f ~/.zshrc.local ]] || source ~/.zshrc.local

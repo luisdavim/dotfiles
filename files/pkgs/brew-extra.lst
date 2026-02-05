@@ -241,6 +241,7 @@ reattach-to-user-namespace
 remarshal
 rename
 resvg
+rgrc
 ripsecrets
 rke
 rm-improved

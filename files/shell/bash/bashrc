@@ -266,12 +266,34 @@ fi
 [ -x "$(command -v thefuck)" ] && eval "$(thefuck --alias)"
 
 [ -f /etc/grc.bashrc ] && source /etc/grc.bashrc
+[ -f /etc/rgrc.sh ] && source /etc/rgrc.sh
 [ -f /usr/local/etc/grc.bashrc ] && source /usr/local/etc/grc.bashrc
+[ -f /usr/local/etc/rgrc.sh ] && source /usr/local/etc/rgrc.sh
 
 if [ -n "${HOMEBREW_PREFIX}" ]; then
   [ ! -f "${HOMEBREW_PREFIX}/opt/asdf/asdf.sh" ] || source "${HOMEBREW_PREFIX}/opt/asdf/asdf.sh"
   [ ! -f "${HOMEBREW_PREFIX}/opt/asdf/etc/bash_completion.d/asdf.bash" ] || source "${HOMEBREW_PREFIX}/opt/asdf/etc/bash_completion.d/asdf.bash"
   [ ! -f "${HOMEBREW_PREFIX}/etc/grc.sh" ] || source "${HOMEBREW_PREFIX}/etc/grc.sh"
+  [ ! -f "${HOMEBREW_PREFIX}/etc/rgrc.sh" ] || source "${HOMEBREW_PREFIX}/etc/rgrc.sh"
+fi
+
+export GRC=""
+if [[ -x command -v grc ]]; then
+  GRC="grc"
+fi
+
+if [[ -x command -v grc-rs ]]; then
+  GRC="grc-rs"
+  alias grc=grc-rs
+  # eval "$(grc-rs --aliases --except=ls)"
+  eval "$(grc-rs --all-aliases --except=ls)"
+fi
+
+if [[ -x command -v rgrc ]]; then
+  GRC="rgrc"
+  alias grc=rgrc
+  # eval "$(rgrc --aliases --except=ls)"
+  eval "$(rgrc --all-aliases --except=ls)"
 fi
 
 [ "$OSTYPE" == "linux-gnu" ] && source /etc/profile.d/vte-2.91.sh
