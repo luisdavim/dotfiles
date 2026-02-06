@@ -111,7 +111,7 @@ export GOPROXY="https://proxy.golang.org,direct"
 export GO111MODULE=on
 export GOVIM_GOPLS_FLAGS=-remote=auto
 
-if [[ "${GITHUB_TOKEN}" == "null" ]]; then
+if [[ "${GITHUB_TOKEN:-null}" == "null" ]]; then
   unset GITHUB_TOKEN
 fi
 if [ -z "${GITHUB_TOKEN:-}" ] && [ -f "${HOME}/.config/gh/hosts.yml" ]; then
@@ -122,6 +122,19 @@ if [ -z "${GITHUB_TOKEN:-}" ] && [ -f "${HOME}/.config/gh/hosts.yml" ]; then
   export GITHUB_TOKEN
   export GITHUB_API_TOKEN="${GITHUB_TOKEN}"
   export GITHUB_PKG_REG_TOKEN="${GITHUB_TOKEN}"
+fi
+
+if [[ "${GITLAB_TOKEN:-null}" == "null" ]]; then
+  unset GITLAB_TOKEN
+fi
+export GITLAB_HOST="${GITLAB_HOST:-gitlab.com}"
+if [ -z "${GITLAB_TOKEN:-}" ] && [ -f "${HOME}/.config/glab-cli/config.yml" ]; then
+  if [ -n "${GITLAB_HOST}" ]; then
+    GITLAB_TOKEN="$(yq '.hosts|.[env(GLAB_HOST)].token' ~/.config/glab-cli/config.yml | tr -d '[:blank:]')"
+  else
+    GITLAB_TOKEN="$(yq '.hosts|.[].token' ~/.config/glab-cli/config.yml | tail -n 1 | tr -d '[:blank:]')"
+  fi
+  export GITLAB_TOKEN
 fi
 
 # fzf config
