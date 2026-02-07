@@ -26,11 +26,11 @@ blocks:
       - type: git
         style: plain
         foreground: p:foreground
-        background_templates:
-          - "{{ if or (.Working.Changed) (.Staging.Changed) }}<p:yellow>{{ end }}</>"
-          - "{{ if and (gt .Ahead 0) (gt .Behind 0) }}<p:yellow>{{ end }}</>"
-          - "{{ if gt .Ahead 0 }}<p:yellow>{{ end }}</>"
-          - "{{ if gt .Behind 0 }}<p:yellow>{{ end }}</>"
+        # background_templates:
+        #   - "{{ if or (.Working.Changed) (.Staging.Changed) }}<p:yellow>{{ end }}</>"
+        #   - "{{ if and (gt .Ahead 0) (gt .Behind 0) }}<p:yellow>{{ end }}</>"
+        #   - "{{ if gt .Ahead 0 }}<p:yellow>{{ end }}</>"
+        #   - "{{ if gt .Behind 0 }}<p:yellow>{{ end }}</>"
         template: >-
           <p:yellow></>({{ if or (.Working.Changed) (.Staging.Changed) (gt .StashCount 0) }}<p:yellow>{{ .HEAD }}</>{{
           else }}<p:green>{{ .HEAD }}</>{{ end }}{{ if (gt .Ahead 0)}}<p:cyan>{{ .BranchStatus }}</>{{ end }}{{ if (gt
@@ -47,18 +47,19 @@ blocks:
       - type: status
         style: plain
         foreground: p:foreground
-        template: "{{ if gt .Code 0 }}<p:red>({{ .Code }}) </>{{ else }}<p:green>({{ .Code }}) </>{{ end }} "
+        template: "{{ if gt .Code 0 }}<p:red>✘({{ .Code }}) </>{{ else }}<p:green>✔({{ .Code }}) </>{{ end }} "
         options:
-          always_enabled: true
+          always_enabled: false
       - type: executiontime
         style: plain
-        foreground: p:foreground
+        foreground: p:grey
         template: "  {{ .FormattedMs }} "
       - type: kubectl
         style: plain
         foreground: p:blue
         foreground_templates:
           - '{{ if contains "prod" .Context }}p:orange{{ end }}'
+          - '{{ if contains "prd" .Context }}p:orange{{ end }}'
         template: " ⎈ {{ .Context }}{{ if .Namespace }} :: {{ .Namespace }}{{ end }} "
         options:
           display_default: false
@@ -92,6 +93,6 @@ palette:
   cyan: "#56b6c2"
   white: "#dcdfe4"
   foreground: "#dcdfe4"
-  background: "#282c34"
+  background: "#000000"
   orange: "#cf893a"
-  grey: "#616161"
+  grey: "#808080"
