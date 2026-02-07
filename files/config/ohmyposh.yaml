@@ -11,7 +11,7 @@ blocks:
     segments:
       - type: text
         style: plain
-        foreground: "#ffffff"
+        foreground: p:foreground
         template: ╭─
       - type: path
         style: plain
@@ -21,19 +21,20 @@ blocks:
           style: powerlevel
       - type: git
         style: plain
+        foreground: p:foreground
         background_templates:
           - "{{ if or (.Working.Changed) (.Staging.Changed) }}<p:yellow>{{ end }}</>"
           - "{{ if and (gt .Ahead 0) (gt .Behind 0) }}<p:yellow>{{ end }}</>"
-          - "{{ if gt .Ahead 0 }}<p:magenta>{{ end }}</>"
-          - "{{ if gt .Behind 0 }}<p:magenta>{{ end }}</>"
+          - "{{ if gt .Ahead 0 }}<p:yellow>{{ end }}</>"
+          - "{{ if gt .Behind 0 }}<p:yellow>{{ end }}</>"
         template: >-
-          <p:yellow> </>({{ if or (.Working.Changed) (.Staging.Changed) (gt .StashCount 0) }}<p:magenta>{{ .HEAD
-          }}</>{{ else }}<p:green>{{ .HEAD }}</>{{ end }}{{ if (gt .Ahead 0)}}<p:cyan>{{ .BranchStatus }}</>{{ end }}{{
-          if (gt .Behind 0)}}<p:cyan>{{ .BranchStatus }}</>{{ end }}{{ if .Staging.Changed }} <p:green>{{
-          .Staging.String }}</>{{ end }}{{ if .Working.Changed }} <p:red>{{ .Working.String }}</>{{ end }})
+          <p:yellow></>({{ if or (.Working.Changed) (.Staging.Changed) (gt .StashCount 0) }}<p:yellow>{{ .HEAD }}</>{{
+          else }}<p:green>{{ .HEAD }}</>{{ end }}{{ if (gt .Ahead 0)}}<p:cyan>{{ .BranchStatus }}</>{{ end }}{{ if (gt
+          .Behind 0)}}<p:cyan>{{ .BranchStatus }}</>{{ end }}{{ if .Staging.Changed }} <p:green>{{ .Staging.String
+          }}</>{{ end }}{{ if .Working.Changed }} <p:red>{{ .Working.String }}</>{{ end }})
         options:
           fetch_status: true
-          branch_icon: ""
+          branch_icon: " "
   - type: rprompt
     alignment: right
     newline: false
@@ -58,7 +59,7 @@ blocks:
           strategy: session
       - type: time
         style: plain
-        foreground: p:foreground
+        foreground: p:grey
         template: "  {{ .CurrentDate | date .Format }} "
   - type: prompt
     alignment: left
@@ -66,10 +67,16 @@ blocks:
     segments:
       - type: text
         style: plain
-        foreground: "#ffffff"
-        template: "╰─ ❯"
+        foreground: p:foreground
+        template: ╰─
+      - type: status
+        style: plain
+        foreground: p:green
+        template: " ❯ "
+        powerline_symbol: 
+        options:
+          always_enabled: true
 palette:
-  black: "#282c34"
   red: "#e06c75"
   green: "#98c379"
   yellow: "#e5c07b"
@@ -80,3 +87,4 @@ palette:
   foreground: "#dcdfe4"
   background: "#282c34"
   orange: "#cf893a"
+  grey: "#616161"
