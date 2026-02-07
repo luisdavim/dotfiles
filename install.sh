@@ -503,6 +503,7 @@ installZshConf() {
     cd "${INSTALLDIR}" || exit
   fi
 
+  touch "${ZSH_CUSTOM}/themes/oh-my-posh.zsh-theme"
   git_clone_or_update https://github.com/denysdovhan/spaceship-prompt.git "${ZSH_CUSTOM}/themes/spaceship-prompt"
   if [ ! -s "${ZSH_CUSTOM}/themes/spaceship.zsh-theme" ]; then
     ln -s "${ZSH_CUSTOM}/themes/spaceship-prompt/spaceship.zsh-theme" "${ZSH_CUSTOM}/themes/spaceship.zsh-theme"

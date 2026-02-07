@@ -49,6 +49,7 @@ make
 moreutils
 neovim
 node
+oh-my-posh
 openssl
 p7zip
 patchutils
