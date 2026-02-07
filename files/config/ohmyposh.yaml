@@ -1,4 +1,3 @@
-# https://jamesmontemagno.github.io/ohmyposh-configurator/
 $schema: https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json
 version: 4
 final_space: false
@@ -6,64 +5,69 @@ console_title_template: "{{ .UserName }}@{{ .HostName }}"
 terminal_background: p:background
 async: true
 blocks:
-  - alignment: left
+  - type: prompt
+    alignment: left
     newline: true
     segments:
       - type: text
         style: plain
-        template: ╭
         foreground: "#ffffff"
-      - foreground: p:blue
+        template: ╭─
+      - type: path
         style: plain
+        foreground: p:blue
+        template: " {{ .Path }} "
         options:
-          style: full
-        template: " {{ .Path }} "
-        type: path
-      - options:
-          branch_icon: ""
-          fetch_status: true
+          style: powerlevel
+      - type: git
         style: plain
+        background_templates:
+          - "{{ if or (.Working.Changed) (.Staging.Changed) }}<p:yellow>{{ end }}</>"
+          - "{{ if and (gt .Ahead 0) (gt .Behind 0) }}<p:yellow>{{ end }}</>"
+          - "{{ if gt .Ahead 0 }}<p:magenta>{{ end }}</>"
+          - "{{ if gt .Behind 0 }}<p:magenta>{{ end }}</>"
         template: >-
           <p:yellow> </>({{ if or (.Working.Changed) (.Staging.Changed) (gt .StashCount 0) }}<p:magenta>{{ .HEAD
           }}</>{{ else }}<p:green>{{ .HEAD }}</>{{ end }}{{ if (gt .Ahead 0)}}<p:cyan>{{ .BranchStatus }}</>{{ end }}{{
           if (gt .Behind 0)}}<p:cyan>{{ .BranchStatus }}</>{{ end }}{{ if .Staging.Changed }} <p:green>{{
           .Staging.String }}</>{{ end }}{{ if .Working.Changed }} <p:red>{{ .Working.String }}</>{{ end }})
-        type: git
-    type: prompt
-  - alignment: right
+        options:
+          fetch_status: true
+          branch_icon: ""
+  - type: rprompt
+    alignment: right
     newline: false
+    force: false
     segments:
-      - foreground: p:foreground
+      - type: status
+        style: plain
+        foreground: p:foreground
+        template: "{{ if gt .Code 0 }}<p:red>({{ .Code }}) </>{{ else }}<p:green>({{ .Code }}) </>{{ end }} "
         options:
           always_enabled: true
-        style: plain
-        template: "{{ if gt .Code 0 }}<p:red>({{ .Code }}) </>{{ else }}<p:green>({{ .Code }}) </>{{ end }} "
-        type: status
       - type: executiontime
         style: plain
-        template: "  {{ .FormattedMs }} "
         foreground: p:foreground
+        template: "  {{ .FormattedMs }} "
       - type: kubectl
         style: plain
+        foreground: p:foreground
         template: " ⎈ {{ .Context }}{{ if .Namespace }} :: {{ .Namespace }}{{ end }} "
         cache:
           duration: 1m
           strategy: session
-        foreground: p:foreground
       - type: time
         style: plain
-        template: "  {{ .CurrentDate | date .Format }} "
         foreground: p:foreground
-    type: rprompt
-    force: false
+        template: "  {{ .CurrentDate | date .Format }} "
   - type: prompt
     alignment: left
+    newline: true
     segments:
       - type: text
         style: plain
-        template: "╰> "
         foreground: "#ffffff"
-    newline: true
+        template: "╰─ ❯ "
 palette:
   black: "#282c34"
   red: "#e06c75"
