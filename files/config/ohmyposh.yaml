@@ -1,6 +1,6 @@
 $schema: https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json
 version: 4
-final_space: false
+final_space: true
 console_title_template: "{{ .UserName }}@{{ .HostName }}"
 terminal_background: p:background
 async: true
@@ -67,7 +67,7 @@ blocks:
       - type: text
         style: plain
         foreground: "#ffffff"
-        template: "╰─ ❯ "
+        template: "╰─ ❯"
 palette:
   black: "#282c34"
   red: "#e06c75"
@@ -79,3 +79,4 @@ palette:
   white: "#dcdfe4"
   foreground: "#dcdfe4"
   background: "#282c34"
+  orange: "#cf893a"
