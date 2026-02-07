@@ -4,6 +4,10 @@ final_space: true
 console_title_template: "{{ .UserName }}@{{ .HostName }}"
 terminal_background: p:background
 async: true
+# transient_prompt:
+#   background: transparent
+#   foreground: "p:foreground"
+#   template: " "
 blocks:
   - type: prompt
     alignment: left
@@ -52,8 +56,12 @@ blocks:
         template: "  {{ .FormattedMs }} "
       - type: kubectl
         style: plain
-        foreground: p:foreground
+        foreground: p:blue
+        foreground_templates:
+          - '{{ if contains "prod" .Context }}p:orange{{ end }}'
         template: " ⎈ {{ .Context }}{{ if .Namespace }} :: {{ .Namespace }}{{ end }} "
+        options:
+          display_default: false
         cache:
           duration: 1m
           strategy: session
@@ -73,7 +81,6 @@ blocks:
         style: plain
         foreground: p:green
         template: " ❯ "
-        powerline_symbol: 
         options:
           always_enabled: true
 palette:
