@@ -322,6 +322,11 @@ fi
 
 [[ ! -f ~/.zshrc.local ]] || source ~/.zshrc.local
 
-compinit
+autoload -Uz compinit
+if [ "$(date +'%j')" != "$(stat -f '%Sm' -t '%j' ~/.zcompdump 2>/dev/null)" ]; then
+    compinit
+else
+    compinit -C
+fi
 
 CONFIGURED="true"
