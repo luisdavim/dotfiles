@@ -89,7 +89,7 @@ function kubectl-getConditions() {
   (.items[] | [
     .metadata.name,
     ((now - (.metadata.creationTimestamp | fromdateiso8601)) / 3600 | floor | tostring + "h"),
-    (.status.conditions | map("\(.type)=\(.status)") | join(", "))
+    (.status.conditions | map("\(.type)=\(.status)[\(.reason)]") | join(", ") | sub("null"; "OK"; "g"))
   ])
   | @tsv' | column -t
 }
