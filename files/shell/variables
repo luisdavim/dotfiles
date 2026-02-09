@@ -127,10 +127,10 @@ fi
 if [[ "${GITLAB_TOKEN:-null}" == "null" ]]; then
   unset GITLAB_TOKEN
 fi
-export GITLAB_HOST="${GITLAB_HOST:-gitlab.com}"
+export GITLAB_HOST="${GITLAB_HOST:-}"
 if [ -z "${GITLAB_TOKEN:-}" ] && [ -f "${HOME}/.config/glab-cli/config.yml" ]; then
   if [ -n "${GITLAB_HOST}" ]; then
-    GITLAB_TOKEN="$(yq '.hosts|.[env(GLAB_HOST)].token' ~/.config/glab-cli/config.yml | tr -d '[:blank:]')"
+    GITLAB_TOKEN="$(yq '.hosts|.[env(GITLAB_HOST)].token' ~/.config/glab-cli/config.yml | tr -d '[:blank:]')"
   else
     GITLAB_TOKEN="$(yq '.hosts|.[].token' ~/.config/glab-cli/config.yml | tail -n 1 | tr -d '[:blank:]')"
   fi
