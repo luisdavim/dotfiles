@@ -277,25 +277,6 @@ if [ -n "${HOMEBREW_PREFIX}" ]; then
   [ ! -f "${HOMEBREW_PREFIX}/etc/rgrc.sh" ] || source "${HOMEBREW_PREFIX}/etc/rgrc.sh"
 fi
 
-export GRC=""
-if [ -x "$(command -v grc)" ]; then
-  GRC="grc"
-fi
-
-# if [ -x "$(command -v grc-rs)" ]; then
-#   GRC="grc-rs"
-#   # alias grc=grc-rs
-#   # eval "$(grc-rs --aliases --except=ls)"
-#   eval "$(grc-rs --all-aliases --except=ls)"
-# fi
-
-# if [ -x "$(command -v rgrc)" ]; then
-#   GRC="rgrc"
-#   # alias grc=rgrc
-#   # eval "$(rgrc --aliases --except=ls)"
-#   eval "$(rgrc --all-aliases --except=ls)"
-# fi
-
 [ "$OSTYPE" == "linux-gnu" ] && source /etc/profile.d/vte-2.91.sh
 
 # gitprompt configuration

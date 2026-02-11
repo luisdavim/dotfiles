@@ -27,7 +27,7 @@ function kctl() {
   if [ -n "${GRC:-}" ] && [[ ',modify-secret,edit,exec,ssh,access-matrix,shell,remote_shell,debug,ephemeral,' != *",${CMD},"* ]]; then
     COLOR="${GRC}"
     if [[ "${COLOR}" == "grc" ]]; then
-      COLOR="grc -es --colour=auto"
+      COLOR="\grc -es --colour=auto"
     fi
   fi
   local args=("${COLOR}" kubectl "${CMD}")
@@ -88,7 +88,7 @@ function kubectl-getConditions() {
   ["NAME", "AGE", "CONDITIONS"],
   (.items[] | [
     .metadata.name,
-    ((now - (.metadata.creationTimestamp | fromdateiso8601)) / 3600 | floor | tostring + "h"),
+    ((now - (.metadata.creationTimestamp | fromdateiso8601)) / 60 | floor | tostring + "m"),
     (.status.conditions | map("\(.type)=\(.status)[\(.reason)]") | join(", ") | sub("null"; "OK"; "g"))
   ])
   | @tsv' | column -t
