@@ -158,12 +158,12 @@ fi
 #   eval "$(grc-rs --all-aliases --except=ls)"
 # fi
 
-# if [ -x "$(command -v rgrc)" ]; then
-#   GRC="rgrc"
-#   # alias grc=rgrc
-#   # eval "$(rgrc --aliases --except=ls)"
-#   eval "$(rgrc --all-aliases --except=ls)"
-# fi
+if [ -x "$(command -v rgrc)" ]; then
+  GRC="rgrc"
+  alias grc=rgrc
+  # eval "$(rgrc --aliases --except=ls)"
+  eval "$(rgrc --all-aliases --except=ls)"
+fi
 
 # Make open and xdg-open work on all plaforms
 if ! [ -x "$(command -v open)" ]; then
