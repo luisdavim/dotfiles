@@ -19,7 +19,7 @@ blocks:
         template: ╭─
       - type: path
         style: plain
-        foreground: p:blue
+        foreground: p:cyan
         template: " {{ .Path }} "
         options:
           style: powerlevel
@@ -32,16 +32,18 @@ blocks:
         #   - "{{ if gt .Ahead 0 }}<p:yellow>{{ end }}</>"
         #   - "{{ if gt .Behind 0 }}<p:yellow>{{ end }}</>"
         template: >-
-          <p:yellow></>({{ if or (.Working.Changed) (.Staging.Changed) (gt .StashCount 0) }}<p:yellow>{{ .HEAD }}</>{{
-          else }}<p:green>{{ .HEAD }}</>{{ end }}{{ if (gt .Ahead 0)}}<p:cyan>{{ .BranchStatus }}</>{{ end }}{{ if (gt
-          .Behind 0)}}<p:cyan>{{ .BranchStatus }}</>{{ end }}{{ if .Staging.Changed }} <p:green>{{ .Staging.String
-          }}</>{{ end }}{{ if .Working.Changed }} <p:red>{{ .Working.String }}</>{{ end }})
+          <p:cyan>(</>{{ if or (.Working.Changed) (.Staging.Changed) (gt .StashCount 0) }}<p:yellow>{{ .HEAD }}</>{{
+          else }}<p:green>{{ .HEAD }}</>{{ end }} {{ if (gt .Ahead 0)}}<p:blue>{{ .BranchStatus }}</>{{ end }}{{ if (gt
+          .Behind 0)}}<p:blue>{{ .BranchStatus }}</>{{ end }}{{ if .Staging.Changed }}<p:green>{{ .Staging.String
+          }}</>{{ end }}{{ if .Working.Changed }}<p:red>{{ .Working.String }}</>{{ end }}<p:cyan>) </>
         options:
           fetch_status: true
           branch_icon: " "
-  - type: rprompt
+  - type: prompt
     alignment: right
     newline: false
+    overflow: hide
+    filler: "{{ if .Overflow }} {{ else }}<p:black>·</>{{ end }}"
     force: false
     segments:
       - type: status
@@ -81,7 +83,7 @@ blocks:
       - type: status
         style: plain
         foreground: p:green
-        template: " ❯ "
+        template: " ❯"
         options:
           always_enabled: true
 palette:
@@ -90,9 +92,10 @@ palette:
   yellow: "#e5c07b"
   blue: "#61afef"
   magenta: "#c678dd"
-  cyan: "#56b6c2"
+  cyan: "#99ddf2"
   white: "#dcdfe4"
   foreground: "#dcdfe4"
-  background: "#000000"
+  background: "transparent"
   orange: "#cf893a"
   grey: "#808080"
+  black: "#303030"
