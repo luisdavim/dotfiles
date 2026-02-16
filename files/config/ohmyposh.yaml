@@ -20,14 +20,11 @@ blocks:
         template: " {{ .Path }} "
         options:
           style: powerlevel
+          max_width: 30
       - type: git
         style: plain
         foreground: p:foreground
-        template: >-
-          <p:cyan>(</>{{ if or (.Working.Changed) (.Staging.Changed) (gt .StashCount 0) }}<p:yellow>{{ .HEAD }}</>{{
-          else }}<p:green>{{ .HEAD }}</>{{ end }}{{ if (gt .Behind 0)}}<p:yellow> {{ .BranchStatus }}</>{{ else if (gt
-          .Ahead 0)}}<p:blue> {{ .BranchStatus }}</>{{ end }}{{ if .Staging.Changed }}<p:green> {{ .Staging.String
-          }}</>{{ end }}{{ if .Working.Changed }}<p:red> {{ .Working.String }}</>{{ end }}{{ if gt .StashCount 0 }}<p:green>  {{ .StashCount }}</>{{ end }}<p:cyan>) </>
+        template: "<p:cyan>(</><p:green>{{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}</>{{ if .Working.Changed }}<p:yellow> {{ .Working.String }}</>{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }}<p:cyan>|</>{{ end }}{{ if .Staging.Changed }}<p:magenta> {{ .Staging.String }}</>{{ end }}{{ if gt .StashCount 0 }}<p:yellow> {{ .StashCount }}</>{{ end }}<p:cyan>)</> "
         options:
           fetch_status: true
           branch_icon: " "
@@ -47,7 +44,7 @@ blocks:
       - type: executiontime
         style: plain
         foreground: p:grey
-        template: "  {{ .FormattedMs }} "
+        template: " {{ .FormattedMs }} "
       - type: kubectl
         style: plain
         foreground: p:blue
