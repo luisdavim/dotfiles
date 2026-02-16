@@ -25,9 +25,9 @@ blocks:
         foreground: p:foreground
         template: >-
           <p:cyan>(</>{{ if or (.Working.Changed) (.Staging.Changed) (gt .StashCount 0) }}<p:yellow>{{ .HEAD }}</>{{
-          else }}<p:green>{{ .HEAD }}</>{{ end }} {{ if (gt .Ahead 0)}}<p:blue>{{ .BranchStatus }}</>{{ end }}{{ if (gt
-          .Behind 0)}}<p:blue>{{ .BranchStatus }}</>{{ end }}{{ if .Staging.Changed }}<p:green>{{ .Staging.String
-          }}</>{{ end }}{{ if .Working.Changed }}<p:red>{{ .Working.String }}</>{{ end }}<p:cyan>) </>
+          else }}<p:green>{{ .HEAD }}</>{{ end }}{{ if (gt .Behind 0)}}<p:yellow> {{ .BranchStatus }}</>{{ else if (gt
+          .Ahead 0)}}<p:blue> {{ .BranchStatus }}</>{{ end }}{{ if .Staging.Changed }}<p:green> {{ .Staging.String
+          }}</>{{ end }}{{ if .Working.Changed }}<p:red> {{ .Working.String }}</>{{ end }}{{ if gt .StashCount 0 }}<p:green>  {{ .StashCount }}</>{{ end }}<p:cyan>) </>
         options:
           fetch_status: true
           branch_icon: " "
