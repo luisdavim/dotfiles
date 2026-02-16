@@ -4,6 +4,7 @@ final_space: true
 console_title_template: "{{ .UserName }}@{{ .HostName }}"
 terminal_background: p:background
 async: true
+streaming: 100
 # transient_prompt:
 #   background: transparent
 #   foreground: "p:foreground"
@@ -90,11 +91,11 @@ palette:
   red: "#e06c75"
   green: "#98c379"
   yellow: "#e5c07b"
-  blue: "#61afef"
+  blue: "#55aaff"
   magenta: "#c678dd"
   cyan: "#99ddf2"
-  white: "#dcdfe4"
-  foreground: "#dcdfe4"
+  white: "#e4e4e4"
+  foreground: "#e4e4e4"
   background: "transparent"
   orange: "#cf893a"
   grey: "#808080"
