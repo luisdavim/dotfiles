@@ -214,6 +214,10 @@ if [ -x "/opt/homebrew/bin/brew" ]; then
   fi
 fi
 
+if [ -d "/Applications/Obsidian.app/Contents/MacOS" ]; then
+  export PATH="$PATH:/Applications/Obsidian.app/Contents/MacOS"
+fi
+
 PATH="${KREW_ROOT:-${HOME}/.krew}/bin:$PATH"
 
 # Load pyenv
@@ -231,7 +235,7 @@ PATH="${KREW_ROOT:-${HOME}/.krew}/bin:$PATH"
 #   export LATEST_RUBY_VERSION=$(rbenv install -L | grep -v - | tail -1)
 # fi
 
-[ -x ${HOME}/.chefvm/bin/chefvm ] && eval "$(${HOME}/.chefvm/bin/chefvm init -)"
+[ -x "${HOME}/.chefvm/bin/chefvm" ] && eval "$("${HOME}/.chefvm/bin/chefvm" init -)"
 
 # GOPATH
 GOPATH="${HOME}/go:${HOME}/workingCopies"
