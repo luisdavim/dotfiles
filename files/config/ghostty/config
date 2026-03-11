@@ -1,4 +1,5 @@
 auto-update = download
+auto-update-channel = tip
 
 # Fonts
 font-family = "JetBrainsMono Nerd Font Mono"
