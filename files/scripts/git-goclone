@@ -24,6 +24,7 @@ function usage {
 			-d, --debug                     enable debug output
 			-u, --update                    update if it already exists
 			-w, --workspace <workspace>     either a number or a valid go workspace path
+      -l, --large-repo                optimise for large repos, using scalar
 
 		If you pass a number for workspace a path will be fetched from \$GOPATH
 		where the number is the position of the workspace in the GOPATH environment varialbe
@@ -46,6 +47,7 @@ cdir=$(pwd)
 workspace="${GOPATH##*:}"
 DEBUG=false
 UPDATE=false
+LARGE_REPO=false
 
 while true; do
   case "$1" in
@@ -61,6 +63,10 @@ while true; do
     -w | --workspace)
       w="$2"
       shift 2
+      ;;
+    -l | --large-repo)
+      LARGE_REPO=true
+      shift
       ;;
     --)
       shift
@@ -118,6 +124,10 @@ if [ -d "${path}" ] && [[ ${UPDATE} == "true" ]]; then
 else
   mkdir -p "${path}"
   git clone --recurse-submodules "${url}" "${path}"
+fi
+
+if [[ "${LARGE_REPO}" != "true" ]]; then
+  exit 0
 fi
 
 if [ -x "$(command -v scalar)" ]; then
