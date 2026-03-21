@@ -642,6 +642,7 @@ safely("now", function()
   add({
     source = "Saghen/blink.cmp",
     -- depends = {
+    --   'saghen/blink.lib',
     --   'fang2hou/blink-copilot',
     -- },
     hooks = {
