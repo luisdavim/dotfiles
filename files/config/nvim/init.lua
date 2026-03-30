@@ -781,7 +781,7 @@ safely("now", function()
 
   local function on_attach(client, buffnr)
     -- highlight symbol under cursor
-    if client ~= nil and client.supports_method("textDocument/documentHighlight", buffnr) then
+    if client ~= nil and client:supports_method("textDocument/documentHighlight", buffnr) then
       vim.b[buffnr].minicursorword_disable = true
 
       vim.api.nvim_set_hl(0, "LspReferenceRead", { link = "MiniCursorword" })
@@ -803,7 +803,7 @@ safely("now", function()
     end
 
     -- Inlay hints
-    if client ~= nil and client.supports_method("textDocument/inlayHint", buffnr) then
+    if client ~= nil and client:supports_method("textDocument/inlayHint", buffnr) then
       vim.lsp.inlay_hint.enable(true, { buffnr })
       keymap("n", "<leader>H", function()
         vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled(), { buffnr })
@@ -814,7 +814,7 @@ safely("now", function()
     end
 
     -- Folds
-    if client ~= nil and client.supports_method("textDocument/foldingRange", buffnr) then
+    if client ~= nil and client:supports_method("textDocument/foldingRange", buffnr) then
       local win = vim.api.nvim_get_current_win()
       vim.wo[win][0].foldexpr = "v:lua.vim.lsp.foldexpr()"
       vim.wo[win][0].foldtext = "v:lua.vim.lsp.foldtext()"
