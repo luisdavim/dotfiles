@@ -60,3 +60,4 @@ macos-option-as-alt = true
 # Other
 copy-on-select = clipboard
 quit-after-last-window-closed = true
+selection-word-chars = " \t'\"│─`@=|,()[]{}<>$"
