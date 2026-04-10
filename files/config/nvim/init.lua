@@ -1597,9 +1597,6 @@ end)
 safely("later", function()
   add({
     source = "chrishrb/gx.nvim",
-    depends = {
-      "nvim-lua/plenary.nvim",
-    },
   })
 
   require("gx").setup({
