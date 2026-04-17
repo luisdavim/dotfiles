@@ -1,25 +1,67 @@
 #! /usr/bin/env bash
 
+function usage() {
+  if [ -n "${1}" ]; then
+    echo -e "${1}"
+    echo ''
+  fi
+  cat <<- EOF
+		Usage: $(basename $0) [<flags>] command
+
+		Flags:
+		  -h, --help                            display help
+		  -d, --debug                           enable debug output
+      -q, --quiet                           don't show the heartbeat
+		  -c, --context                         number of diff context lines
+		  -i, --interval                        interval between command executions
+	EOF
+  if [ -n "${1}" ]; then
+    exit 1
+  fi
+  exit 0
+}
+
 # Defaults
+DEBUG=false
 INTERVAL=2
 CONTEXT=4
 SHOW_HEARTBEAT=true
 
-# Parse flags
-while getopts "n:c:q" opt; do
-  case $opt in
-    n) INTERVAL=$OPTARG ;;
-    c) CONTEXT=$OPTARG ;;
-    q) SHOW_HEARTBEAT=false ;;
+POSITIONAL=()
+while [[ $# -gt 0 ]]; do
+  key="$1"
+
+  case $key in
+    -h | --help) usage "" ;;
+    -d | --debug)
+      DEBUG=true
+      shift
+      ;;
+    -q | --quiet)
+      SHOW_HEARTBEAT=false
+      shift
+      ;;
+    -c | --context)
+      CONTEXT="$2"
+      shift 2
+      ;;
+    -i | --interval)
+      INTERVAL="$2"
+      shift 2
+      ;;
+    --)
+      shift
+      break
+      ;;
     *)
-      echo "Usage: watchdiff [-n seconds] [-c context] [-q] 'command'"
-      exit 1
+      POSITIONAL+=("$1") # save it in an array for later
+      shift              # past argument
       ;;
   esac
 done
+set -- "${POSITIONAL[@]}" # restore positional parameters
 
-shift $((OPTIND - 1))
-COMMAND="$@"
+COMMAND="${*}"
 
 if [ -z "$COMMAND" ]; then
   echo "Error: No command provided."
