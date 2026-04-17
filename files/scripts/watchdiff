@@ -6,7 +6,7 @@ function usage() {
     echo ''
   fi
   cat <<- EOF
-		Usage: $(basename $0) [<flags>] command
+		Usage: $(basename ${0}) [<flags>] command
 
 		Flags:
 		  -h, --help                            display help
@@ -14,6 +14,7 @@ function usage() {
       -q, --quiet                           don't show the heartbeat
 		  -c, --context                         number of diff context lines
 		  -i, --interval                        interval between command executions
+      -e, --err                             also include stderr
 	EOF
   if [ -n "${1}" ]; then
     exit 1
@@ -23,18 +24,23 @@ function usage() {
 
 # Defaults
 DEBUG=false
+STDERR=false
 INTERVAL=2
 CONTEXT=4
 SHOW_HEARTBEAT=true
 
 POSITIONAL=()
 while [[ $# -gt 0 ]]; do
-  key="$1"
+  key="${1}"
 
-  case $key in
+  case ${key} in
     -h | --help) usage "" ;;
     -d | --debug)
       DEBUG=true
+      shift
+      ;;
+    -e | --err)
+      STDERR=true
       shift
       ;;
     -q | --quiet)
@@ -42,11 +48,11 @@ while [[ $# -gt 0 ]]; do
       shift
       ;;
     -c | --context)
-      CONTEXT="$2"
+      CONTEXT="${2}"
       shift 2
       ;;
     -i | --interval)
-      INTERVAL="$2"
+      INTERVAL="${2}"
       shift 2
       ;;
     --)
@@ -54,8 +60,8 @@ while [[ $# -gt 0 ]]; do
       break
       ;;
     *)
-      POSITIONAL+=("$1") # save it in an array for later
-      shift              # past argument
+      POSITIONAL+=("${1}") # save it in an array for later
+      shift                # past argument
       ;;
   esac
 done
@@ -63,52 +69,59 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 
 COMMAND="${*}"
 
-if [ -z "$COMMAND" ]; then
-  echo "Error: No command provided."
-  exit 1
+if [ -z "${COMMAND}" ]; then
+  usage "Error: No command provided."
 fi
 
 # Setup temp files
 OLD_OUT=$(mktemp)
 NEW_OUT=$(mktemp)
-trap "rm -f $OLD_OUT $NEW_OUT; exit" INT TERM EXIT
+trap 'rm -f ${OLD_OUT} ${NEW_OUT}; exit' INT TERM EXIT
 
 # UI Elements
 WIDTH=$(tput cols 2> /dev/null || echo 80)
-SEP=$(printf '%*s' "$WIDTH" '' | tr ' ' '-')
+SEP=$(printf '%*s' "${WIDTH}" '' | tr ' ' '-')
 
 # --- INITIAL RUN ---
-echo -e "\033[1;32mMonitoring:\033[0m $COMMAND"
+echo -e "\033[1;32mMonitoring:\033[0m ${COMMAND}"
 echo -e "\033[90mInterval: ${INTERVAL}s | Context: ${CONTEXT}\033[0m"
-echo -e "\033[1;34m$SEP\033[0m"
+echo -e "\033[1;34m${SEP}\033[0m"
 echo -e "\033[1;34mINITIAL OUTPUT ($(date +%H:%M:%S)):\033[0m"
 
 # Show full initial output and save it
-bash -c "$COMMAND" | tee "$OLD_OUT"
+if [[ "${STDERR}" == "true" ]]; then
+  bash -c "${COMMAND}" |& tee "${OLD_OUT}"
+else
+  bash -c "${COMMAND}" | tee "${OLD_OUT}"
+fi
 LAST_EXIT=$?
-echo -e "\n\033[1;34m$SEP\033[0m"
+echo -e "\n\033[1;34m${SEP}\033[0m"
 
 # --- LOOP FOR DIFFS ---
 while true; do
-  sleep "$INTERVAL"
-  bash -c "$COMMAND" > "$NEW_OUT"
+  sleep "${INTERVAL}"
+  if [[ "${STDERR}" == "true" ]]; then
+    bash -c "${COMMAND}" &> "${NEW_OUT}"
+  else
+    bash -c "${COMMAND}" > "${NEW_OUT}"
+  fi
   CURRENT_EXIT=$?
 
   # Check for content change or exit code change
-  if ! cmp -s "$OLD_OUT" "$NEW_OUT" || [ $CURRENT_EXIT -ne $LAST_EXIT ]; then
+  if ! cmp -s "${OLD_OUT}" "${NEW_OUT}" || [ ${CURRENT_EXIT} -ne ${LAST_EXIT} ]; then
     echo -e "\n\033[1;33mCHANGE DETECTED: $(date +%H:%M:%S)\033[0m"
 
-    if [ $CURRENT_EXIT -ne $LAST_EXIT ]; then
-      echo -e "\033[1;31mExit Code Changed: $LAST_EXIT -> $CURRENT_EXIT\033[0m"
+    if [ ${CURRENT_EXIT} -ne ${LAST_EXIT} ]; then
+      echo -e "\033[1;31mExit Code Changed: ${LAST_EXIT} -> ${CURRENT_EXIT}\033[0m"
     fi
 
     # Generate diff with context
     # We use --label to make the header easier to strip consistently
-    diff --color=always "-U$CONTEXT" --label "OLD" --label "NEW" "$OLD_OUT" "$NEW_OUT" | sed '1,2d'
+    diff --color=always "-U${CONTEXT}" --label "OLD" --label "NEW" "${OLD_OUT}" "${NEW_OUT}" | sed '1,2d'
 
-    cp "$NEW_OUT" "$OLD_OUT"
-    LAST_EXIT=$CURRENT_EXIT
-  elif [ "$SHOW_HEARTBEAT" = true ]; then
+    cp "${NEW_OUT}" "${OLD_OUT}"
+    LAST_EXIT=${CURRENT_EXIT}
+  elif [ "${SHOW_HEARTBEAT}" = true ]; then
     # Print a subtle heartbeat
     echo -ne "\033[90m.\033[0m"
   fi
