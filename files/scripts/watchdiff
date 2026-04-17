@@ -1,0 +1,73 @@
+#! /usr/bin/env bash
+
+# Defaults
+INTERVAL=2
+CONTEXT=4
+SHOW_HEARTBEAT=true
+
+# Parse flags
+while getopts "n:c:q" opt; do
+  case $opt in
+    n) INTERVAL=$OPTARG ;;
+    c) CONTEXT=$OPTARG ;;
+    q) SHOW_HEARTBEAT=false ;;
+    *)
+      echo "Usage: watchdiff [-n seconds] [-c context] [-q] 'command'"
+      exit 1
+      ;;
+  esac
+done
+
+shift $((OPTIND - 1))
+COMMAND="$@"
+
+if [ -z "$COMMAND" ]; then
+  echo "Error: No command provided."
+  exit 1
+fi
+
+# Setup temp files
+OLD_OUT=$(mktemp)
+NEW_OUT=$(mktemp)
+trap "rm -f $OLD_OUT $NEW_OUT; exit" INT TERM EXIT
+
+# UI Elements
+WIDTH=$(tput cols 2> /dev/null || echo 80)
+SEP=$(printf '%*s' "$WIDTH" '' | tr ' ' '-')
+
+# --- INITIAL RUN ---
+echo -e "\033[1;32mMonitoring:\033[0m $COMMAND"
+echo -e "\033[90mInterval: ${INTERVAL}s | Context: ${CONTEXT}\033[0m"
+echo -e "\033[1;34m$SEP\033[0m"
+echo -e "\033[1;34mINITIAL OUTPUT ($(date +%H:%M:%S)):\033[0m"
+
+# Show full initial output and save it
+bash -c "$COMMAND" | tee "$OLD_OUT"
+LAST_EXIT=$?
+echo -e "\n\033[1;34m$SEP\033[0m"
+
+# --- LOOP FOR DIFFS ---
+while true; do
+  sleep "$INTERVAL"
+  bash -c "$COMMAND" > "$NEW_OUT"
+  CURRENT_EXIT=$?
+
+  # Check for content change or exit code change
+  if ! cmp -s "$OLD_OUT" "$NEW_OUT" || [ $CURRENT_EXIT -ne $LAST_EXIT ]; then
+    echo -e "\n\033[1;33mCHANGE DETECTED: $(date +%H:%M:%S)\033[0m"
+
+    if [ $CURRENT_EXIT -ne $LAST_EXIT ]; then
+      echo -e "\033[1;31mExit Code Changed: $LAST_EXIT -> $CURRENT_EXIT\033[0m"
+    fi
+
+    # Generate diff with context
+    # We use --label to make the header easier to strip consistently
+    diff --color=always "-U$CONTEXT" --label "OLD" --label "NEW" "$OLD_OUT" "$NEW_OUT" | sed '1,2d'
+
+    cp "$NEW_OUT" "$OLD_OUT"
+    LAST_EXIT=$CURRENT_EXIT
+  elif [ "$SHOW_HEARTBEAT" = true ]; then
+    # Print a subtle heartbeat
+    echo -ne "\033[90m.\033[0m"
+  fi
+done
