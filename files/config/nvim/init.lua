@@ -348,6 +348,10 @@ safely("now", function()
   require("mini.notify").setup()
   vim.notify = MiniNotify.make_notify()
 
+  vim.api.nvim_create_user_command('NotifyHistory', function()
+    MiniNotify.show_history()
+  end, { desc = 'Show notification history' })
+
   require("mini.icons").setup()
   MiniIcons.mock_nvim_web_devicons()
 
@@ -641,10 +645,10 @@ safely("now", function()
 
   add({
     source = "Saghen/blink.cmp",
-    -- depends = {
-    --   'saghen/blink.lib',
-    --   'fang2hou/blink-copilot',
-    -- },
+    depends = {
+      'saghen/blink.lib',
+      --   'fang2hou/blink-copilot',
+    },
     hooks = {
       post_install = build_blink,
       post_checkout = build_blink,
