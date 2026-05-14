@@ -7,8 +7,11 @@
 # hab
 # hipchat
 # minikube
+# minishift
 # oni
 # pingplotter
+# quicklook-json
+# skype
 # skype-for-business
 # webex-nbr-player
 # webex-wrf-player
@@ -59,13 +62,10 @@ keepingyouawake
 kitty
 macfuse
 magicprefs
-minishift
 multipass
 powershell
-quicklook-json
 rq
 sequel-pro
-skype
 slack
 spotify
 svu
