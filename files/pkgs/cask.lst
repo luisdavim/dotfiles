@@ -2,6 +2,7 @@
 # atom
 # cakebrew
 # cerebro
+# cisco-proximity
 # docker
 # docker-edge
 # hab
@@ -21,7 +22,6 @@ android-platform-tools
 applepi-baker
 avibrazil-rdm
 chefdk
-cisco-proximity
 clipy
 cyberduck
 dbeaver-community
