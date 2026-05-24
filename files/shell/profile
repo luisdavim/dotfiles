@@ -237,6 +237,10 @@ PATH="${KREW_ROOT:-${HOME}/.krew}/bin:$PATH"
 
 [ -x "${HOME}/.chefvm/bin/chefvm" ] && eval "$("${HOME}/.chefvm/bin/chefvm" init -)"
 
+if [ -d "${HOME}/Library/Android/sdk" ]; then
+  export ANDROID_HOME="${HOME}/Library/Android/sdk"
+fi
+
 # GOPATH
 GOPATH="${HOME}/go:${HOME}/workingCopies"
 GOBIN="${GOPATH/:*/}/bin"
