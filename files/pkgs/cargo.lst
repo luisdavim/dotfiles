@@ -4,12 +4,13 @@ cargo-xtask
 click
 docuum
 flexlint
+grc-rs
 kubie
 pipecolor
 rgrc
-grc-rs
 rm-improved
 rq
 toast
+typos-cli
 viu
 xcp
