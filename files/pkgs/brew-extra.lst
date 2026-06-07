@@ -304,6 +304,8 @@ tree-sitter-cli
 ttyd
 ttyplot
 tubekit
+typos-cli
+typos-lsp
 ufraw
 updatecli
 vagrant-completion
