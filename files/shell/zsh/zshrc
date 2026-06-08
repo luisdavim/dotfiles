@@ -284,6 +284,8 @@ case "${ZSH_THEME}" in
     ;;
   powerlevel10k* | p10k)
     # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+    # to reset prompt cache use:
+    # rm -f ~/.cache/p10k-dump-${USER}.zsh{,.zwc} ~/.cache/p10k-instant-prompt-${USER}.zsh{,.zwc}
     [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
     ;;
 esac
