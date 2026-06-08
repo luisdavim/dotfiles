@@ -178,6 +178,8 @@ installPackages() {
   brew_install_or_upgrade cask
   installPkgList "cask_install" files/pkgs/cask.lst
 
+  brew list --formula --full-name -1 | grep '\/' | xargs brew trust --formula
+
   echo "$(brew --prefix)/bin/zsh" | sudo tee -a /etc/shells > /dev/null
   echo "$(brew --prefix)/bin/bash" | sudo tee -a /etc/shells > /dev/null
   # Set bash as the login shell
