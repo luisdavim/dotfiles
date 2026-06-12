@@ -66,6 +66,7 @@ brew_is_upgradable() {
 
 brew_tap() {
   fancy_echo "Adding Tap: $1 ..."
+  brew trust --tap "$1"
   brew tap "$1" || brew tap "$1" --repair 2> /dev/null
 }
 
