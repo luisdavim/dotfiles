@@ -5,7 +5,9 @@
 # homebrew/core
 # homebrew/services
 # reactiveops/tap
+#koekeishiya/formulae
 FairwindsOps/tap
+asmvik/formulae
 aws/tap
 bazelbuild/tap
 browsh-org/homebrew-browsh
@@ -40,7 +42,6 @@ jesseduffield/lazydocker
 jzelinskie/faq
 knes1/tap
 knqyf263/pet
-koekeishiya/formulae
 komiserio/komiser
 kontena/chpharos
 kube-score/tap
