@@ -9,7 +9,7 @@ if not vim.uv.fs_stat(mini_path) then
   vim.cmd('echo "Installed `mini.nvim`" | redraw')
 end
 
-local function is_andriod()
+local function is_android()
   if vim.uv.os_uname().release:match(".*android.*") then
     return true
   end
@@ -629,8 +629,8 @@ end)
 -- Using blink.cmp
 safely("now", function()
   local function build_blink(params)
-    if is_andriod() then
-      -- requiers rs nightly, not available on android
+    if is_android() then
+      -- requires rs nightly, not available on android
       return
     end
     vim.notify("Building blink.cmp", vim.log.levels.INFO)
@@ -656,8 +656,8 @@ safely("now", function()
   })
 
   local implementation = "prefer_rust"
-  if is_andriod() then
-    -- requiers rs nightly, not available on android
+  if is_android() then
+    -- requires rs nightly, not available on android
     implementation = "lua"
   end
   require("blink.cmp").setup({
@@ -1162,7 +1162,7 @@ safely("now", function()
       end
 
       -- Stop the client if no other buffers are attached
-      client:stop()
+      -- client:stop()
     end),
   })
 
@@ -1643,10 +1643,10 @@ safely("later", function()
       "*.md",
     },
     options = {
-      insert = true,           -- when typing "|"
-      insert_leave = true,     -- when leaving insert
+      insert = true,              -- when typing "|"
+      insert_leave = true,        -- when leaving insert
       pad_separator_line = false, -- add space in separator line
-      alig_style = "default",  -- default, left, center, right
+      alig_style = "default",     -- default, left, center, right
     },
   })
 end)
