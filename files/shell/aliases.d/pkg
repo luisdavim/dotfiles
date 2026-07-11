@@ -107,19 +107,19 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
         if [ "$1" != '-y' ]; then
           select ynx in "Yes" "No" "Exit"; do
             case $ynx in
-            "Yes")
-              echo "Re-installing $c"
-              brew reinstall --cask "$c"
-              break
-              ;;
-            "No")
-              echo "Skipping $c"
-              break
-              ;;
-            "Exit")
-              echo "Exiting brew-cask-upgrade"
-              return
-              ;;
+              "Yes")
+                echo "Re-installing $c"
+                brew reinstall --cask "$c"
+                break
+                ;;
+              "No")
+                echo "Skipping $c"
+                break
+                ;;
+              "Exit")
+                echo "Exiting brew-cask-upgrade"
+                return
+                ;;
             esac
           done
         else
@@ -139,7 +139,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
       if ! [[ ":$PATH:" == *":${keg}:"* ]] && [ -d "$keg" ]; then
         echo -e "\n# WARNING: ${keg} is not in your PATH"
         echo '# add the following to your profile to fix it'
-        cat <<EOF
+        cat << EOF
 if [ -d '${keg}' ]; then
   PATH="${keg}:\$PATH"
 fi
@@ -150,8 +150,8 @@ EOF
 
   alias cask-upgrade='brew-cask-upgrade'
   alias brew-cleanup='brew cleanup'
-  alias brew-upgrade='brew update && brew upgrade && brew cleanup && check-keg_only'
-  alias dist-upgrade='brew-upgrade && brew-cask-upgrade -y'
+  alias brew-upgrade='brew update && brew upgrade -y && brew cleanup && check-keg_only'
+  alias dist-upgrade='brew-upgrade -y && brew-cask-upgrade -y'
 
   brew-list() {
     brew list --formula | grep -E "^${1}(@\d*.*)?\$"
