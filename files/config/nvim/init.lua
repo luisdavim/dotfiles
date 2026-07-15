@@ -1301,124 +1301,120 @@ safely("now", function()
 end)
 
 -- DAP
-safely("event:VimEnter", function()
-  add({
-    source = "rcarriga/nvim-dap-ui",
-    depends = {
-      "mfussenegger/nvim-dap",
-      "williamboman/mason.nvim",
-      "jay-babu/mason-nvim-dap.nvim",
-      "nvim-neotest/nvim-nio",
-      "theHamsta/nvim-dap-virtual-text",
-    },
-  })
-  add({
-    source = "leoluz/nvim-dap-go",
-  })
-  add({
-    source = "mfussenegger/nvim-dap-python",
-  })
-  require("mason-nvim-dap").setup({
-    automatic_installation = true,
-  })
+safely("now", function()
+  local dap_loaded = false
 
-  require("nvim-dap-virtual-text").setup({})
-  require("dap-go").setup()
-  require("dap-python").setup("python3")
+  local function setup_dap()
+    if dap_loaded then
+      return require("dap"), require("dapui")
+    end
+    dap_loaded = true
 
-  local dap, dapui = require("dap"), require("dapui")
-  dapui.setup({
-    icons = { expanded = "▾", collapsed = "▸", current_frame = "*" },
-    controls = {
-      icons = {
-        pause = "⏸",
-        play = "▶",
-        step_into = "⏎",
-        step_over = "⏭",
-        step_out = "⏮",
-        step_back = "b",
-        run_last = "▶▶",
-        terminate = "⏹",
-        disconnect = "⏏",
+    add({
+      source = "rcarriga/nvim-dap-ui",
+      depends = {
+        "mfussenegger/nvim-dap",
+        "williamboman/mason.nvim",
+        "jay-babu/mason-nvim-dap.nvim",
+        "nvim-neotest/nvim-nio",
+        "theHamsta/nvim-dap-virtual-text",
       },
-    },
-  })
+    })
+    add({
+      source = "leoluz/nvim-dap-go",
+    })
+    add({
+      source = "mfussenegger/nvim-dap-python",
+    })
 
-  -- dap.listeners.after.event_initialized["dapui_config"]=function()
-  --   dapui.open()
-  -- end
-  -- dap.listeners.before.event_terminated["dapui_config"]=function()
-  --   dapui.close()
-  -- end
-  -- dap.listeners.before.event_exited["dapui_config"]=function()
-  --   dapui.close()
-  -- end
+    require("mason-nvim-dap").setup({
+      automatic_installation = true,
+    })
+    require("nvim-dap-virtual-text").setup({})
+    require("dap-go").setup()
+    require("dap-python").setup("python3")
 
-  -- open Dap UI automatically when debug starts (e.g. after <F5>)
-  dap.listeners.before.attach.dapui_config = function()
-    dapui.open()
+    local dap, dapui = require("dap"), require("dapui")
+    dapui.setup({
+      icons = { expanded = "▾", collapsed = "▸", current_frame = "*" },
+      controls = {
+        icons = {
+          pause = "⏸",
+          play = "▶",
+          step_into = "⏎",
+          step_over = "⏭",
+          step_out = "⏮",
+          step_back = "b",
+          run_last = "▶▶",
+          terminate = "⏹",
+          disconnect = "⏏",
+        },
+      },
+    })
+
+    -- open Dap UI automatically when debug starts (e.g. after <F5>)
+    dap.listeners.before.attach.dapui_config = function()
+      dapui.open()
+    end
+    dap.listeners.before.launch.dapui_config = function()
+      dapui.open()
+    end
+
+    return dap, dapui
   end
-  dap.listeners.before.launch.dapui_config = function()
-    dapui.open()
+
+  local function with_dap(fn)
+    return function(...)
+      local dap, dapui = setup_dap()
+      return fn(dap, dapui, ...)
+    end
   end
 
   -- close Dap UI with :DapCloseUI
-  vim.api.nvim_create_user_command("DapCloseUI", function()
-    require("dapui").close()
-  end, {})
+  vim.api.nvim_create_user_command("DapCloseUI", with_dap(function(_, dapui)
+    dapui.close()
+  end), {})
 
   -- use <Alt-e> to eval expressions
-  keymap({ "n", "v" }, "<M-e>", function()
-    require("dapui").eval()
-  end)
+  keymap({ "n", "v" }, "<M-e>", with_dap(function(_, dapui)
+    dapui.eval()
+  end))
 
-  -- vim.api.nvim_create_autocmd("ColorScheme", {
-  --   pattern = "*",
-  --   desc = "Prevent colorscheme clearing self-defined DAP marker colors",
-  --   callback = function()
-  --     -- Reuse current SignColumn background (except for DapStoppedLine)
-  --     local sign_column_hl = vim.api.nvim_get_hl(0, { name = 'SignColumn' })
-  --     -- if bg or ctermbg aren't found, use bg = 'bg' (which means current Normal) and ctermbg = 'Black'
-  --     -- convert to 6 digit hex value starting with #
-  --     local sign_column_bg = (sign_column_hl.bg ~= nil) and ('#%06x'):format(sign_column_hl.bg) or 'bg'
-  --     local sign_column_ctermbg = (sign_column_hl.ctermbg ~= nil) and sign_column_hl.ctermbg or 'Black'
-  --
-  --     vim.api.nvim_set_hl(0, 'DapStopped', { fg = '#00ff00', bg = sign_column_bg, ctermbg = sign_column_ctermbg })
-  --     vim.api.nvim_set_hl(0, 'DapStoppedLine', { bg = '#2e4d3d', ctermbg = 'Green' })
-  --     vim.api.nvim_set_hl(0, 'DapBreakpoint', { fg = '#c23127', bg = sign_column_bg, ctermbg = sign_column_ctermbg })
-  --     vim.api.nvim_set_hl(0, 'DapBreakpointRejected',
-  --       { fg = '#888ca6', bg = sign_column_bg, ctermbg = sign_column_ctermbg })
-  --     vim.api.nvim_set_hl(0, 'DapLogPoint', { fg = '#61afef', bg = sign_column_bg, ctermbg = sign_column_ctermbg })
-  --   end
-  -- })
-  --
-  -- vim.fn.sign_define('DapBreakpoint',
-  --   { text = '⏹', texthl = 'DapBreakpoint', linehl = 'DapBreakpoint', numhl = 'DapBreakpoint' })
-  -- vim.fn.sign_define('DapBreakpointCondition',
-  --   { text = 'ﳁ', texthl = 'DapBreakpoint', linehl = 'DapBreakpoint', numhl = 'DapBreakpoint' })
-  -- vim.fn.sign_define('DapBreakpointRejected',
-  --   { text = '', texthl = 'DapBreakpoint', linehl = 'DapBreakpoint', numhl = 'DapBreakpoint' })
-  -- vim.fn.sign_define('DapLogPoint', { text = '🗎', texthl = 'DapLogPoint', linehl = 'DapLogPoint', numhl = 'DapLogPoint' })
-  -- vim.fn.sign_define('DapStopped', { text = '⏵', texthl = 'DapStopped', linehl = 'DapStopped', numhl = 'DapStopped' })
-  --
-  -- -- reload current color scheme to pick up colors override if it was set up in a lazy plugin definition fashion
-  -- vim.cmd.colorscheme(vim.g.colors_name)
+  keymap("n", "<F5>", with_dap(function(dap)
+    dap.continue()
+  end))
+  keymap("n", "<F10>", with_dap(function(dap)
+    dap.step_over()
+  end))
+  keymap("n", "<F11>", with_dap(function(dap)
+    dap.step_into()
+  end))
+  keymap("n", "<F12>", with_dap(function(dap)
+    dap.step_out()
+  end))
 
-  keymap("n", "<F5>", dap.continue)
-  keymap("n", "<F10>", dap.step_over)
-  keymap("n", "<F11>", dap.step_into)
-  keymap("n", "<F12>", dap.step_out)
-
-  keymap("n", "<leader>b", dap.toggle_breakpoint, { desc = "Toggle breakpoint" })
-  keymap("n", "<Leader>B", dap.set_breakpoint, { desc = "Set breakpoint" })
-  keymap("n", "<Leader>lp", function()
+  keymap("n", "<leader>b", with_dap(function(dap)
+    dap.toggle_breakpoint()
+  end), { desc = "Toggle breakpoint" })
+  keymap("n", "<Leader>B", with_dap(function(dap)
+    dap.set_breakpoint()
+  end), { desc = "Set breakpoint" })
+  keymap("n", "<Leader>lp", with_dap(function(dap)
     dap.set_breakpoint(nil, nil, vim.fn.input("Log point message: "))
-  end, { desc = "Set logpoint" })
-  keymap("n", "<Leader>dr", dap.repl.open, { desc = "Open repl" })
-  keymap("n", "<Leader>dl", dap.run_last, { desc = "Debug last" })
+  end), { desc = "Set logpoint" })
+  keymap("n", "<Leader>dr", with_dap(function(dap)
+    dap.repl.open()
+  end), { desc = "Open repl" })
+  keymap("n", "<Leader>dl", with_dap(function(dap)
+    dap.run_last()
+  end), { desc = "Debug last" })
 
-  keymap("n", "<Leader>w", dapui.open, { desc = "Open DAP UI" })
-  keymap("n", "<Leader>W", dapui.close, { desc = "Close DAP UI" })
+  keymap("n", "<Leader>w", with_dap(function(_, dapui)
+    dapui.open()
+  end), { desc = "Open DAP UI" })
+  keymap("n", "<Leader>W", with_dap(function(_, dapui)
+    dapui.close()
+  end), { desc = "Close DAP UI" })
 end)
 
 safely("later", function()
