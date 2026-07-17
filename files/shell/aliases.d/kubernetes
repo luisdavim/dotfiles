@@ -123,6 +123,16 @@ function kubectl-get-all() {
 }
 alias kgaa='kubectl-get-all'
 
+function kubectl-touch() {
+  \kubectl label "${@}" reconcile.k8s.io/requestedAt="$(date -u +"%s")"
+}
+alias ktouch='kubectl-touch'
+
+function kubectl-untouch() {
+  \kubectl label "${@}" reconcile.k8s.io/requestedAt-
+}
+alias kuntouch='kubectl-untouch'
+
 # New versions of kubectl support: kubectl events --for <type/resource> (no get),
 # function kubectl-events() {
 #   local filter=""
