@@ -1,13 +1,16 @@
--- Clone 'mini.nvim' manually in a way that it gets managed by 'mini.deps'
-local path_package = vim.fn.stdpath("data") .. "/site/"
-local mini_path = path_package .. "pack/deps/start/mini.nvim"
-if not vim.uv.fs_stat(mini_path) then
-  vim.cmd('echo "Installing `mini.nvim`" | redraw')
-  local clone_cmd = { "git", "clone", "--filter=blob:none", "https://github.com/nvim-mini/mini.nvim", mini_path }
-  vim.fn.system(clone_cmd)
-  vim.cmd("packadd mini.nvim | helptags ALL")
-  vim.cmd('echo "Installed `mini.nvim`" | redraw')
-end
+local add = vim.pack.add
+local gh = function(x) return 'https://github.com/' .. x end
+
+vim.api.nvim_create_autocmd("PackChanged", {
+  callback = function(ev)
+    local plugin = ev.data
+
+    local pch = (plugin.spec.data or {}).pack_changed_hook
+    if type(pch) == "function" and (plugin.kind == "install" or plugin.kind == "update") then
+      pcall(pch, plugin)
+    end
+  end,
+})
 
 local function is_android()
   if vim.uv.os_uname().release:match(".*android.*") then
@@ -16,33 +19,27 @@ local function is_android()
   return false
 end
 
--- Set up 'mini.deps'
-require("mini.deps").setup({ path = { package = path_package } })
+add({ gh('nvim-mini/mini.nvim') })
 
--- Use 'mini.deps' helpers
-local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
-
-now(function()
-  require("mini.misc").setup({ make_global = { "put", "put_text" } })
-  MiniMisc.setup_restore_cursor()
-  MiniMisc.setup_auto_root({
-    "requirements.txt",
-    "setup.cfg",
-    "package.json",
-    "go.mod",
-    "Cargo.toml",
-    ".projections.json",
-    "PROJECT",
-    "Makefile",
-    "pom.xml",
-    ".root",
-    ".repo",
-    ".git",
-    ".hg",
-    ".bzr",
-    ".svn",
-  })
-end)
+require("mini.misc").setup({ make_global = { "put", "put_text" } })
+MiniMisc.setup_restore_cursor()
+MiniMisc.setup_auto_root({
+  "requirements.txt",
+  "setup.cfg",
+  "package.json",
+  "go.mod",
+  "Cargo.toml",
+  ".projections.json",
+  "PROJECT",
+  "Makefile",
+  "pom.xml",
+  ".root",
+  ".repo",
+  ".git",
+  ".hg",
+  ".bzr",
+  ".svn",
+})
 
 -- Use 'mini.misc' helpers
 local safely = MiniMisc.safely
@@ -212,9 +209,7 @@ safely("now", function()
 end)
 
 safely("now", function()
-  add({
-    source = "lewis6991/fileline.nvim",
-  })
+  add({ gh('lewis6991/fileline.nvim') })
 end)
 
 safely("now", function()
@@ -254,23 +249,25 @@ end)
 -- Treesitter
 safely("now", function()
   add({
-    source = "nvim-treesitter/nvim-treesitter",
-    checkout = "main",
-    hooks = {
-      post_checkout = function()
-        vim.cmd("TSUpdate")
-      end,
+    {
+      src = gh('nvim-treesitter/nvim-treesitter'),
+      version = "main",
+      data = {
+        pack_changed_hook = function()
+          vim.cmd("TSUpdate")
+        end,
+      },
     },
-  })
-  add({
-    source = "MeanderingProgrammer/treesitter-modules.nvim",
-  })
-  add({
-    source = "nvim-treesitter/nvim-treesitter-textobjects",
-    checkout = "main",
-  })
-  add({
-    source = "nvim-treesitter/nvim-treesitter-context",
+    {
+      src = gh('MeanderingProgrammer/treesitter-modules.nvim'),
+    },
+    {
+      src = gh('nvim-treesitter/nvim-treesitter-textobjects'),
+      version = "main",
+    },
+    {
+      src = gh('nvim-treesitter/nvim-treesitter-context'),
+    },
   })
 
   vim.treesitter.language.register("starlark", { "bzl", "tiltfile" })
@@ -332,11 +329,13 @@ end)
 
 safely("now", function()
   add({
-    source = "projekt0n/github-nvim-theme",
-    hooks = {
-      post_checkout = function()
-        vim.cmd("GithubThemeCompile")
-      end,
+    {
+      src = gh('projekt0n/github-nvim-theme'),
+      data = {
+        pack_changed_hook = function()
+          vim.cmd("GithubThemeCompile")
+        end,
+      },
     },
   })
 
@@ -362,9 +361,7 @@ end)
 
 -- Snacks
 safely("now", function()
-  add({
-    source = "folke/snacks.nvim",
-  })
+  add({ gh('folke/snacks.nvim') })
 
   local truncate_width = vim.api.nvim_win_get_width(0) * 0.5
 
@@ -519,9 +516,7 @@ end)
 -- AI
 
 -- later_on('InsertEnter', function()
---   add({
---     source = 'zbirenbaum/copilot.lua',
---   })
+--   add({ gh('zbirenbaum/copilot.lua') })
 --   require('copilot').setup({
 --     suggestion = { enabled = false },
 --     panel = { enabled = false },
@@ -529,9 +524,7 @@ end)
 -- end)
 
 -- safely('later', function()
---   add({
---     source = "folke/sidekick.nvim",
---   })
+--   add({ gh('folke/sidekick.nvim') })
 --   require('sidekick').setup({
 --     -- add any options here
 --     cli = {
@@ -615,9 +608,7 @@ end)
 
 -- Dropbar
 safely("now", function()
-  add({
-    source = "Bekaboo/dropbar.nvim",
-  })
+  add({ gh('Bekaboo/dropbar.nvim') })
   local dropbar_api = require("dropbar.api")
   keymap("n", "<Leader>;", dropbar_api.pick, { desc = "Pick symbols in winbar" })
   keymap("n", "[;", dropbar_api.goto_context_start, { desc = "Go to start of current context" })
@@ -644,14 +635,15 @@ safely("now", function()
   end
 
   add({
-    source = "Saghen/blink.cmp",
-    depends = {
-      "saghen/blink.lib",
-      --   'fang2hou/blink-copilot',
-    },
-    hooks = {
-      post_install = build_blink,
-      post_checkout = build_blink,
+    gh("saghen/blink.lib"),
+    --   gh('fang2hou/blink-copilot'),
+  })
+  add({
+    {
+      src = gh('Saghen/blink.cmp'),
+      data = {
+        pack_changed_hook = build_blink,
+      },
     },
   })
 
@@ -734,16 +726,14 @@ end)
 -- LSP config
 safely("now", function()
   add({
-    source = "folke/lazydev.nvim",
-    depends = {
-      "neovim/nvim-lspconfig",
-      "williamboman/mason.nvim",
-      "williamboman/mason-lspconfig.nvim",
-      "WhoIsSethDaniel/mason-tool-installer.nvim",
-      "saghen/blink.cmp",
-      -- 'jay-babu/mason-null-ls.nvim',
-      -- 'nvimtools/none-ls.nvim',
-    },
+    gh("neovim/nvim-lspconfig"),
+    gh("mason-org/mason.nvim"),
+    gh("mason-org/mason-lspconfig.nvim"),
+    gh("WhoIsSethDaniel/mason-tool-installer.nvim"),
+    gh("sagneovimhen/blink.cmp"),
+    -- gh('jay-babu/mason-null-ls.nvim'),
+    -- gh('nvimtools/none-ls.nvim'),
+    gh('folke/lazydev.nvim'),
   })
 
   require("lazydev").setup()
@@ -770,10 +760,12 @@ safely("now", function()
   })
 
   add({
-    source = "fnune/codeactions-on-save.nvim",
-  })
-  add({
-    source = "dnlhc/glance.nvim",
+    {
+      src = gh('fnune/codeactions-on-save.nvim'),
+    },
+    {
+      src = gh('dnlhc/glance.nvim'),
+    },
   })
 
   require("lspconfig")
@@ -1212,19 +1204,15 @@ safely("now", function()
 end)
 
 safely("event:VimEnter", function()
-  add({
-    source = "FabijanZulj/blame.nvim",
-  })
+  add({ gh('FabijanZulj/blame.nvim') })
   require("blame").setup({})
 end)
 
 -- later_on('VimEnter', function()
 safely("now", function()
   add({
-    source = "tanvirtin/vgit.nvim",
-    depends = {
-      "nvim-lua/plenary.nvim",
-    },
+    gh("nvim-lua/plenary.nvim"),
+    gh('tanvirtin/vgit.nvim'),
   })
   require("vgit").setup({
     settings = {
@@ -1241,10 +1229,8 @@ end)
 -- using now instead of later so the gitv shell alias works
 safely("now", function()
   add({
-    source = "isakbm/gitgraph.nvim",
-    depends = {
-      "sindrets/diffview.nvim",
-    },
+    gh("sindrets/diffview.nvim"),
+    gh('isakbm/gitgraph.nvim'),
   })
 
   require("diffview").setup()
@@ -1311,20 +1297,14 @@ safely("now", function()
     dap_loaded = true
 
     add({
-      source = "rcarriga/nvim-dap-ui",
-      depends = {
-        "mfussenegger/nvim-dap",
-        "williamboman/mason.nvim",
-        "jay-babu/mason-nvim-dap.nvim",
-        "nvim-neotest/nvim-nio",
-        "theHamsta/nvim-dap-virtual-text",
-      },
-    })
-    add({
-      source = "leoluz/nvim-dap-go",
-    })
-    add({
-      source = "mfussenegger/nvim-dap-python",
+      gh("mfussenegger/nvim-dap"),
+      gh("mason-org/mason.nvim"),
+      gh("jay-babu/mason-nvim-dap.nvim"),
+      gh("nvim-neotest/nvim-nio"),
+      gh("theHamsta/nvim-dap-virtual-text"),
+      gh('rcarriga/nvim-dap-ui'),
+      gh('leoluz/nvim-dap-go'),
+      gh('mfussenegger/nvim-dap-python'),
     })
 
     require("mason-nvim-dap").setup({
@@ -1418,9 +1398,7 @@ safely("now", function()
 end)
 
 safely("later", function()
-  add({
-    source = "johmsalas/text-case.nvim",
-  })
+  add({ gh('johmsalas/text-case.nvim') })
   require("textcase").setup({
     substitude_command_name = "S",
   })
@@ -1595,9 +1573,7 @@ safely("later", function()
 end)
 
 safely("later", function()
-  add({
-    source = "chrishrb/gx.nvim",
-  })
+  add({ gh('chrishrb/gx.nvim') })
 
   require("gx").setup({
     handlers = {
@@ -1618,22 +1594,18 @@ end)
 -- Markdown rendering
 safely("later", function()
   add({
-    -- source = "OXY2DEV/markview.nvim"
-    source = "MeanderingProgrammer/render-markdown.nvim",
+    --  gh('OXY2DEV/markview.nvim')
+    gh('MeanderingProgrammer/render-markdown.nvim'),
   })
   -- require('markview').setup(require("markview.spec").default)
   require("render-markdown").setup({})
 
-  add({
-    source = "wallpants/github-preview.nvim",
-  })
+  add({ gh('wallpants/github-preview.nvim') })
   require("github-preview").setup({
     single_file = true,
   })
 
-  add({
-    source = "Kicamon/markdown-table-mode.nvim",
-  })
+  add({ gh('Kicamon/markdown-table-mode.nvim') })
   require("markdown-table-mode").setup({
     filetype = {
       "*.md",
