@@ -1,11 +1,15 @@
 local add = vim.pack.add
 local gh = function(x) return 'https://github.com/' .. x end
 
+vim.api.nvim_create_user_command('PackUpdate', function()
+  vim.pack.update()
+end, {})
+
 vim.api.nvim_create_autocmd("PackChanged", {
   callback = function(ev)
     local plugin = ev.data
 
-    local pch = (plugin.spec.data or {}).pack_changed_hook
+    local pch = (plugin.spec.data or {}).build
     if type(pch) == "function" and (plugin.kind == "install" or plugin.kind == "update") then
       pcall(pch, plugin)
     end
@@ -253,7 +257,7 @@ safely("now", function()
       src = gh('nvim-treesitter/nvim-treesitter'),
       version = "main",
       data = {
-        pack_changed_hook = function()
+        build = function()
           vim.cmd("TSUpdate")
         end,
       },
@@ -332,7 +336,7 @@ safely("now", function()
     {
       src = gh('projekt0n/github-nvim-theme'),
       data = {
-        pack_changed_hook = function()
+        build = function()
           vim.cmd("GithubThemeCompile")
         end,
       },
@@ -642,7 +646,7 @@ safely("now", function()
     {
       src = gh('Saghen/blink.cmp'),
       data = {
-        pack_changed_hook = build_blink,
+        build = build_blink,
       },
     },
   })
