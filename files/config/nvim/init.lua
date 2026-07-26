@@ -1291,7 +1291,7 @@ safely("now", function()
 end)
 
 -- DAP
-safely("now", function()
+safely("event:VimEnter", function()
   local dap_loaded = false
 
   local function setup_dap()

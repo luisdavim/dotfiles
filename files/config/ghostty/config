@@ -29,7 +29,7 @@ window-padding-balance = true
 # window-decoration = false
 
 scrollbar = never
-# scrollback-limit = 1000000
+scrollback-limit = 0
 
 # gtk-single-instance = true
 # gtk-tabs-location = bottom
@@ -56,6 +56,9 @@ macos-option-as-alt = true
 # keybind = ctrl+l=goto_split:right
 # keybind = super+shift+h=previous_tab
 # keybind = super+shift+v=paste_from_clipboard
+
+key-repeat-delay = 200
+key-repeat-interval = 25
 
 # Other
 copy-on-select = clipboard
