@@ -57,9 +57,6 @@ macos-option-as-alt = true
 # keybind = super+shift+h=previous_tab
 # keybind = super+shift+v=paste_from_clipboard
 
-key-repeat-delay = 200
-key-repeat-interval = 25
-
 # Other
 copy-on-select = clipboard
 quit-after-last-window-closed = true

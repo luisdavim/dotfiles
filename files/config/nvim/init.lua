@@ -1,4 +1,13 @@
-local add = vim.pack.add
+local function add(specs, opts)
+  for _, spec in ipairs(specs) do
+    local deps = (spec.data or {}).deps
+    if deps ~= nil then
+      vim.pack.add(deps, opts)
+    end
+    vim.pack.add({ spec }, opts)
+  end
+end
+
 local gh = function(x) return 'https://github.com/' .. x end
 
 vim.api.nvim_create_user_command('PackUpdate', function()
@@ -639,14 +648,14 @@ safely("now", function()
   end
 
   add({
-    gh("saghen/blink.lib"),
-    --   gh('fang2hou/blink-copilot'),
-  })
-  add({
     {
       src = gh('Saghen/blink.cmp'),
       data = {
         build = build_blink,
+        deps = {
+          gh("saghen/blink.lib"),
+          --   gh('fang2hou/blink-copilot'),
+        },
       },
     },
   })
@@ -730,14 +739,20 @@ end)
 -- LSP config
 safely("now", function()
   add({
-    gh("neovim/nvim-lspconfig"),
-    gh("mason-org/mason.nvim"),
-    gh("mason-org/mason-lspconfig.nvim"),
-    gh("WhoIsSethDaniel/mason-tool-installer.nvim"),
-    gh("sagneovimhen/blink.cmp"),
-    -- gh('jay-babu/mason-null-ls.nvim'),
-    -- gh('nvimtools/none-ls.nvim'),
-    gh('folke/lazydev.nvim'),
+    {
+      src = gh('folke/lazydev.nvim'),
+      data = {
+        deps = {
+          gh("neovim/nvim-lspconfig"),
+          gh("mason-org/mason.nvim"),
+          gh("mason-org/mason-lspconfig.nvim"),
+          gh("WhoIsSethDaniel/mason-tool-installer.nvim"),
+          gh("sagneovimhen/blink.cmp"),
+          -- gh('jay-babu/mason-null-ls.nvim'),
+          -- gh('nvimtools/none-ls.nvim'),
+        },
+      },
+    },
   })
 
   require("lazydev").setup()
@@ -1215,8 +1230,14 @@ end)
 -- later_on('VimEnter', function()
 safely("now", function()
   add({
-    gh("nvim-lua/plenary.nvim"),
-    gh('tanvirtin/vgit.nvim'),
+    {
+      src = gh('tanvirtin/vgit.nvim'),
+      data = {
+        deps = {
+          gh("nvim-lua/plenary.nvim"),
+        },
+      },
+    },
   })
   require("vgit").setup({
     settings = {
@@ -1233,8 +1254,14 @@ end)
 -- using now instead of later so the gitv shell alias works
 safely("now", function()
   add({
-    gh("sindrets/diffview.nvim"),
-    gh('isakbm/gitgraph.nvim'),
+    {
+      src = gh('isakbm/gitgraph.nvim'),
+      data = {
+        deps = {
+          gh("sindrets/diffview.nvim"),
+        },
+      },
+    },
   })
 
   require("diffview").setup()
@@ -1301,12 +1328,18 @@ safely("event:VimEnter", function()
     dap_loaded = true
 
     add({
-      gh("mfussenegger/nvim-dap"),
-      gh("mason-org/mason.nvim"),
-      gh("jay-babu/mason-nvim-dap.nvim"),
-      gh("nvim-neotest/nvim-nio"),
-      gh("theHamsta/nvim-dap-virtual-text"),
-      gh('rcarriga/nvim-dap-ui'),
+      {
+        src = gh('rcarriga/nvim-dap-ui'),
+        data = {
+          deps = {
+            gh("mfussenegger/nvim-dap"),
+            gh("mason-org/mason.nvim"),
+            gh("jay-babu/mason-nvim-dap.nvim"),
+            gh("nvim-neotest/nvim-nio"),
+            gh("theHamsta/nvim-dap-virtual-text"),
+          },
+        },
+      },
       gh('leoluz/nvim-dap-go'),
       gh('mfussenegger/nvim-dap-python'),
     })
