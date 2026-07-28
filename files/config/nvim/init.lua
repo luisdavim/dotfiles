@@ -78,7 +78,7 @@ safely("now", function()
   set.smarttab = true
   set.scrolloff = 1
   set.ttyfast = true
-  set.lazyredraw = true
+  set.lazyredraw = false
   set.ttimeout = true
   set.ttimeoutlen = 50
   set.updatetime = 300
@@ -1318,7 +1318,7 @@ safely("now", function()
 end)
 
 -- DAP
-safely("event:VimEnter", function()
+safely("now", function()
   local dap_loaded = false
 
   local function setup_dap()
