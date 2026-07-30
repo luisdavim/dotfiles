@@ -1154,6 +1154,10 @@ safely("now", function()
   vim.api.nvim_create_autocmd("LspDetach", {
     group = "lsp_config",
     callback = vim.schedule_wrap(function(args)
+      if not vim.api.nvim_buf_is_valid(args.buf) then
+        return
+      end
+
       -- Clear LSP autocmds
       vim.api.nvim_clear_autocmds({
         group = "lsp_config_attach",
