@@ -1268,6 +1268,7 @@ safely("now", function()
 
   local gitgraph = require("gitgraph")
   gitgraph.setup({
+    git_cmd = "git",
     symbols = {
       merge_commit = "",
       commit = "",
@@ -1308,6 +1309,11 @@ safely("now", function()
         vim.cmd(":DiffviewOpen " .. from.hash .. "~1.." .. to.hash)
       end,
     },
+    format = {
+      timestamp = '%H:%M:%S %d-%m-%Y',
+      fields = { 'hash', 'timestamp', 'author', 'branch_name', 'tag' },
+    },
+    log_level = vim.log.levels.ERROR,
   })
 
   vim.api.nvim_create_user_command("Flog", function()
