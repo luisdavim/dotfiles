@@ -124,7 +124,7 @@ function kubectl-get-all() {
 alias kgaa='kubectl-get-all'
 
 function kubectl-touch() {
-  \kubectl label "${@}" reconcile.k8s.io/requestedAt="$(date -u +"%s")"
+  \kubectl label "${@}" reconcile.k8s.io/requestedAt="$(date -u +"%s")" --overwrite
 }
 alias ktouch='kubectl-touch'
 
