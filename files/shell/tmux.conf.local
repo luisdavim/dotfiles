@@ -411,10 +411,11 @@ tmux_conf_urlscan_options="--compact --dedupe"
 
 # this is the place to override or undo settings
 
-# TODO: workaround pasting issues, should be fixed in the next tmux release
-# - https://github.com/gpakosz/.tmux/issues/776
-# - https://github.com/ghostty-org/ghostty/discussions/5924
-set -s extended-keys off
+set -g allow-passthrough all
+
+set -g extended-keys always
+set -g extended-keys-format csi-u
+set -as terminal-features 'xterm*:extkeys'
 
 # faster key repetition
 set-option -s escape-time 10
@@ -423,7 +424,7 @@ set-option -s escape-time 10
 #set -g history-limit 10000
 
 # start with mouse mode enabled
-#set -g mouse on
+set -g mouse on
 
 # force Vi mode
 #   really you should export VISUAL or EDITOR environment variable, see manual
@@ -533,7 +534,7 @@ set -ga update-environment TERM
 set -ga update-environment TERM_PROGRAM
 set-option -g set-clipboard on
 # word separators for automatic word selection
-setw -g word-separators ' @"=()[]─'  # default => ‘ -_@’.
+setw -g word-separators ' @"=()[]│─'  # default => ‘ -_@’.
 
 # -- custom variables ----------------------------------------------------------
 
