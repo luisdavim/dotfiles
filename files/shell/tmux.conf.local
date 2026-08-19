@@ -73,10 +73,10 @@ tmux_conf_24b_colour=true
 
 # Undercurl
 if-shell '[[ "$(uname -o)" != "Android" ]]' {
-  set -sa terminal-features "xterm*:256:RGB:hyperlinks"
-  set -sa terminal-features "xterm*:usstyle:overline:sixel:sync"
   # set -g default-terminal tmux-256color
   set -g default-terminal "${TERM}"
+  set -as terminal-features ",xterm*:256:RGB:hyperlinks"
+  set -as terminal-features ",xterm*:usstyle:overline:sixel:sync"
   set -as terminal-overrides ',*256col*:RGB'
   set -as terminal-overrides ',*:sitm=\E[3m' # Italics support for older ncurses
   set -as terminal-overrides ',*:smxx=\E[9m' # Strikeout
@@ -417,7 +417,7 @@ set -g allow-passthrough all
 
 set -g extended-keys always
 set -g extended-keys-format csi-u
-set -as terminal-features 'xterm*:extkeys'
+set -sa terminal-features 'xterm*:extkeys'
 
 # faster key repetition
 set-option -s escape-time 10
