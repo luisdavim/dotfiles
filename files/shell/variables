@@ -136,6 +136,9 @@ if [ -z "${GITLAB_TOKEN:-}" ] && [ -f "${HOME}/.config/glab-cli/config.yml" ]; t
   fi
   export GITLAB_TOKEN
 fi
+if [[ "${GITLAB_TOKEN:-null}" == "null" ]]; then
+  unset GITLAB_TOKEN
+fi
 
 # fzf config
 # Use ag for feeding into fzf for searching files.
