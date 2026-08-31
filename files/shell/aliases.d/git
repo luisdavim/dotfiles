@@ -13,12 +13,12 @@ function git-main_branch() {
 }
 
 function git-status() {
-  UNCOMMITED=$(git status -s)
+  UNCOMMITTED=$(git status -s)
   LOCAL=$(git rev-parse @)
-  REMOTE=$(git rev-parse @{u})
-  BASE=$(git merge-base @ @{u})
+  REMOTE="$(git rev-parse @{u})"
+  BASE="$(git merge-base @ @{u})"
 
-  if [ "${UNCOMMITED}" != "" ]; then
+  if [ "${UNCOMMITTED}" != "" ]; then
     echo "Need to commit"
   elif [ "${LOCAL}" = "${REMOTE}" ]; then
     echo "Up-to-date"
@@ -36,7 +36,7 @@ function gch() {
 }
 
 function git-compare() {
-  git rev-list --left-right --count $1...$2
+  git rev-list --left-right --count "${1}...${2}"
 }
 
 function git-branch-status() {
