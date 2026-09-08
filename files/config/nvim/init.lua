@@ -78,7 +78,10 @@ safely("now", function()
   set.smarttab = true
   set.scrolloff = 1
   set.ttyfast = true
-  set.lazyredraw = false
+  set.lazyredraw = true
+  set.termsync = false
+  set.mouse = "a"
+  set.mousescroll = "ver:6,hor:6"
   set.ttimeout = true
   set.ttimeoutlen = 50
   set.updatetime = 300
