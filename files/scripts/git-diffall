@@ -1,0 +1,24 @@
+#! /usr/bin/env bash
+
+git-diffall() {
+  # 1. Get the list of untracked files
+  local untracked
+  untracked=$(git ls-files --others --exclude-standard)
+
+  if [ -n "${untracked}" ]; then
+    # 2. Mark them as intent-to-add
+    echo "${untracked}" | xargs git add --intent-to-add
+
+    # 3. SET THE TRAP: If this function exits, interrupts, or kills,
+    # IMMEDIATELY reset the files back to untracked.
+    trap 'echo "${untracked}" | xargs git reset -q --; trap - EXIT INT' EXIT INT
+
+    # 4. Run native git diff through your custom paginator
+    git diff "${@}"
+  else
+    # No untracked files? Just do a normal diff.
+    git diff "${@}"
+  fi
+}
+
+git-diffall "${@}"
