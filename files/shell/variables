@@ -88,7 +88,7 @@ fi
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export BAT_THEME='Enki-Tokyo-Night'
 # export BAT_PAGER="less -R"
-export DELTA_PAGER="less -LREFX"
+export DELTA_PAGER="less --mouse -LREFX"
 export PAGER="bat -p"
 export AWS_PAGER="bat -p ${AWS_PAGER_OPTS}"
 
