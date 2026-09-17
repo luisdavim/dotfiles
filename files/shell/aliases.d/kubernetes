@@ -330,7 +330,7 @@ function krun() {
 alias kctl-run='krun'
 
 function kubectl-remote_shell() {
-  command kubectl run "${@}" --restart=Never --rm -i --tty debug --image=ghcr.io/luisdavim/debug:main -- sh
+  command kubectl run "${@}" --restart=Never --rm -i --tty debug --image=ghcr.io/luisdavim/debug:main
 }
 alias kctl-shell='kubectl-remote_shell'
 alias kube-shell='kubectl-remote_shell'
