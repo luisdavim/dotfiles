@@ -11,7 +11,7 @@
 # helm
 # kubernetes-cli
 # macvim
-# terraform # can't be installed allong with tfswitch
+# terraform # can't be installed along with tfswitch
 # tldr
 # godep
 1password
@@ -278,6 +278,7 @@ tanka
 tcptraceroute
 tealdeer
 telepresence
+termaid
 terrafile
 terraform-docs
 terraform-inventory
