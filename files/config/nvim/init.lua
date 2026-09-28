@@ -1669,6 +1669,13 @@ safely("later", function()
   })
 end)
 
+safely("later", function ()
+  add({
+    gh('kais-radwan/ascii-mermaid')
+  })
+  require("ascii-mermaid").setup()
+end)
+
 -- Buffer and window management
 
 safely("later", function()
