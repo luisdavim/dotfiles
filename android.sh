@@ -14,7 +14,7 @@ fi
 INSTALLDIR=$(pwd)
 
 installGYP() {
-  mkdir ~/.gyp && echo "{'variables':{'android_ndk_path':''}}" > ~/.gyp/include.gypi
+  mkdir "${HOME}/.gyp" && echo "{'variables':{'android_ndk_path':''}}" > "${HOME}/.gyp/include.gypi"
 }
 
 installPackages() {
@@ -33,7 +33,7 @@ installPackages() {
 installAwsCli() {
   # curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
   # unzip awscliv2.zip
-  # ./aws/install -i ~/.local/aws-cli -b ~/.local/bin --update
+  # ./aws/install -i "${HOME}/.local/aws-cli" -b "${HOME}/.local/bin" --update
   # rm -rf aws
   # rm awscliv2.zip
 

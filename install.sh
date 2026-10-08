@@ -25,13 +25,14 @@ installEls() {
 }
 
 installAwless() {
+  mkdir -p "${HOME}/.local/bin/"
   pipeBashFromRawGithub 'wallix/awless/master' 'getawless.sh'
-  mv awless ~/.local/bin/
+  mv awless "${HOME}/.local/bin/"
 }
 
 installUdocker() {
-  mkdir -p ~/.local
-  pushd ~/.local
+  mkdir -p "${HOME}/.local"
+  pushd "${HOME}/.local"
   python3 -m venv udockervenv
   source udockervenv/bin/activate
   pip install udocker
@@ -56,7 +57,7 @@ EOF
 
 installFastPath() {
   # https://github.com/mfornasa/docker-fastpath
-  mkdir -p ~/.local/bin/
+  mkdir -p "${HOME}/.local/bin/"
   version='linux'
   arch='-amb64'
   if [[ "${OSTYPE}" == "darwin"* ]]; then
@@ -65,24 +66,24 @@ installFastPath() {
   fi
   curl https://docker-fastpath.s3-eu-west-1.amazonaws.com/releases/${version}/docker-fastpath-${version}"${arch}"-latest.zip > fastpath.zip
   unzip fastpath.zip
-  chmod +x fastpath && mv fastpath ~/.local/bin/
+  chmod +x fastpath && mv fastpath "${HOME}/.local/bin/"
 }
 
 installFission() {
   # http://fission.io/
-  mkdir -p ~/.local/bin/
+  mkdir -p "${HOME}/.local/bin/"
   version='linux'
   if [[ "${OSTYPE}" == "darwin"* ]]; then
     version='mac'
   fi
-  curl http://fission.io/$version/fission > fission && chmod +x fission && mv fission ~/.local/bin/
+  curl "http://fission.io/${version}/fission" > fission && chmod +x fission && mv fission "${HOME}/.local/bin/"
 }
 
 installMinikube() {
-  mkdir -p ~/.local/bin/
+  mkdir -p "${HOME}/.local/bin/"
   curl -Lo "minikube https://storage.googleapis.com/minikube/releases/latest/minikube-${OS}-amd64"
   chmod +x minikube
-  mv minikube ~/.local/bin/
+  mv minikube "${HOME}/.local/bin/"
 }
 
 installKrew() {
@@ -147,15 +148,15 @@ installKubeScripts() {
 }
 
 installDCOScli() {
-  mkdir -p ~/.local/bin/
+  mkdir -p "${HOME}/.local/bin/"
   curl -Lo dcos "https://downloads.dcos.io/binaries/cli/${OS}/x86-64/latest/dcos"
   chmod +x dcos
-  mv dcos ~/.local/bin/
+  mv dcos "${HOME}/.local/bin/"
 }
 
 installGoss() {
-  mkdir -p ~/.local/bin/
-  curl -fsSL https://goss.rocks/install | GOSS_DST=~/.local/bin sh
+  mkdir -p "${HOME}/.local/bin/"
+  curl -fsSL "https://goss.rocks/install" | GOSS_DST="${HOME}/.local/bin" sh
 }
 
 installDepcon() {
@@ -250,7 +251,7 @@ installTestssl() {
 }
 
 installScripts() {
-  mkdir -p ~/.local/bin/
+  mkdir -p "${HOME}/.local/bin/"
   cp -r files/scripts/* "${HOME}/.local/bin/"
   installFromGithub 'AkihiroSuda/sshocker'
   installFromRawGithub 'huyng/bashmarks' 'bashmarks.sh'
@@ -275,11 +276,11 @@ installScripts() {
 
 installChefVM() {
   git_clone_or_update https://github.com/trobrock/chefvm.git "${HOME}/.chefvm"
-  ~/.chefvm/bin/chefvm init
+  ${HOME}/.chefvm/bin/chefvm init
 }
 
 installAtomPackages() {
-  mkdir -p ~/.atom/
+  mkdir -p "${HOME}/.atom/"
   cd "${INSTALLDIR}" || exit
   # Backup package list with:
   #   apm list --installed --bare | cut -d'@' -f1 | grep -vE '^$' > atom-packages.lst
@@ -356,14 +357,14 @@ installVimPlugins() {
   # Using vim-plug
   if [[ "${NVIM_FLAVOUR}" == "coc" ]]; then
     cp files/vim/init.lua "${HOME}/.config/nvim/"
-    if [ ! -s ~/.config/nvim/coc-settings.json ]; then
+    if [ ! -s "${HOME}/.config/nvim/coc-settings.json" ]; then
       ln -s "${HOME}"/.vim/autoload/ "${HOME}/.config/nvim/autoload"
       ln -s "${HOME}"/.vim/ftdetect/ "${HOME}/.config/nvim/ftdetect"
       ln -s "${HOME}"/.vim/ftplugin/ "${HOME}/.config/nvim/ftplugin"
       ln -s "${HOME}"/.vim/coc-settings.json "${HOME}/.config/nvim/coc-settings.json"
     fi
-    if [ ! -f ~/.vim/autoload/plug.vim ]; then
-      curl -sLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    if [ ! -f "${HOME}/.vim/autoload/plug.vim" ]; then
+      curl -sLo "${HOME}/.vim/autoload/plug.vim" --create-dirs "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
     fi
     vim +PlugInstall +qall
     nvim +PlugInstall +qall
@@ -473,8 +474,8 @@ installFishConf() {
     brew install fish
   fi
   curl -sfL https://git.io/fundle-install | fish
-  curl -Lo ~/.config/fish/functions/fisher.fish --create-dirs git.io/fisher
-  curl -L https://github.com/oh-my-fish/oh-my-fish/raw/master/bin/install | fish
+  curl -Lo "${HOME}/.config/fish/functions/fisher.fish" --create-dirs "git.io/fisher"
+  curl -L "https://github.com/oh-my-fish/oh-my-fish/raw/master/bin/install" | fish
   fisher add fzf edc/bass omf/thefuck omf/wttr omf/vundle ansible-completion docker-completion
   fisher add teapot
 
@@ -549,8 +550,8 @@ installDotFiles() {
   installWeztermConfig
 
   # Set alacritty themes with:
-  # alacritty-colorscheme -C ~/.alacritty-theme/themes -a tomorrow_night_bright.yaml -V
-  # a matching vim theme will also be created in ~/.vimrc_background
+  # alacritty-colorscheme -C "${HOME}/.alacritty-theme/themes" -a tomorrow_night_bright.yaml -V
+  # a matching vim theme will also be created in "${HOME}/.vimrc_background"
   git_clone_or_update https://github.com/eendroroy/alacritty-theme.git "${HOME}/.alacritty-theme"
 
   # kitty themes

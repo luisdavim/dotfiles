@@ -82,7 +82,7 @@ installKubernetes() {
   cd "${HOME}/.local/bin/" || exit
   curl -sS https://get.k8s.io | bash
   rm -rf kubernetes.tar.gz
-  ln -s ~/.local/bin/kubernetes/client/bin/* ~/.local/bin/
+  ln -s "${HOME}/.local/bin/kubernetes/client/bin/"* "${HOME}/.local/bin/"
   cd "${INSTALLDIR}" || exit
 }
 
