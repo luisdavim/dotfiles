@@ -32,13 +32,13 @@ installAwless() {
 
 installUdocker() {
   mkdir -p "${HOME}/.local"
-  pushd "${HOME}/.local"
+  pushd "${HOME}/.local" || exit
   python3 -m venv udockervenv
   source udockervenv/bin/activate
   pip install udocker
   # udocker install
   udockervenv/bin/udocker install
-  popd
+  popd || exit
   if [[ "${OSTYPE}" != *"android"* ]]; then
     # https://github.com/indigo-dc/udocker/issues/424
     # Force use Termux provided proot
@@ -521,7 +521,7 @@ createSkeleton() {
     mkdir -p "${d}"
   done
 
-  for dir in $(ls -1d files/config/*/); do mkdir -p "${HOME}/.config/${dir##*/}"; done
+  for dir in files/config/*/; do mkdir -p "${HOME}/.config/${dir##*/}"; done
 
   [ -d "${HOME}/workingCopies/code" ] || ln -s "${HOME}/workingCopies/src" "${HOME}/workingCopies/code"
 
@@ -558,7 +558,7 @@ installDotFiles() {
   git_clone_or_update https://github.com/dexpota/kitty-themes.git "${HOME}/.kitty-themes"
   git_clone_or_update git@github.com:lemnos/theme.sh.git "${HOME}/.theme.sh"
 
-  for dir in $(ls -1d files/config/*/); do
+  for dir in files/config/*/; do
     cp -r files/config/"${dir##*/}"/* "${HOME}/.config/${dir##*/}/"
   done
 
