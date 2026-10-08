@@ -13,12 +13,12 @@ path() {
 }
 
 link() {
-  create_link "$dotfiles_dir/$1" "${HOME}/$1"
+  create_link "${dotfiles_dir}/$1" "${HOME}/$1"
 }
 
 create_link() {
-  real_file="$(path "$1")"
-  link_file="$(path "$2")"
+  real_file="$(path "${1}")"
+  link_file="$(path "${2}")"
 
   rm -rf "$link_file"
   ln -s "$real_file" "$link_file"
@@ -65,4 +65,13 @@ installPkgList() {
 
 getNerdFont() {
   getFromRawGithub 'ryanoasis/nerd-fonts/' "patched-fonts/${1}" 'latest'
+}
+
+cleanGoPkgs() {
+  go clean -modcache
+  rm -rf "${HOME}/.glide/"*
+  rm -rf "${GOPATH/:*/}/src/"*
+  rm -rf "${GOPATH/:*/}/pkg/"*
+  rm -rf "${GOPATH/:*/}/.cache"
+  rm -rf "${HOME}/.cache/go-build/"
 }

@@ -208,15 +208,6 @@ installGhExtensions() {
   installPkgList "gh extension upgrade" files/pkgs/gh.lst
 }
 
-cleanGoPkgs() {
-  go clean -modcache
-  rm -rf "${HOME}/.glide/"*
-  rm -rf "${GOPATH/:*/}/src/"*
-  rm -rf "${GOPATH/:*/}/pkg/"*
-  rm -rf "${GOPATH/:*/}/.cache"
-  rm -rf "${HOME}/.cache/go-build/"
-}
-
 installHelmPlugins() {
   if ! [ -x "$(command -v helm)" ]; then
     if [[ "${OSTYPE}" == *"android"* ]]; then
@@ -543,7 +534,7 @@ createSkeleton() {
   mkdir -p "${HOME}/.kube/config.d"
 }
 
-instrallRangerPlugins() {
+installRangerPlugins() {
   rm -f "${HOME}/.config/ranger/"*.{sh,py}
   ranger --copy-config=all
   mkdir -p "${HOME}/.ranger_plugins/"
@@ -583,7 +574,7 @@ installDotFiles() {
   installVscodeConfig
   installVimPlugins
   installHelix
-  instrallRangerPlugins
+  installRangerPlugins
 
   if [ -x "$(command -v bat)" ]; then
     mkdir -p "${HOME}/.config/bat/themes"
