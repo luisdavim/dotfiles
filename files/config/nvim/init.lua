@@ -372,6 +372,18 @@ safely("now", function()
 
   require("mini.tabline").setup()
   require("mini.statusline").setup()
+  local statuscolumn = require('mini.statuscolumn')
+  local default_spec = {
+    { fold = '%C', lnum = '%l', sign = '%s' },
+    { format = '=fs=l=', sep = '▏' },
+    { ltype = 'virt', lnum = '•' },
+    { ltype = 'wrap', lnum = '↳' },
+    { win = 'inactive', sep = ' ' },
+  }
+  statuscolumn.setup({
+    content = statuscolumn.gen_content.main(default_spec),
+    dim_inactive = true,
+  })
   require("mini.starter").setup()
 end)
 
