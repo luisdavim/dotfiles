@@ -375,7 +375,7 @@ safely("now", function()
   local statuscolumn = require('mini.statuscolumn')
   local default_spec = {
     { fold = '%C', lnum = '%l', sign = '%s' },
-    { format = '=fs=l=', sep = '▏' },
+    { format = 'fs=l=', sep = '▏' },
     { ltype = 'virt', lnum = '•' },
     { ltype = 'wrap', lnum = '↳' },
     { win = 'inactive', sep = ' ' },
