@@ -88,6 +88,8 @@ set -as terminal-features ",${TERM}*:RGB:cstyle:extkeys:focus:hyperlinks:margins
 
 # -- theming -------------------------------------------------------------------
 
+set -s theme terminal
+
 # enable or disable theming:
 #   - enabled (default)
 #   - disabled
