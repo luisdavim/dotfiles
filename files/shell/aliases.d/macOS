@@ -23,6 +23,8 @@ yabai-reload() {
   # brew services stop yabai
   skhd --stop-service
   yabai --stop-service
+  killall yabai
+  killall skhd
   brew upgrade yabai
   brew upgrade skhd
   # brew services start yabai
