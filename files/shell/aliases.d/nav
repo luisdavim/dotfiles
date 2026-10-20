@@ -20,8 +20,8 @@ if [ -x "$(command -v els)" ]; then
 fi
 
 if [ -x "$(command -v eza)" ]; then
-  alias ls='eza --color-scale'
-  alias tree='eza -T --color-scale --icons --ignore-glob "*node_modules*|*vendor*"'
+  alias ls='eza --color-scale=all'
+  alias tree='eza -T --color-scale=all --icons --ignore-glob "*node_modules*|*vendor*"'
   alias lt='ls -lhmr --sort=modified && echo "------Oldest------"'
   alias ltr='ls -lhm --sort=modified && echo "------Newest------"'
 elif [ -x "$(command -v exa)" ]; then
