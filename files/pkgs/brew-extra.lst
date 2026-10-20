@@ -64,6 +64,7 @@ crane
 credhub-cli
 cruft
 csvkit
+ctop
 dagger
 dark-mode
 datree
