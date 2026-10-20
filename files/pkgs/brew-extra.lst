@@ -64,7 +64,6 @@ crane
 credhub-cli
 cruft
 csvkit
-ctop
 dagger
 dark-mode
 datree
@@ -82,6 +81,7 @@ docker-ls
 docker-slim
 dockerfile-language-server
 dog
+dtop
 dust
 ec2-ami-tools
 ec2-api-tools
