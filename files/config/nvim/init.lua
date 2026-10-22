@@ -44,6 +44,7 @@ MiniMisc.setup_auto_root({
   "Cargo.toml",
   ".projections.json",
   "PROJECT",
+  "LICENSE",
   "Makefile",
   "pom.xml",
   ".root",
