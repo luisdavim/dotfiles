@@ -654,9 +654,8 @@ safely("now", function()
       return
     end
     vim.notify("Building blink.cmp", vim.log.levels.INFO)
-    local res = vim.system({ "cargo", "build", "--release" }, { cwd = params.path }):wait()
-    -- local res = require('blink.cmp').build():pwait()
-    if res.code == 0 then
+    local res = require('blink.cmp').build():pwait()
+    if res then
       vim.notify("Building blink.cmp done", vim.log.levels.INFO)
     else
       vim.notify("Building blink.cmp failed", vim.log.levels.ERROR)
