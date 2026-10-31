@@ -12,7 +12,7 @@ function usage {
     echo ''
   fi
   cat <<- EOF
-		Usage: $(basename $0) [<flags>] <node> [<command>]
+		Usage: $(basename "${0}") [<flags>] [<releases>]
 
 		Flags:
 		  -h, --help                            display help
@@ -63,6 +63,7 @@ fi
 
 failed=$(echo "${*}" | sed -r -e 's/(\s|\n|,|;)+/\n/g')
 
+# negative filter (excluding)
 filter='(deployed|superseded|pending|NAME)'
 if [[ "${PENDING}" == "true" ]]; then
   filter='(deployed|superseded|NAME)'
@@ -87,6 +88,7 @@ if [[ "$DEBUG" == "true" ]]; then
   echo -e "Going to rollback:\n${failed}"
 fi
 
+# positive filter (including)
 filter='(deployed|superseded)'
 if [[ "${PENDING}" == "true" ]]; then
   filter='(deployed|superseded|pending)'

@@ -1,0 +1,47 @@
+#! /usr/bin/env bash
+
+# example:
+#   kubectl get po | older_than 2d
+
+age=""
+
+function to_seconds() {
+  echo "${1}" |
+    sed -Ee '
+      s/[1-9][0-9]*[dhms]/&+ /g
+      :a;s/[+]([^+].*)/\1+/;ta
+      s/.$//
+      :loop
+        s/d/ 24h*/
+        s/h/ 60m*/
+        s/m/ 60s*/
+        s/s//
+      t loop
+      s/.*/echo "&" | dc -e "?p"/e
+    '
+}
+
+age="$(to_seconds "${1}")"
+shift
+
+if [ -z "${age}" ]; then
+  echo "missing argument: age"
+  exit 1
+fi
+
+function check() {
+  duration="$(echo "${*}" | grep -Eo '(\s|^)([0-9]+[smhd]+)+(\s|$)')"
+  if [ -z "${duration}" ]; then
+    echo "${*}"
+    return
+  fi
+  duration=$(awk '{$1=$1};1' <<< "${duration}")
+  seconds=$(to_seconds "${duration}")
+  if [ "${seconds}" -ge "${age}" ]; then
+    echo "${*}"
+  fi
+}
+
+while IFS=$'\n' read -r line; do
+  check "${line}"
+done
