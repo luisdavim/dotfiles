@@ -362,7 +362,7 @@ end)
 
 safely("now", function()
   require("mini.notify").setup()
-  vim.notify = MiniNotify.make_notify()
+  vim.notify = MiniNotify.make_notify({ ERROR = { duration = 35000 } })
 
   vim.api.nvim_create_user_command("NotifyHistory", function()
     MiniNotify.show_history()
@@ -655,6 +655,7 @@ safely("now", function()
     end
     vim.notify("Building blink.cmp", vim.log.levels.INFO)
     local res = vim.system({ "cargo", "build", "--release" }, { cwd = params.path }):wait()
+    -- local res = require('blink.cmp').build():pwait()
     if res.code == 0 then
       vim.notify("Building blink.cmp done", vim.log.levels.INFO)
     else
