@@ -221,7 +221,7 @@ safely("now", function()
   keymap("n", "<C-L>", "<cmd>noh<CR>", { noremap = true, silent = true })
   -- toggle spell checker
   keymap("n", "<leader>sc", function()
-    vim.opt.spell = not (vim.opt.spell:get())
+    vim.opt.spell = not (vim.opt.spell)
   end, { desc = "Toggle spell checker" })
 end)
 
@@ -742,6 +742,7 @@ safely("now", function()
             },
           },
           columns = { { "label", "label_description", gap = 1 }, { "kind_icon" }, { "kind" } },
+          padding = 1,
         },
       },
     },
@@ -1244,7 +1245,7 @@ end)
 
 safely("event:VimEnter", function()
   add({ gh('FabijanZulj/blame.nvim') })
-  require("blame").setup({})
+  require("blame").setup()
 end)
 
 -- later_on('VimEnter', function()
