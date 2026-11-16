@@ -859,20 +859,35 @@ safely("now", function()
       filetypes = { "markdown", "gitcommit", "html" },
     },
     ["gopls"] = {
+      -- Share caches across Neovim instances using the same gopls binary.
       cmd = { "gopls", "-remote=auto" },
+      -- cmd_env = {
+      --   GOMAXPROCS = "4",
+      --   GOMEMLIMIT = "4GiB", -- Soft Go runtime limit, not a hard RSS cap.
+      -- },
       filetypes = { "go", "gomod", "gowork", "gotmpl", "gohtmltmpl", "gotexttmpl" },
-      root_dir = vim.fs.dirname(vim.fs.find({ "go.mod", "go.work", ".git" }, { upward = true })[1]),
+      root_dir = function(bufnr, on_dir)
+        -- Use the file's module, even when Neovim starts at the monorepo root.
+        on_dir(vim.fs.root(bufnr, "go.mod") or vim.fs.root(bufnr, "go.work") or vim.fs.root(bufnr, ".git"))
+      end,
       settings = {
         gopls = {
           gofumpt = false,
-          staticcheck = true,
+          -- Keep diagnostics inside the selected module. Retain go.work for imports.
+          expandWorkspaceToModule = false,
+          -- diagnosticsTrigger = "Save", -- default is Edit
+          -- staticcheck = true,
           semanticTokens = true,
           usePlaceholders = true,
           completeUnimported = true,
           completionDocumentation = true,
           deepCompletion = true,
           matcher = "Fuzzy",
-          directoryFilters = { "-.git", "-.vscode", "-.idea", "-.vscode-test", "-node_modules", "-.nvim" },
+          buildFlags = { "-p=2" }, -- Limit concurrent Go package builds during loading.
+          directoryFilters = {
+            "-.git", "-.vscode", "-.idea", "-.vscode-test", "-.nvim",
+            "-**/.cache", "-**/node_modules", "-**/bazel-bin", "-**/bazel-out", "-**/bazel-testlogs",
+          },
           codelenses = {
             gc_details = false,
             generate = true,
