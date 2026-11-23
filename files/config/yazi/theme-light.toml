@@ -124,8 +124,10 @@ progress_error  = { fg = "yellow", bg = "red" }
 # : Which {{{
 
 [which]
+border          = { fg = "blue" }
+border_set      = { as = "rounded" }
 cols            = 3
-mask            = { bg = "black" }
+mask            = {}
 cand            = { fg = "lightcyan" }
 rest            = { fg = "darkgray" }
 desc            = { fg = "lightmagenta" }
@@ -139,6 +141,7 @@ separator_style = { fg = "darkgray" }
 
 [confirm]
 border     = { fg = "blue" }
+border_set = { as = "rounded" }
 title      = { fg = "blue" }
 body       = {}
 list       = {}
@@ -152,8 +155,9 @@ btn_labels = [ "  [Y]es  ", "  (N)o  " ]
 # : Spotter {{{
 
 [spot]
-border = { fg = "blue" }
-title  = { fg = "blue" }
+border     = { fg = "blue" }
+border_set = { as = "rounded" }
+title      = { fg = "blue" }
 
 # Table
 tbl_col  = { fg = "blue" }
@@ -165,6 +169,8 @@ tbl_cell = { fg = "yellow", reversed = true }
 # : Notification {{{
 
 [notify]
+border_set = { as = "rounded" }
+
 title_info  = { fg = "green" }
 title_warn  = { fg = "yellow" }
 title_error = { fg = "red" }
@@ -180,9 +186,10 @@ icon_error = ""
 # : Picker {{{
 
 [pick]
-border   = { fg = "blue" }
-active   = { fg = "magenta", bold = true }
-inactive = {}
+border     = { fg = "blue" }
+border_set = { as = "rounded" }
+active     = { fg = "magenta", bold = true }
+inactive   = {}
 
 # : }}}
 
@@ -190,10 +197,12 @@ inactive = {}
 # : Input {{{
 
 [input]
-border   = { fg = "blue" }
-title    = {}
-value    = {}
-selected = { reversed = true }
+border     = { fg = "blue" }
+border_set = { as = "rounded" }
+title      = {}
+value      = {}
+hint       = { fg = "darkgray", italic = true }
+selected   = { reversed = true }
 
 # : }}}
 
@@ -201,9 +210,10 @@ selected = { reversed = true }
 # : Completion {{{
 
 [cmp]
-border   = { fg = "blue" }
-active   = { reversed = true }
-inactive = {}
+border     = { fg = "blue" }
+border_set = { as = "rounded" }
+active     = { reversed = true }
+inactive   = {}
 
 # Icons
 icon_file    = ""
@@ -216,9 +226,10 @@ icon_command = ""
 # : Task manager {{{
 
 [tasks]
-border  = { fg = "blue" }
-title   = {}
-hovered = { fg = "magenta", bold = true }
+border     = { fg = "blue" }
+border_set = { as = "rounded" }
+title      = {}
+hovered    = { fg = "magenta", bold = true }
 
 # : }}}
 
@@ -226,11 +237,24 @@ hovered = { fg = "magenta", bold = true }
 # : Help menu {{{
 
 [help]
-on      = { fg = "cyan" }
-run     = { fg = "magenta" }
-desc    = {}
-hovered = { reversed = true, bold = true }
-footer  = { fg = "black", bg = "white" }
+border     = { fg = "blue" }
+border_set = { as = "rounded" }
+chord      = { fg = "cyan" }
+action     = {}
+hovered    = { reversed = true, bold = true }
+
+# : }}}
+
+
+# : Search {{{
+
+[fd]
+title    = "Search via fd:"
+position = { at = "top-center", y = 2, w = 80, h = 3 }
+
+[rg]
+title    = "Search via rg:"
+position = { at = "top-center", y = 2, w = 80, h = 3 }
 
 # : }}}
 
@@ -240,13 +264,13 @@ footer  = { fg = "black", bg = "white" }
 [filetype]
 rules = [
 	# Image
-	{ mime = "image/*", fg = "yellow" },
+	{ mime = "**/image/*", fg = "yellow" },
 	# Media
-	{ mime = "{audio,video}/*", fg = "magenta" },
+	{ mime = "**/{audio,video}/*", fg = "magenta" },
 	# Archive
-	{ mime = "application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", fg = "red" },
+	{ mime = "**/application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", fg = "red" },
 	# Document
-	{ mime = "application/{pdf,doc,rtf}", fg = "cyan" },
+	{ mime = "**/application/{pdf,doc,rtf}", fg = "cyan" },
 	# Virtual file system
 	{ mime = "vfs/{absent,stale}", fg = "darkgray" },
 	# Special file

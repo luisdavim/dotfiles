@@ -16,7 +16,6 @@ show_hidden    = false
 show_symlink   = true
 scrolloff      = 5
 mouse_events   = [ "click", "scroll", "drag" ]
-title_format   = "Yazi: {cwd}"
 
 [preview]
 wrap            = "no"
@@ -64,11 +63,15 @@ download = [
 	{ run = "ya emit download --open %S", desc = "Download and open" },
 	{ run = "ya emit download %S",        desc = "Download" },
 ]
+trash = [
+	{ run = "ya pub trash-restore --list %S", desc = "Restore selected files" },
+	{ run = "ya pub trash-empty --list %S",   desc = "Empty trash bin" },
+]
 
 [open]
 rules = [
 	# Folder
-	{ url = "*/", use = [ "edit", "open", "reveal" ] },
+	{ mime = "folder/*", use = [ "edit", "open", "reveal" ] },
 	# Text
 	{ mime = "text/*", use = [ "edit", "reveal" ] },
 	# Image
@@ -79,13 +82,12 @@ rules = [
 	{ mime = "application/{json,ndjson,javascript,wine-extension-ini}", use = [ "edit", "reveal" ] },
 	# Archive
 	{ mime = "application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", use = [ "extract", "reveal" ] },
-	# JSON
-	{ mime = "application/{json,ndjson}", use = [ "edit", "reveal" ] },
-	{ mime = "*/javascript", use = [ "edit", "reveal" ] },
 	# Empty file
 	{ mime = "inode/empty", use = [ "edit", "reveal" ] },
 	# Virtual file system
 	{ mime = "vfs/{absent,stale}", use = "download" },
+	# Trash
+	{ mime = "trash/**", use = [ "open", "trash" ] },
 	# Fallback
 	{ url = "*", use = [ "open", "reveal" ] },
 ]
@@ -96,7 +98,6 @@ plugin_workers   = 5
 fetch_workers    = 5
 preload_workers  = 2
 process_workers  = 5
-bizarre_retry    = 3
 image_alloc      = 536870912  # 512MB
 image_bound      = [ 10000, 10000 ]
 suppress_preload = false
@@ -106,13 +107,14 @@ fetchers = [
 	# MIME-type
 	{ url = "*/",         run = "mime.dir",    prio = "high", group = "mime" },
 	{ url = "local://*",  run = "mime.local",  prio = "high", group = "mime" },
+	{ url = "trash://*",  run = "mime.trash",  prio = "high", group = "mime" },
 	{ url = "remote://*", run = "mime.remote", prio = "high", group = "mime" },
 ]
 spotters = [
 	# Multi-file
 	{ mime = "multi/*", run = "multi" },
 	# Folder
-	{ url = "*/", run = "folder" },
+	{ mime = "folder/*", run = "folder" },
 	# Code
 	{ mime = "text/*", run = "code" },
 	{ mime = "application/{mbox,javascript,wine-extension-ini}", run = "code" },
@@ -124,10 +126,13 @@ spotters = [
 	{ mime = "video/*", run = "video" },
 	# Virtual file system
 	{ mime = "vfs/*", run = "vfs" },
+	# Trash
+	{ mime = "trash/**", run = "trash" },
 	# Error
-	{ mime = "null/*", run = "null" },
+	{ mime = "error/*", run = "error" },
 	# Fallback
 	{ url = "*", run = "file" },
+	{ url = "*/", run = "file" },
 ]
 preloaders = [
 	# Image
@@ -141,9 +146,11 @@ preloaders = [
 	# Font
 	{ mime = "font/*", run = "font" },
 	{ mime = "application/ms-opentype", run = "font" },
+	# Trash
+	{ mime = "trash/**", run = "trash" },
 ]
 previewers = [
-	{ url = "*/", run = "folder" },
+	{ mime = "folder/*", run = "folder" },
 	# Code
 	{ mime = "text/*", run = "code" },
 	{ mime = "application/{mbox,javascript,wine-extension-ini}", run = "code" },
@@ -172,8 +179,10 @@ previewers = [
 	{ mime = "inode/empty", run = "empty" },
 	# Virtual file system
 	{ mime = "vfs/*", run = "vfs" },
+	# Trash
+	{ mime = "trash/**", run = "trash" },
 	# Error
-	{ mime = "null/*", run = "null" },
+	{ mime = "error/*", run = "error" },
 	# Fallback
 	{ url = "*", run = "file" },
 ]
@@ -184,37 +193,32 @@ cursor_blink = false
 # cd
 cd_title  = "Change directory:"
 cd_origin = "top-center"
-cd_offset = [ 0, 2, 50, 3 ]
+cd_offset = [ 0, 2, 80, 3 ]
 
 # create
 create_title  = [ "Create:", "Create (dir):" ]
 create_origin = "top-center"
-create_offset = [ 0, 2, 50, 3 ]
+create_offset = [ 0, 2, 80, 3 ]
 
 # rename
 rename_title  = "Rename:"
 rename_origin = "hovered"
-rename_offset = [ 0, 1, 50, 3 ]
+rename_offset = [ 0, 1, 80, 3 ]
 
 # filter
 filter_title  = "Filter:"
 filter_origin = "top-center"
-filter_offset = [ 0, 2, 50, 3 ]
+filter_offset = [ 0, 2, 80, 3 ]
 
 # find
 find_title  = [ "Find next:", "Find previous:" ]
 find_origin = "top-center"
-find_offset = [ 0, 2, 50, 3 ]
-
-# search
-search_title  = "Search via {n}:"
-search_origin = "top-center"
-search_offset = [ 0, 2, 50, 3 ]
+find_offset = [ 0, 2, 80, 3 ]
 
 # shell
 shell_title  = [ "Shell:", "Shell (block):" ]
 shell_origin = "top-center"
-shell_offset = [ 0, 2, 50, 3 ]
+shell_offset = [ 0, 2, 80, 3 ]
 
 [confirm]
 # trash
